@@ -8,7 +8,6 @@ import java.util.Map;
 
 // aqui se definen los metodos a ocupar en serviceJPA
 // los siguientes son los que deben ir siempre
-//
 public interface IEjemploService {
     List<Ejemplo> findAll();
     Ejemplo findById(Long id);

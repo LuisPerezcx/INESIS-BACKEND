@@ -33,15 +33,15 @@ public class EjemploController {
         }
     }
 
-    //AQUI SIEMPRE RECIBIR UN MAPA ES LA FORMA DE RECIBIR UN JSON
-    //NUNCA RECIBIR UNA INSTANCIA DE LA CLASE
+    //AQUI SIEMPRE RECIBIR UN MAPA, ES LA FORMA DE RECIBIR UN JSON
+    //NO RECIBIR UNA INSTANCIA DE LA CLASE
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
             Ejemplo ejemplo = ejemploServiceJPA.create(params);
             return ResponseEntity.status(HttpStatus.CREATED).body(ejemplo);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
@@ -52,6 +52,19 @@ public class EjemploController {
         try {
             Ejemplo ejemploUpdated = ejemploServiceJPA.update(ejemploServiceJPA.findById(id),params);
             return ResponseEntity.status(HttpStatus.CREATED).body(ejemploUpdated);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> remove(@PathVariable Long id){
+        try {
+            ejemploServiceJPA.findById(id); // PARA TIRAR LA EXEPCION SI NO SE ENCUENTRA EL REGISTRO
+            ejemploServiceJPA.deleteById(id);
+            return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {

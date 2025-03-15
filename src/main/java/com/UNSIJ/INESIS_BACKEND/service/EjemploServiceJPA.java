@@ -3,6 +3,7 @@ package com.UNSIJ.INESIS_BACKEND.service;
 import com.UNSIJ.INESIS_BACKEND.model.Ejemplo;
 import com.UNSIJ.INESIS_BACKEND.repository.EjemploRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IEjemploService;
+import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +38,10 @@ public class EjemploServiceJPA implements IEjemploService {
     public Ejemplo create(Map<String, Object> params) throws Exception {
         Ejemplo ejemplo = new Ejemplo();
         try {
+            //AQUI ASIGNAMOS VALORES QUE SOLO SE NECESITAN AL CREAR POR PRIMERA VEZ UN REGISTRO
+            //POR EJEMPLO EL CAMPO ACTIVO
+            ejemplo.setActive(true); //ESTE ES UN CASO DE USO
+            //AHORA LLAMAMOS AL METODO QUE SE OCUPA DE CONSTRUIR EL OBJETO
             this.build(params, ejemplo);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
@@ -68,6 +73,14 @@ public class EjemploServiceJPA implements IEjemploService {
             //AQUI SE DEBEN VALIDAR LOS DATOS QUE SE ESTAN RECIBIENDO Y SE LANZAN LAS EXCEPCIONES CORRESPONDIENTES
             //SI TOD0 ESTA BIEN, SE LLENAN LOS CAMPOS DE LA CLASE CON LOS VALORES DEL JSON
             //POR EJEMLO EL CAMPO NUMERO ES OBLIGATORIO
+
+            //JsonUtils recibe el mapa y el nombre del parametro a extraer
+            Integer numero = JsonUtils.obtInteger(params,"numeroEjemplo");
+            //VERIFICACION DEL CAMPO NUMERO
+            if(numero == null) throw new IllegalArgumentException("El campo numero es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            ejemplo.setNumeroEjemplo(numero);
+            ejemplo.setNombreEjemplo(JsonUtils.obtString(params,"nombreEjemplo")); //TAMBIEN SE PUEDE HACER DE ESTA FORMA DIRECTA
+            //... Y SE REPITIRÁ ESTA SECCIÓN PARA CADA CAMPO EN EL JSON
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
