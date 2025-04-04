@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.UNSIJ.INESIS_BACKEND.model.CatSemestreModel;
@@ -11,6 +12,7 @@ import com.UNSIJ.INESIS_BACKEND.repository.CatSemestreRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatSemestreService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 
+@Service
 public class CatSemestreServiceJPA implements ICatSemestreService{
     
     
