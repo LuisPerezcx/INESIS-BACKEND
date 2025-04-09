@@ -46,7 +46,7 @@ public class MisDatos {
     private String idioma;
 
 
-    @ManyToOne
+    @OneToMany
     @JoinColumn(name = "id_transporte")
     private Transporte transporte;
 }
