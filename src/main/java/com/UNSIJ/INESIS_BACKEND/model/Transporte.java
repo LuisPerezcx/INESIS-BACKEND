@@ -24,5 +24,5 @@ public class Transporte {
 
     @ManyToOne
     @JoinColumn(name = "id_cat_tipo_transporte")
-    private cat_tipo_transporte catTipoTransporte;
+    private CatTipoTransporte catTipoTransporte;
 }
