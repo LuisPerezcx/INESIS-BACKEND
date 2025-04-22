@@ -1,5 +1,7 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -47,6 +49,6 @@ public class MisDatos {
 
 
     @OneToMany
-    @JoinColumn(name = "id_transporte")
-    private Transporte transporte;
+    @JoinColumn(name = "idTransporte")
+    private List<Transporte> transporte;
 }

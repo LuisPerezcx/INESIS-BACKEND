@@ -1,5 +1,8 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.swing.text.StyledEditorKit.BoldAction;
 
 import jakarta.persistence.*;
@@ -39,7 +42,7 @@ public class GastosIngresos {
     @Column(name = "otro")
     private String otro;
 
-    @OneToMany
-    @JoinColumn(name = "id_trabajo")
-    private Trabajo trabajo;
+    @OneToMany(mappedBy = "gastosIngresos", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Trabajo> trabajos = new ArrayList<>();
+
 }
