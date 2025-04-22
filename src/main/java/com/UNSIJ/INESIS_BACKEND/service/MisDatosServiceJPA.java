@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.UNSIJ.INESIS_BACKEND.model.MisDatos;
@@ -11,6 +12,7 @@ import com.UNSIJ.INESIS_BACKEND.repository.MisDatosRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IMisDatosService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 
+@Service
 public class MisDatosServiceJPA implements IMisDatosService{
     @Autowired
     private MisDatosRepository misDatosRepository;
@@ -66,18 +68,37 @@ public class MisDatosServiceJPA implements IMisDatosService{
     @Override
     public MisDatos build(Map<String, Object> params, MisDatos misDatos) throws IllegalArgumentException {
         try {
-            //PRIMERO DEBEMOS VERIFICAR QUE LOS VALORES QUE SON NOT NULL EN LA BASE EXISTAN EN EL JSON
-            //AQUI SE DEBEN VALIDAR LOS DATOS QUE SE ESTAN RECIBIENDO Y SE LANZAN LAS EXCEPCIONES CORRESPONDIENTES
-            //SI TOD0 ESTA BIEN, SE LLENAN LOS CAMPOS DE LA CLASE CON LOS VALORES DEL JSON
-            //POR EJEMLO EL CAMPO NUMERO ES OBLIGATORIO
+            String nombreCompleto = JsonUtils.obtString(params,"nombreCompleto");
+            if(nombreCompleto == null) throw new IllegalArgumentException("El campo nombre Completo es obligatorio");
+            misDatos.setNombreCompleto(nombreCompleto);
 
-            //JsonUtils recibe el mapa y el nombre del parametro a extraer
-            Integer numero = JsonUtils.obtInteger(params,"numeroEjemplo");
-            //VERIFICACION DEL CAMPO NUMERO
-            if(numero == null) throw new IllegalArgumentException("El campo numero es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
-            misDatos.setCarrera("carreranumero");
-            misDatos.setIdioma(JsonUtils.obtString(params,"idioma")); //TAMBIEN SE PUEDE HACER DE ESTA FORMA DIRECTA
-            //... Y SE REPITIRÁ ESTA SECCIÓN PARA CADA CAMPO EN EL JSON
+            String carrera = JsonUtils.obtString(params,"carrera");
+            if(carrera == null) throw new IllegalArgumentException("El campo carrera es obligatorio");
+            misDatos.setCarrera(carrera);
+
+            String semestre = JsonUtils.obtString(params,"semestre");
+            if(semestre == null) throw new IllegalArgumentException("El campo semestre es obligatorio");
+            misDatos.setSemestre(semestre);
+
+            Boolean recursosSuficientes = JsonUtils.obtBoolean(params,"recursosSuficientes");
+            if(recursosSuficientes == null) throw new IllegalArgumentException("El campo recursosSuficientes es obligatorio");
+            misDatos.setRecursosSuficientes(recursosSuficientes);
+
+            Boolean familiarComunero = JsonUtils.obtBoolean(params,"familiarComunero");
+            if(familiarComunero == null) throw new IllegalArgumentException("El campo familiarComunero es obligatorio");
+            misDatos.setFamiliarComunero(familiarComunero);
+
+            Boolean utilizaCelular = JsonUtils.obtBoolean(params,"utilizaCelular");
+            if(utilizaCelular == null) throw new IllegalArgumentException("El campo utilizaCelular es obligatorio");
+            misDatos.setUtilizaCelular(utilizaCelular);
+
+            Boolean tieneComputadora = JsonUtils.obtBoolean(params,"tieneComputadora");
+            if(tieneComputadora == null) throw new IllegalArgumentException("El campo tieneComputadora es obligatorio");
+            misDatos.setTieneComputadora(tieneComputadora);
+
+            String idioma = JsonUtils.obtString(params,"idioma");
+            if(idioma == null) throw new IllegalArgumentException("El campo idioma es obligatorio");
+            misDatos.setIdioma(idioma);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
@@ -101,5 +122,4 @@ public class MisDatosServiceJPA implements IMisDatosService{
             misDatosRepository.deleteById(id);
         }
     }
-    
 }

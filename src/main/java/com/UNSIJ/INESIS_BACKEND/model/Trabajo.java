@@ -16,7 +16,7 @@ public class Trabajo {
     private String nombreTrabajo;
 
     @Column(name = "telefono_trabajo")
-    private int telefonoTrabajo;
+    private Integer telefonoTrabajo;
 
     @Column(name = "ingreso_mensual")
     private Double ingresoMensual;
