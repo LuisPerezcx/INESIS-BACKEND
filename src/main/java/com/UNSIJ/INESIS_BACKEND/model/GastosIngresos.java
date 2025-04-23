@@ -18,8 +18,8 @@ public class GastosIngresos {
     @Column(name = "id_gatos_ingresos")
     private Long idGatosIngresos;
 
-    @Column(name = "cuanto_hacienden")
-    private Double cuantoHacienden;
+    @Column(name = "gasto_mensual")
+    private Double gastoMensual;
 
     @Column (name = "depende_economicamente")
     private String dependeEconomicamente;
@@ -27,8 +27,8 @@ public class GastosIngresos {
     @Column(name = "nombre_quien_dependes")
     private String nombreQuienDependes;
 
-    @Column(name = "gasto_mensual")
-    private Double gastoMensual;
+    // @Column(name = "ingreso_mensual")
+    // private Double ingresoMensual;
 
     @Column(name = "solicita_beca_alimenticia")
     private Boolean solicitaBecaAlimenticia;
