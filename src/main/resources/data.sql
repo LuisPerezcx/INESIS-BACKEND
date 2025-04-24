@@ -1,4 +1,6 @@
 #------------------- REGISTROS DE CATCARRERA -------------------
+-- Inicio registros
+SELECT 1;
 
 INSERT INTO cat_carrera (nombre_carrera)
 SELECT 'Licenciatura en Informática'
@@ -33,6 +35,8 @@ SELECT 'Maestría en Ciencias en Gestión Ambiental'
 WHERE NOT EXISTS (SELECT 1 FROM cat_carrera WHERE nombre_carrera = 'Maestría en Ciencias en Gestión Ambiental');
 
 #------------------- REGISTROS DE CATSEMESTRE -------------------
+-- Inicio registros
+SELECT 1;
 
 INSERT INTO cat_semestre (nombre_semestre)
 SELECT 'Primero'
@@ -75,6 +79,8 @@ SELECT 'Décimo'
 WHERE NOT EXISTS (SELECT 1 FROM cat_semestre WHERE nombre_semestre = 'Décimo');
 
 #------------------- REGISTROS DE CATSEXO -------------------
+-- Inicio registros
+SELECT 1;
 
 INSERT INTO cat_sexo (nombre_sexo)
 SELECT 'Masculino'
@@ -88,3 +94,38 @@ INSERT INTO cat_sexo (nombre_sexo)
 SELECT 'Otro'
 WHERE NOT EXISTS (SELECT 1 FROM cat_sexo WHERE nombre_sexo = 'Otro');
 
+#------------------- REGISTROS DE CATMEDIOSTRANSPORTE -------------------
+-- Inicio registros
+SELECT 1;
+
+INSERT INTO cat_medios_transporte (nombre_medio)
+SELECT 'Automóvil de amigos'
+WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Automóvil de amigos');
+
+INSERT INTO cat_medios_transporte (nombre_medio)
+SELECT 'Bicicleta'
+WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Bicicleta');
+
+INSERT INTO cat_medios_transporte (nombre_medio)
+SELECT 'Mototaxi'
+WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Mototaxi');
+
+INSERT INTO cat_medios_transporte (nombre_medio)
+SELECT 'Caminando'
+WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Caminando');
+
+INSERT INTO cat_medios_transporte (nombre_medio)
+SELECT 'Automovil familiar'
+WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Automovil familiar');
+
+INSERT INTO cat_medios_transporte (nombre_medio)
+SELECT 'Colectivo'
+WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Colectivo');
+
+INSERT INTO cat_medios_transporte (nombre_medio)
+SELECT 'Taxi'
+WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Taxi');
+
+INSERT INTO cat_medios_transporte (nombre_medio)
+SELECT 'Microbús'
+WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Microbús');
