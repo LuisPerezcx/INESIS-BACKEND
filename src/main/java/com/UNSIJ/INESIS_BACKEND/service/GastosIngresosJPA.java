@@ -66,9 +66,9 @@ public class GastosIngresosJPA implements IGastosIngresosService {
     @Override
     public GastosIngresos build(Map<String, Object> params, GastosIngresos gastosIngresos){
         try {
-            Double cuantoHacienden = JsonUtils.obtDouble(params, "cuantoHacienden");
-            if(cuantoHacienden == null) throw new IllegalArgumentException("El campo cuantoHacienden es obligatorio");
-            gastosIngresos.setCuantoHacienden(cuantoHacienden);
+            Double gastoMensual = JsonUtils.obtDouble(params, "gastoMensual");
+            if(gastoMensual == null) throw new IllegalArgumentException("El campo gastoMensual es obligatorio");
+            gastosIngresos.setGastoMensual(gastoMensual);
 
             String dependeEconomicamente = JsonUtils.obtString(params, "dependeEconomicamente");
             if(dependeEconomicamente == null) throw new IllegalArgumentException("El campo dependeEconomicamente es obligatorio");
@@ -78,9 +78,9 @@ public class GastosIngresosJPA implements IGastosIngresosService {
             if(nombreQuienDependes == null) throw new IllegalArgumentException("El campo nombreQuienDependes es obligatorio");
             gastosIngresos.setNombreQuienDependes(nombreQuienDependes);
 
-            Double gastoMensual = JsonUtils.obtDouble(params, "gastoMensual");
-            if(gastoMensual == null) throw new IllegalArgumentException("El campo gastoMensual es obligatorio");
-            gastosIngresos.setGastoMensual(gastoMensual);
+            // Double gastoMensual = JsonUtils.obtDouble(params, "gastoMensual");
+            // if(gastoMensual == null) throw new IllegalArgumentException("El campo gastoMensual es obligatorio");
+            // gastosIngresos.setGastoMensual(gastoMensual);
 
             Boolean solicitaBecaAlimenticia = JsonUtils.obtBoolean(params, "solicitaBecaAlimenticia");
             if(solicitaBecaAlimenticia == null) throw new IllegalArgumentException("El campo solicitaBecaAlimenticia es obligatorio");
@@ -113,7 +113,7 @@ public class GastosIngresosJPA implements IGastosIngresosService {
     public GastosIngresos updateInstance(GastosIngresos gastosIngresosInstance) throws Exception {
         GastosIngresos gastosIngresosBD = this.findById(gastosIngresosInstance.getIdGatosIngresos());
         
-        gastosIngresosBD.setCuantoHacienden(gastosIngresosInstance.getCuantoHacienden());
+        // gastosIngresosBD.setCuantoHacienden(gastosIngresosInstance.getCuantoHacienden());
         gastosIngresosBD.setDependeEconomicamente(gastosIngresosInstance.getDependeEconomicamente());
         gastosIngresosBD.setNombreQuienDependes(gastosIngresosInstance.getNombreQuienDependes());
         gastosIngresosBD.setGastoMensual(gastosIngresosInstance.getGastoMensual());
