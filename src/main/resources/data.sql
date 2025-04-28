@@ -3,12 +3,12 @@
 SELECT 1;
 
 INSERT INTO cat_carrera (nombre_carrera)
-SELECT 'Ingeniería en Desarrollo de Software y Sistemas Inteligentes'
-WHERE NOT EXISTS (SELECT 1 FROM cat_carrera WHERE nombre_carrera = 'Ingeniería en Desarrollo de Software y Sistemas Inteligentes');
+SELECT 'Licenciatura en Informática'
+WHERE NOT EXISTS (SELECT 1 FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Informática');
 
 INSERT INTO cat_carrera (nombre_carrera)
-SELECT 'Ingeniería Forestal'
-WHERE NOT EXISTS (SELECT 1 FROM cat_carrera WHERE nombre_carrera = 'Ingeniería Forestal');
+SELECT 'Ingeniería en Desarrollo de Software y Sistemas Inteligentes'
+WHERE NOT EXISTS (SELECT 1 FROM cat_carrera WHERE nombre_carrera = 'Ingeniería en Desarrollo de Software y Sistemas Inteligentes');
 
 INSERT INTO cat_carrera (nombre_carrera)
 SELECT 'Licenciatura en Administración Turística'
@@ -21,6 +21,10 @@ WHERE NOT EXISTS (SELECT 1 FROM cat_carrera WHERE nombre_carrera = 'Licenciatura
 INSERT INTO cat_carrera (nombre_carrera)
 SELECT 'Licenciatura en Ciencias Ambientales'
 WHERE NOT EXISTS (SELECT 1 FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Ciencias Ambientales');
+
+INSERT INTO cat_carrera (nombre_carrera)
+SELECT 'Ingeniería Forestal'
+WHERE NOT EXISTS (SELECT 1 FROM cat_carrera WHERE nombre_carrera = 'Ingeniería Forestal');
 
 INSERT INTO cat_carrera (nombre_carrera)
 SELECT 'Maestría en Ciencias en Conservación de los Recursos Forestales'
