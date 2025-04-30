@@ -1,13 +1,6 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
@@ -41,4 +34,19 @@ public class AlumnoModel {
     @ManyToOne
     @JoinColumn(name = "id_cat_carrera", referencedColumnName = "id_cat_carrera")
     private CatCarreraModel carrera;
+
+    @ManyToOne
+    @JoinColumn(name = "id_semestre", referencedColumnName = "id_cat_semestre")
+    private CatSemestreModel semestre;
+
+    @ManyToOne
+    @JoinColumn(name = "id_sexo", referencedColumnName = "id_cat_sexo")
+    private CatSexoModel sexo;
+
+    @Column(name = "grupo")
+    private String grupo;
+
+    @OneToOne
+    @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
+    private UsuarioModel usuario;
 }

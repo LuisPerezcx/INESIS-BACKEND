@@ -1,3 +1,19 @@
+#------------------- REGISTROS DE CATROL -------------------
+-- Inicio registros
+SELECT 1;
+
+INSERT INTO cat_rol (nombre_rol)
+SELECT 'Alumno'
+WHERE NOT EXISTS (SELECT 1 FROM cat_rol WHERE nombre_rol = 'Alumno');
+
+INSERT INTO cat_rol (nombre_rol)
+SELECT 'Administrador'
+WHERE NOT EXISTS (SELECT 1 FROM cat_rol WHERE nombre_rol = 'Administrador');
+
+INSERT INTO cat_rol (nombre_rol)
+SELECT 'Revisor'
+WHERE NOT EXISTS (SELECT 1 FROM cat_rol WHERE nombre_rol = 'Revisor');
+
 #------------------- REGISTROS DE CATCARRERA -------------------
 -- Inicio registros
 SELECT 1;
