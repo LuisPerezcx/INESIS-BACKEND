@@ -86,9 +86,9 @@ public class GastosIngresosJPA implements IGastosIngresosService {
             if(solicitaBecaAlimenticia == null) throw new IllegalArgumentException("El campo solicitaBecaAlimenticia es obligatorio");
             gastosIngresos.setSolicitaBecaAlimenticia(solicitaBecaAlimenticia);
 
-            Boolean trabajoTemporal = JsonUtils.obtBoolean(params, "trabajoTemporal");
-            if(trabajoTemporal == null) throw new IllegalArgumentException("El campo trabajoTemporal es obligatorio");
-            gastosIngresos.setTrabajoTemporal(trabajoTemporal);
+            Boolean trabajoTipo = JsonUtils.obtBoolean(params, "trabajoTemporal");
+            if(trabajoTipo == null) throw new IllegalArgumentException("El campo trabajoTipo es obligatorio");
+            gastosIngresos.setTrabajoTipo(trabajoTipo);
 
             String ocupacion = JsonUtils.obtString(params, "ocupacion");
             if(ocupacion == null) throw new IllegalArgumentException("El campo ocupacion es obligatorio");
@@ -118,7 +118,7 @@ public class GastosIngresosJPA implements IGastosIngresosService {
         gastosIngresosBD.setNombreQuienDependes(gastosIngresosInstance.getNombreQuienDependes());
         gastosIngresosBD.setGastoMensual(gastosIngresosInstance.getGastoMensual());
         gastosIngresosBD.setSolicitaBecaAlimenticia(gastosIngresosInstance.getSolicitaBecaAlimenticia());
-        gastosIngresosBD.setTrabajoTemporal(gastosIngresosInstance.getTrabajoTemporal());
+        gastosIngresosBD.setTrabajoTipo(gastosIngresosInstance.getTrabajoTipo());
         gastosIngresosBD.setOcupacion(gastosIngresosInstance.getOcupacion());
         gastosIngresosBD.setOtro(gastosIngresosInstance.getOtro());
         

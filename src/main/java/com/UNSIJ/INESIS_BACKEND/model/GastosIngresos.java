@@ -33,8 +33,8 @@ public class GastosIngresos {
     @Column(name = "solicita_beca_alimenticia")
     private Boolean solicitaBecaAlimenticia;
 
-    @Column(name = "trabajo_temporal")
-    private Boolean trabajoTemporal;
+    @Column(name = "trabajo_tipo")
+    private Boolean trabajoTipo;
 
     @Column(name = "ocupacion")
     private String ocupacion;
