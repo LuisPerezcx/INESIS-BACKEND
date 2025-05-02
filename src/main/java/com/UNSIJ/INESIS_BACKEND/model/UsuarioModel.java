@@ -36,5 +36,4 @@ public class UsuarioModel {
 
     @OneToOne(mappedBy = "usuario")
     private AlumnoModel alumno;
-
 }
