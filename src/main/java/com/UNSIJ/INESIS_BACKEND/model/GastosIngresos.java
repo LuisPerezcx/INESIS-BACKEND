@@ -31,10 +31,10 @@ public class GastosIngresos {
     // private Double ingresoMensual;
 
     @Column(name = "solicita_beca_alimenticia")
-    private Boolean solicitaBecaAlimenticia;
+    private String solicitaBecaAlimenticia;
 
     @Column(name = "trabajo_tipo")
-    private Boolean trabajoTipo;
+    private String trabajoTipo;
 
     @Column(name = "ocupacion")
     private String ocupacion;

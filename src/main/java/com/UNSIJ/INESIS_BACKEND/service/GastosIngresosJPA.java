@@ -67,27 +67,27 @@ public class GastosIngresosJPA implements IGastosIngresosService {
     public GastosIngresos build(Map<String, Object> params, GastosIngresos gastosIngresos){
         try {
             Double gastoMensual = JsonUtils.obtDouble(params, "gastoMensual");
-            if(gastoMensual == null) throw new IllegalArgumentException("El campo gastoMensual es obligatorio");
+            if(gastoMensual == null) throw new IllegalArgumentException("El campo gasto mensual es obligatorio");
             gastosIngresos.setGastoMensual(gastoMensual);
 
             String dependeEconomicamente = JsonUtils.obtString(params, "dependeEconomicamente");
-            if(dependeEconomicamente == null) throw new IllegalArgumentException("El campo dependeEconomicamente es obligatorio");
+            if(dependeEconomicamente == null) throw new IllegalArgumentException("El campo depende economicamente es obligatorio");
             gastosIngresos.setDependeEconomicamente(dependeEconomicamente);
 
             String nombreQuienDependes = JsonUtils.obtString(params, "nombreQuienDependes");
-            if(nombreQuienDependes == null) throw new IllegalArgumentException("El campo nombreQuienDependes es obligatorio");
+            if(nombreQuienDependes == null) throw new IllegalArgumentException("El nombre de quien dependes es obligatorio");
             gastosIngresos.setNombreQuienDependes(nombreQuienDependes);
 
             // Double gastoMensual = JsonUtils.obtDouble(params, "gastoMensual");
             // if(gastoMensual == null) throw new IllegalArgumentException("El campo gastoMensual es obligatorio");
             // gastosIngresos.setGastoMensual(gastoMensual);
 
-            Boolean solicitaBecaAlimenticia = JsonUtils.obtBoolean(params, "solicitaBecaAlimenticia");
-            if(solicitaBecaAlimenticia == null) throw new IllegalArgumentException("El campo solicitaBecaAlimenticia es obligatorio");
+            String solicitaBecaAlimenticia = JsonUtils.obtString(params, "solicitaBecaAlimenticia");
+            if(solicitaBecaAlimenticia == null) throw new IllegalArgumentException("El campo solicitar besa alimenticia es obligatorio");
             gastosIngresos.setSolicitaBecaAlimenticia(solicitaBecaAlimenticia);
 
-            Boolean trabajoTipo = JsonUtils.obtBoolean(params, "trabajoTemporal");
-            if(trabajoTipo == null) throw new IllegalArgumentException("El campo trabajoTipo es obligatorio");
+            String trabajoTipo = JsonUtils.obtString(params, "trabajoTipo");
+            if(trabajoTipo == null) throw new IllegalArgumentException("El tipo de trabajo es obligatorio");
             gastosIngresos.setTrabajoTipo(trabajoTipo);
 
             String ocupacion = JsonUtils.obtString(params, "ocupacion");
