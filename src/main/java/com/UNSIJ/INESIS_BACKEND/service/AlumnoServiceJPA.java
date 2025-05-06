@@ -68,6 +68,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
             String nombre = JsonUtils.obtString(params, "nombre");
             if (nombre == null) throw new IllegalArgumentException("El campo nombre es obligatorio");
             alumnoModel.setNombre(nombre);
+            //crear usuarios
 
             // Otros campos pueden ser agregados según la estructura del modelo
         } catch (IllegalArgumentException e) {

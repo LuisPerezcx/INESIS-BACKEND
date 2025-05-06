@@ -72,7 +72,7 @@ public class CatGrupoController {
         }
     }
 
-    // 📌 Endpoint para obtener el grupo basado en carrera y semestre seleccionados
+    //Endpoint para obtener el grupo basado en carrera y semestre seleccionados
     @GetMapping("/carrera/{idCarrera}/semestre/{idSemestre}")
     public ResponseEntity<?> obtenerGrupo(@PathVariable Long idCarrera, @PathVariable Long idSemestre) {
         try {

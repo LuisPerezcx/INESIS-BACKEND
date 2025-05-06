@@ -31,7 +31,7 @@ SELECT 'Licenciatura en Administración Turística', '05'
 WHERE NOT EXISTS (SELECT 1 FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Administración Turística');
 
 INSERT INTO cat_carrera (nombre_carrera, codigo_carrera)
-SELECT 'Licenciatura en Biología', '06'
+SELECT 'Licenciatura en Biología', '04'
 WHERE NOT EXISTS (SELECT 1 FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Biología');
 
 INSERT INTO cat_carrera (nombre_carrera, codigo_carrera)
@@ -94,6 +94,13 @@ INSERT INTO cat_semestre (nombre_semestre)
 SELECT 'Décimo'
 WHERE NOT EXISTS (SELECT 1 FROM cat_semestre WHERE nombre_semestre = 'Décimo');
 
+#------------------- REGISTROS DE CATGRUPO -------------------
+-- Inicio registros
+SELECT 1;
+
+    
+
+
 #------------------- REGISTROS DE CATSEXO -------------------
 -- Inicio registros
 SELECT 1;
@@ -145,3 +152,5 @@ WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Taxi
 INSERT INTO cat_medios_transporte (nombre_medio)
 SELECT 'Microbús'
 WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Microbús');
+
+
