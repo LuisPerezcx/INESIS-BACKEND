@@ -1,18 +1,13 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.text.StyledEditorKit.BoldAction;
-
 import jakarta.persistence.*;
 import lombok.Data;
 
-@Data  
+@Data
 @Entity
-@Table(name = "gatos_ingresos")
+@Table(name = "gastos_ingresos")
 public class GastosIngresos {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_gatos_ingresos")
@@ -21,14 +16,11 @@ public class GastosIngresos {
     @Column(name = "gasto_mensual")
     private Double gastoMensual;
 
-    @Column (name = "depende_economicamente")
+    @Column(name = "depende_economicamente")
     private String dependeEconomicamente;
 
     @Column(name = "nombre_quien_dependes")
     private String nombreQuienDependes;
-
-    // @Column(name = "ingreso_mensual")
-    // private Double ingresoMensual;
 
     @Column(name = "solicita_beca_alimenticia")
     private String solicitaBecaAlimenticia;
@@ -42,7 +34,8 @@ public class GastosIngresos {
     @Column(name = "otro")
     private String otro;
 
-    @OneToMany(mappedBy = "gastosIngresos", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Trabajo> trabajos = new ArrayList<>();
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_trabajo")
+    private Trabajo trabajo;
 
 }

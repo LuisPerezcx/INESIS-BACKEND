@@ -20,7 +20,6 @@ public class CatTipoTransporte {
     private Long idCatTipoTransporte;
 
     private String nombreTipo;
-    private String abrevTipo;
 
     @OneToMany(mappedBy = "catTipoTransporte")
     private List<Transporte> transportes;

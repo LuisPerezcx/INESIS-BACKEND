@@ -22,10 +22,5 @@ public class Trabajo {
     private Double ingresoMensual;
 
     @Column(name = "domicilio")
-    private String domicilio;
-
-    @ManyToOne
-    @JoinColumn(name = "id_gastos_ingresos")
-    private GastosIngresos gastosIngresos;
-
+    private String domicilioTrabajo;
 }

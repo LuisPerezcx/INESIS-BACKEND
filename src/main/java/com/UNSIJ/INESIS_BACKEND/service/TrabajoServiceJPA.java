@@ -78,9 +78,9 @@ public class TrabajoServiceJPA implements ITrabajoService {
             if(ingresoMensual == null) throw new IllegalArgumentException("El campo ingresoMensual es obligatorio");
             trabajo.setIngresoMensual(ingresoMensual);
 
-            String domicilio = JsonUtils.obtString(params,"domicilio");
-            if(domicilio == null) throw new IllegalArgumentException("El campo domicilio es obligatorio");
-            trabajo.setDomicilio(domicilio);
+            String domicilioTrabajo = JsonUtils.obtString(params,"domicilioTrabajo");
+            if(domicilioTrabajo == null) throw new IllegalArgumentException("El campo domicilio es obligatorio");
+            trabajo.setDomicilioTrabajo(domicilioTrabajo);
             
 
         } catch (IllegalArgumentException e) {
@@ -99,7 +99,7 @@ public class TrabajoServiceJPA implements ITrabajoService {
         trabajoBD.setNombreTrabajo(trabajoInstance.getNombreTrabajo());
         trabajoBD.setTelefonoTrabajo(trabajoInstance.getTelefonoTrabajo());
         trabajoBD.setIngresoMensual(trabajoInstance.getIngresoMensual());
-        trabajoBD.setDomicilio(trabajoInstance.getDomicilio());
+        trabajoBD.setDomicilioTrabajo(trabajoInstance.getDomicilioTrabajo());
 
         return this.save(trabajoBD);
     }
