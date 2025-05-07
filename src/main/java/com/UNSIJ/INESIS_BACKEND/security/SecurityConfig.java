@@ -1,4 +1,4 @@
-package com.UNSIJ.security;
+package com.UNSIJ.INESIS_BACKEND.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

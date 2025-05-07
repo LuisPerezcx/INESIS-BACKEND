@@ -92,13 +92,6 @@ public class CatGrupoServiceJPA implements ICatGrupoService {
             catGrupoModel.setCatCarreraModel(carrera);
             catGrupoModel.setCatSemestreModel(semestre);
 
-            // Generar nombre de grupo con la lógica de combinación (ejemplo: 803)
-            String codigoCarrera = carrera.getCodigoCarrera(); // Recuperar el código de la carrera
-            // Obtener el semestre sin formateo
-            String nombreGrupo = idSemestre + codigoCarrera;
-
-            // Establecer el nombre del grupo en el modelo
-            catGrupoModel.setNombreGrupo(nombreGrupo);
 
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
@@ -133,9 +126,9 @@ public class CatGrupoServiceJPA implements ICatGrupoService {
         CatSemestreModel semestre = catSemestreRepository.findById(idSemestre)
                 .orElseThrow(() -> new IllegalArgumentException("Semestre no encontrado con ID: " + idSemestre));
 
-        String codigoCarrera = carrera.getCodigoCarrera();
+      
        
         // Concatenar el semestre y el código de la carrera
-        return idSemestre + codigoCarrera; // Ejemplo: "803"
+        return ""; // Ejemplo: "803"
     }
 }
