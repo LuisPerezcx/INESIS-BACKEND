@@ -1,7 +1,9 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;  
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -14,47 +16,49 @@ public class AlumnoModel {
     @Column(name = "id_alumno")
     private Long id;
 
-    @NotNull  
+    @NotNull
     @Column(name = "nombre")
     private String nombre;
 
-    @NotNull  
+    @NotNull
     @Column(name = "apellido")
     private String apellido;
 
-    @NotNull  
+    @NotNull
     @Column(name = "curp")
     private String curp;
 
-    @NotNull  
+    @NotNull
     @Column(name = "correo")
     private String correo;
 
-    @NotNull  
+    @NotNull
     @Column(name = "telefono")
     private String telefono;
 
-    @NotNull  
+    @NotNull
     @Column(name = "matricula")
     private String matricula;
 
     @ManyToOne
     @JoinColumn(name = "id_cat_carrera", referencedColumnName = "id_cat_carrera")
-    @NotNull 
+    @NotNull
     private CatCarreraModel carrera;
 
     @ManyToOne
     @JoinColumn(name = "id_semestre", referencedColumnName = "id_cat_semestre")
-    @NotNull  
+    @NotNull
     private CatSemestreModel semestre;
 
     @ManyToOne
     @JoinColumn(name = "id_sexo", referencedColumnName = "id_cat_sexo")
-    @NotNull  
+    @NotNull
     private CatSexoModel sexo;
 
     @Column(name = "grupo")
-    private String grupo;  
+    @Min(0)
+    @Max(9999)
+    private Integer grupo;
 
     @OneToOne
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
