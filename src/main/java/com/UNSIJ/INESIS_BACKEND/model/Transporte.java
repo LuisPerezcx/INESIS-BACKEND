@@ -7,6 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
@@ -17,11 +18,17 @@ public class Transporte {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idTransporte;
 
+    @NotNull
     private String llevaVehiculo;
+    
+    @NotNull
     private String marca;
+    
+    @NotNull
     private String modelo;
+    
+    @NotNull
     private Integer anio;
-    private String mediosTraslado;
 
     @ManyToOne
     @JoinColumn(name = "id_cat_tipo_transporte")

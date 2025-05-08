@@ -12,9 +12,9 @@ import lombok.Data;
 public class MisDatos {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_mis_datos")  
+    @Column(name = "id_mis_datos")
     private Long id;
-    
+
     @NotNull
     @Column(name = "nombre_completo")
     private String nombreCompleto;
@@ -22,7 +22,7 @@ public class MisDatos {
     @NotNull
     @Column(name = "carrera")
     private String carrera;
-    
+
     @NotNull
     @Column(name = "semestre")
     private String semestre;
@@ -47,8 +47,11 @@ public class MisDatos {
     @Column(name = "idioma")
     private String idioma;
 
-
     @OneToMany
     @JoinColumn(name = "idTransporte")
     private List<Transporte> transporte;
+
+    @OneToMany(mappedBy = "misDatos", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<MedioTraslado> mediosTraslado;
+
 }
