@@ -14,7 +14,7 @@ public class CatGrupoModel {
     @Column(name = "id_cat_grupo")
     private Long id;
 
-    @Column(name = "nombre_grupo", unique = true, nullable = false)
+    @Column(name = "nombre_grupo", nullable = false)
     private String nombreGrupo;
 
     @NotNull

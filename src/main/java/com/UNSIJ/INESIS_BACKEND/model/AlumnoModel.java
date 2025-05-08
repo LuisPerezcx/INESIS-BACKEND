@@ -56,9 +56,7 @@ public class AlumnoModel {
     private CatSexoModel sexo;
 
     @Column(name = "grupo")
-    @Min(0)
-    @Max(9999)
-    private Integer grupo;
+    private String grupo;
 
     @OneToOne
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
