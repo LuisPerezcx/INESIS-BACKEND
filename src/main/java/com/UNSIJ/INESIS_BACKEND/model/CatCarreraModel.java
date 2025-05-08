@@ -20,7 +20,4 @@ public class CatCarreraModel {
 
     @Column(name = "nombre_carrera")
     private String nombreCarrera;
-
-    @Column(name = "codigo_carrera")
-    private String codigoCarrera; 
 }
