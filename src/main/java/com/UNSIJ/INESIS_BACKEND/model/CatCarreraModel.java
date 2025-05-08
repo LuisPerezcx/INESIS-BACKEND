@@ -20,4 +20,5 @@ public class CatCarreraModel {
 
     @Column(name = "nombre_carrera")
     private String nombreCarrera;
+
 }
