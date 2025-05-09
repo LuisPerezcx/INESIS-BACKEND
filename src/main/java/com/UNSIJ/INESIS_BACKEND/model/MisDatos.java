@@ -53,5 +53,4 @@ public class MisDatos {
 
     @OneToMany(mappedBy = "misDatos", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MedioTraslado> mediosTraslado;
-
 }

@@ -7,15 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.UNSIJ.INESIS_BACKEND.model.CatTipoTransporte;
 import com.UNSIJ.INESIS_BACKEND.model.Transporte;
+import com.UNSIJ.INESIS_BACKEND.repository.CatTipoTransporteRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.TransporteRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.ITransporteService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 
 @Service
-public class TransporteServiceJPA implements ITransporteService{
+public class TransporteServiceJPA implements ITransporteService {
     @Autowired
     private TransporteRepository transporteRepository;
+
+    @Autowired
+    private CatTipoTransporteRepository catTipoTransporteRepository;
 
     @Override
     public List<Transporte> findAll() {
@@ -24,16 +29,15 @@ public class TransporteServiceJPA implements ITransporteService{
 
     @Override
     public Transporte findById(Long id) {
-        return transporteRepository.findById(id).orElseThrow( ()->
-                new IllegalArgumentException("Transporte no encontrado con el ID: " + id));
+        return transporteRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Transporte no encontrado con el ID: " + id));
     }
 
     @Override
-    @Transactional //SIEMPRE TRANSACTIONAL AQUI
+    @Transactional // SIEMPRE TRANSACTIONAL AQUI
     public Transporte save(Transporte transporte) throws Exception {
         return transporteRepository.save(transporte);
     }
-
 
     @Override
     public Transporte create(Map<String, Object> params) throws Exception {
@@ -49,7 +53,8 @@ public class TransporteServiceJPA implements ITransporteService{
         return this.save(transporte);
     }
 
-    //ESTE METODO SE OCUPA AL ACTUALIZAR DESDE EL FRONTEND YA QUE RECIBE UN MAPA(JSON)
+    // ESTE METODO SE OCUPA AL ACTUALIZAR DESDE EL FRONTEND YA QUE RECIBE UN
+    // MAPA(JSON)
     @Override
     public Transporte update(Transporte transporte, Map<String, Object> params) throws Exception {
         try {
@@ -64,25 +69,39 @@ public class TransporteServiceJPA implements ITransporteService{
     }
 
     @Override
-    public Transporte build(Map<String, Object> params, Transporte transporte){
+    public Transporte build(Map<String, Object> params, Transporte transporte) {
         try {
 
             String llevaVehiculo = JsonUtils.obtString(params, "llevaVehiculo");
-            if(llevaVehiculo == null || llevaVehiculo.isEmpty()) throw new IllegalArgumentException("El campo 'lleva vehiculo' es obligatorio.");
+            if (llevaVehiculo == null || llevaVehiculo.isEmpty())
+                throw new IllegalArgumentException("El campo 'lleva vehiculo' es obligatorio.");
             transporte.setLlevaVehiculo(llevaVehiculo);
 
             String marca = JsonUtils.obtString(params, "marca");
-            if(marca == null || marca.isEmpty()) throw new IllegalArgumentException("El campo 'marca' es obligatorio.");
+            if (marca == null || marca.isEmpty())
+                throw new IllegalArgumentException("El campo 'marca' es obligatorio.");
             transporte.setMarca(marca);
 
             String modelo = JsonUtils.obtString(params, "modelo");
-            if(modelo == null || modelo.isEmpty()) throw new IllegalArgumentException("El campo 'modelo' es obligatorio.");
+            if (modelo == null || modelo.isEmpty())
+                throw new IllegalArgumentException("El campo 'modelo' es obligatorio.");
             transporte.setModelo(modelo);
 
             Integer anio = JsonUtils.obtInteger(params, "anio");
-            if(anio == null) throw new IllegalArgumentException("El campo 'anio' es obligatorio.");
+            if (anio == null)
+                throw new IllegalArgumentException("El campo 'anio' es obligatorio.");
             transporte.setAnio(anio);
+
             
+            Long idCatTipoTransporte = JsonUtils.obtLong(params, "catTipoTransporte");
+            if (idCatTipoTransporte == null) {
+                throw new IllegalArgumentException("El campo 'idCatTipoTransporte' es obligatorio.");
+            }
+            CatTipoTransporte catTipoTransporte = catTipoTransporteRepository.findById(idCatTipoTransporte)
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Tipo de transporte no encontrado con el ID: " + idCatTipoTransporte));
+            transporte.setCatTipoTransporte(catTipoTransporte);
+
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
@@ -92,11 +111,11 @@ public class TransporteServiceJPA implements ITransporteService{
         return transporte;
     }
 
-    //ESTE METODO SE OCUPA CUANDO YA TENEMOS LA INSTANCIA QUE QUEREMOS ACTUALIZAR
+    // ESTE METODO SE OCUPA CUANDO YA TENEMOS LA INSTANCIA QUE QUEREMOS ACTUALIZAR
     @Override
     public Transporte updateInstance(Transporte transporteInstance) throws Exception {
         Transporte transporteBD = this.findById(transporteInstance.getIdTransporte());
-        
+
         transporteBD.setLlevaVehiculo(transporteInstance.getLlevaVehiculo());
         transporteBD.setMarca(transporteInstance.getMarca());
         transporteBD.setModelo(transporteInstance.getModelo());
@@ -108,7 +127,7 @@ public class TransporteServiceJPA implements ITransporteService{
     @Override
     public void deleteById(Long id) {
         Transporte transporte = this.findById(id);
-        if (transporte!= null){
+        if (transporte != null) {
             transporteRepository.deleteById(id);
         }
     }

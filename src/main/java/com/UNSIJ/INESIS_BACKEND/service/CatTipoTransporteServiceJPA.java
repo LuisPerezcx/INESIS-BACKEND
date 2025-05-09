@@ -8,11 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.UNSIJ.INESIS_BACKEND.model.CatTipoTransporte;
-import com.UNSIJ.INESIS_BACKEND.model.Ejemplo;
-import com.UNSIJ.INESIS_BACKEND.model.Transporte;
 import com.UNSIJ.INESIS_BACKEND.repository.CatTipoTransporteRepository;
-import com.UNSIJ.INESIS_BACKEND.repository.EjemploRepository;
-import com.UNSIJ.INESIS_BACKEND.repository.TransporteRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatTipoTransporteService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 
@@ -71,6 +67,7 @@ public class CatTipoTransporteServiceJPA implements ICatTipoTransporteService {
     public CatTipoTransporte build(Map<String, Object> params, CatTipoTransporte catTipoTransporte){
         try {
             String  nombreTipo = JsonUtils.obtString(params, "nombreTipo");
+            catTipoTransporte.setNombreTipo(nombreTipo);
 
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
