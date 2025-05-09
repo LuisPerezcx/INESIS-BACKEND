@@ -77,8 +77,8 @@ public class GastosIngresosJPA implements IGastosIngresosService {
                 throw new IllegalArgumentException("El campo depende economicamente es obligatorio");
             gastosIngresos.setDependeEconomicamente(dependeEconomicamente);
 
-            String nombreQuienDepende = JsonUtils.obtString(params, "nombreQuienDepende");
-            gastosIngresos.setNombreQuienDependes(nombreQuienDepende);
+            String nombreQuienDependes = JsonUtils.obtString(params, "nombreQuienDependes");
+            gastosIngresos.setNombreQuienDependes(nombreQuienDependes);
 
             String trabajoTipo = JsonUtils.obtString(params, "trabajoTipo");
             gastosIngresos.setTrabajoTipo(trabajoTipo);
@@ -102,7 +102,7 @@ public class GastosIngresosJPA implements IGastosIngresosService {
                 String nombreTrabajo = JsonUtils.obtString(trabajoMap, "nombreTrabajo");
                 trabajo.setNombreTrabajo(nombreTrabajo);
                 
-                Integer telefonoTrabajo = JsonUtils.obtInteger(trabajoMap,"telefonoTrabajo");
+                Long telefonoTrabajo = JsonUtils.obtLong(trabajoMap,"telefonoTrabajo");
                 trabajo.setTelefonoTrabajo(telefonoTrabajo);
 
                 Double ingresoMensual = JsonUtils.obtDouble(trabajoMap, "ingresoMensual");

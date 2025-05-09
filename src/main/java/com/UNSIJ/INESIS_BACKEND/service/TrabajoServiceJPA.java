@@ -67,22 +67,16 @@ public class TrabajoServiceJPA implements ITrabajoService {
     public Trabajo build(Map<String, Object> params, Trabajo trabajo){
         try {
             String nombreTrabajo = JsonUtils.obtString(params,"nombreTrabajo");
-            if(nombreTrabajo == null) throw new IllegalArgumentException("El campo nombreTrabajo es obligatorio");
             trabajo.setNombreTrabajo(nombreTrabajo);
 
-            Integer telefonoTrabajo = JsonUtils.obtInteger(params,"telefonoTrabajo");
-            if(telefonoTrabajo == null) throw new IllegalArgumentException("El campo telefonoTrabajo es obligatorio");
+            Long telefonoTrabajo = JsonUtils.obtLong(params,"telefonoTrabajo");
             trabajo.setTelefonoTrabajo(telefonoTrabajo);
 
             Double ingresoMensual = JsonUtils.obtDouble(params,"ingresoMensual");
-            if(ingresoMensual == null) throw new IllegalArgumentException("El campo ingresoMensual es obligatorio");
             trabajo.setIngresoMensual(ingresoMensual);
 
             String domicilioTrabajo = JsonUtils.obtString(params,"domicilioTrabajo");
-            if(domicilioTrabajo == null) throw new IllegalArgumentException("El campo domicilio es obligatorio");
             trabajo.setDomicilioTrabajo(domicilioTrabajo);
-            
-
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
