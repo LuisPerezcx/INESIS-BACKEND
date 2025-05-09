@@ -18,6 +18,9 @@ public class GastosIngresosJPA implements IGastosIngresosService {
     @Autowired
     private GastosIngresosRepository gastosIngresosRepository;
 
+    @Autowired
+    private TrabajoServiceJPA trabajoServiceJPA;
+
     @Override
     public List<GastosIngresos> findAll() {
         return gastosIngresosRepository.findAll();
@@ -97,20 +100,7 @@ public class GastosIngresosJPA implements IGastosIngresosService {
 
             Map<String, Object> trabajoMap = (Map<String, Object>) params.get("trabajo");
             if (trabajoMap != null) {
-                Trabajo trabajo = new Trabajo();
-
-                String nombreTrabajo = JsonUtils.obtString(trabajoMap, "nombreTrabajo");
-                trabajo.setNombreTrabajo(nombreTrabajo);
-                
-                Long telefonoTrabajo = JsonUtils.obtLong(trabajoMap,"telefonoTrabajo");
-                trabajo.setTelefonoTrabajo(telefonoTrabajo);
-
-                Double ingresoMensual = JsonUtils.obtDouble(trabajoMap, "ingresoMensual");
-                trabajo.setIngresoMensual(ingresoMensual);
-                
-                String domicilioTrabajo = JsonUtils.obtString(trabajoMap, "domicilioTrabajo");
-                trabajo.setDomicilioTrabajo(domicilioTrabajo);
-                
+                Trabajo trabajo = trabajoServiceJPA.create(trabajoMap);
                 gastosIngresos.setTrabajo(trabajo);
             }
         } catch (IllegalArgumentException e) {

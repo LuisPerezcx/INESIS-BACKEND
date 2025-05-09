@@ -69,7 +69,7 @@ public class TrabajoServiceJPA implements ITrabajoService {
             String nombreTrabajo = JsonUtils.obtString(params,"nombreTrabajo");
             trabajo.setNombreTrabajo(nombreTrabajo);
 
-            Long telefonoTrabajo = JsonUtils.obtLong(params,"telefonoTrabajo");
+            String telefonoTrabajo = JsonUtils.obtString(params,"telefonoTrabajo");
             trabajo.setTelefonoTrabajo(telefonoTrabajo);
 
             Double ingresoMensual = JsonUtils.obtDouble(params,"ingresoMensual");
