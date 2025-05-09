@@ -119,16 +119,14 @@ public class CatGrupoServiceJPA implements ICatGrupoService {
         }
     }
 
-    // 📌 Método para obtener el nombre del grupo basado en carrera y semestre
-    public String obtenerNombreGrupo(Long idCarrera, Long idSemestre) {
-        CatCarreraModel carrera = catCarreraRepository.findById(idCarrera)
-                .orElseThrow(() -> new IllegalArgumentException("Carrera no encontrada con ID: " + idCarrera));
-        CatSemestreModel semestre = catSemestreRepository.findById(idSemestre)
-                .orElseThrow(() -> new IllegalArgumentException("Semestre no encontrado con ID: " + idSemestre));
+   @Override
+public CatGrupoModel obtenerNombreGrupo(Long idCarrera, Long idSemestre) {
+    CatGrupoModel grupo = catGrupoRepository.findByCatCarreraModel_IdAndCatSemestreModel_Id(idCarrera, idSemestre);
 
-      
-       
-        // Concatenar el semestre y el código de la carrera
-        return ""; // Ejemplo: "803"
+    if (grupo != null) {
+        return grupo; 
+    } else {
+        throw new IllegalArgumentException("No existe un grupo con esa carrera y semestre.");
     }
+}
 }

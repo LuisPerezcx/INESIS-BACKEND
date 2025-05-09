@@ -25,7 +25,7 @@ public class AlumnoModel {
     private String apellido;
 
     @NotNull
-    @Column(name = "curp")
+    @Column(name = "curp", unique = true) 
     private String curp;
 
     @NotNull
@@ -55,8 +55,9 @@ public class AlumnoModel {
     @NotNull
     private CatSexoModel sexo;
 
-    @Column(name = "grupo")
-    private String grupo;
+    @ManyToOne
+    @JoinColumn(name = "id_cat_grupo")
+    private CatGrupoModel grupo;
 
     @OneToOne
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")

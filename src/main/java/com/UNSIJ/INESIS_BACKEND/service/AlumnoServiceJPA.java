@@ -1,13 +1,19 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
 import com.UNSIJ.INESIS_BACKEND.model.AlumnoModel;
+import com.UNSIJ.INESIS_BACKEND.model.UsuarioModel;
 import com.UNSIJ.INESIS_BACKEND.repository.AlumnoRepository;
+import com.UNSIJ.INESIS_BACKEND.repository.CatCarreraRepository;
+import com.UNSIJ.INESIS_BACKEND.repository.CatRolRepository;
+import com.UNSIJ.INESIS_BACKEND.repository.CatSemestreRepository;
+import com.UNSIJ.INESIS_BACKEND.repository.CatSexoRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IAlumnoService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,6 +23,24 @@ public class AlumnoServiceJPA implements IAlumnoService {
     @Autowired
     private AlumnoRepository alumnoRepository;
 
+    @Autowired
+    private CatCarreraServiceJPA carreraServiceJPA;
+
+    @Autowired
+    private CatSemestreServiceJPA semestreServiceJPA;
+
+    @Autowired
+    private CatSexoServiceJPA sexoServiceJPA;
+
+    @Autowired
+    private CatRolServiceJPA rolServiceJPA;
+
+    @Autowired
+    private CatGrupoServiceJPA grupoServiceJPA;
+
+    @Autowired
+    private UsuarioServiceJPA usuarioServiceJPA;
+
     @Override
     public List<AlumnoModel> findAll() {
         return alumnoRepository.findAll();
@@ -24,8 +48,8 @@ public class AlumnoServiceJPA implements IAlumnoService {
 
     @Override
     public AlumnoModel findById(Long id) {
-        return alumnoRepository.findById(id).orElseThrow(() ->
-                new IllegalArgumentException("Alumno no encontrado con el ID: " + id));
+        return alumnoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Alumno no encontrado con el ID: " + id));
     }
 
     @Override
@@ -35,6 +59,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
     }
 
     @Override
+    @Transactional
     public AlumnoModel create(Map<String, Object> params) throws Exception {
         AlumnoModel alumnoModel = new AlumnoModel();
         try {
@@ -61,16 +86,53 @@ public class AlumnoServiceJPA implements IAlumnoService {
         return this.save(alumnoModel);
     }
 
+    @Transactional
     @Override
     public AlumnoModel build(Map<String, Object> params, AlumnoModel alumnoModel) {
         try {
-            // Aquí validamos y asignamos los campos que necesitamos del JSON
-            String nombre = JsonUtils.obtString(params, "nombre");
-            if (nombre == null) throw new IllegalArgumentException("El campo nombre es obligatorio");
-            alumnoModel.setNombre(nombre);
-            //crear usuarios
+            // Asignar campos del alumno
+            alumnoModel.setNombre(JsonUtils.obtString(params, "nombre"));
+            alumnoModel.setApellido(JsonUtils.obtString(params, "apellido"));
+            alumnoModel.setCurp(JsonUtils.obtString(params, "curp"));
+            alumnoModel.setCorreo(JsonUtils.obtString(params, "correo"));
+            alumnoModel.setTelefono(JsonUtils.obtString(params, "telefono"));
+            alumnoModel.setMatricula(JsonUtils.obtString(params, "matricula"));
 
-            // Otros campos pueden ser agregados según la estructura del modelo
+            Long idGrupo = JsonUtils.obtLong(params, "grupo");
+            alumnoModel.setGrupo(grupoServiceJPA.findById(idGrupo));
+
+            Long idCarrera = JsonUtils.obtLong(params, "carrera");
+            alumnoModel.setCarrera(carreraServiceJPA.findById(idCarrera));
+
+            Long idSemestre = JsonUtils.obtLong(params, "semestre");
+            alumnoModel.setSemestre(semestreServiceJPA.findById(idSemestre));
+
+            Long idSexo = JsonUtils.obtLong(params, "sexo");
+            alumnoModel.setSexo(sexoServiceJPA.findById(idSexo));
+
+            alumnoModel = save(alumnoModel);
+
+            Map<String, Object> usuarioParams = new HashMap<>();
+            usuarioParams.put("usuario", JsonUtils.obtString(params, "usuario"));
+            usuarioParams.put("contrasenia", JsonUtils.obtString(params, "contrasenia"));
+            usuarioParams.put("estatus", params.getOrDefault("estatus", "Activo"));
+
+            Long idRol = params.get("idCatRol") != null ? Long.parseLong(params.get("idCatRol").toString()) : 1L;
+            Map<String, Object> rolMap = new HashMap<>();
+            rolMap.put("idCatRol", idRol);
+            usuarioParams.put("rol", rolMap);
+
+            Map<String, Object> alumnoMap = new HashMap<>();
+            alumnoMap.put("idAlumno", alumnoModel.getIdAlumno());
+            usuarioParams.put("alumno", alumnoMap);
+
+            usuarioParams.put("alumno", alumnoMap);
+
+            usuarioServiceJPA.create(usuarioParams);
+            // Relación bidireccional
+            usuario.setAlumno(alumnoModel);
+            alumnoModel.setUsuario(usuario);
+
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {

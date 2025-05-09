@@ -63,6 +63,7 @@ public class UsuarioServiceJPA implements IUsuarioService {
     }
 
     @Override
+    @Transactional
     public UsuarioModel build(Map<String, Object> params, UsuarioModel usuarioModel) {
         try {
             String usuario = JsonUtils.obtString(params, "usuario");
@@ -102,4 +103,5 @@ public class UsuarioServiceJPA implements IUsuarioService {
             usuarioRepository.deleteById(id);
         }
     }
+
 }
