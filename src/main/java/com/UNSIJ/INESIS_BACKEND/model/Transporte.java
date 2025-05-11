@@ -20,17 +20,22 @@ public class Transporte {
 
     @NotNull
     private String llevaVehiculo;
-    
+
     @NotNull
     private String marca;
-    
+
     @NotNull
     private String modelo;
-    
+
     @NotNull
     private Integer anio;
 
     @ManyToOne
     @JoinColumn(name = "id_cat_tipo_transporte")
-    private CatTipoTransporte catTipoTransporte; 
+    private CatTipoTransporte catTipoTransporte;
+
+    @ManyToOne
+    @JoinColumn(name = "id_mis_datos", nullable = false)
+    private MisDatos misDatos;
+
 }

@@ -19,13 +19,21 @@ public class MisDatos {
     @Column(name = "nombre_completo")
     private String nombreCompleto;
 
-    @NotNull
-    @Column(name = "carrera")
-    private String carrera;
+    @ManyToOne
+    @JoinColumn(name = "id_cat_carrera", nullable = false)
+    private CatCarreraModel carrera;
 
-    @NotNull
-    @Column(name = "semestre")
-    private String semestre;
+    @ManyToOne
+    @JoinColumn(name = "id_cat_semestre", nullable = false)
+    private CatSemestreModel semestre;
+
+    @ManyToOne
+    @JoinColumn(name = "id_cat_sexo")
+    private CatSexoModel sexo;
+
+    @ManyToOne
+    @JoinColumn(name = "id_cat_estado_civil")
+    private CatEstadoCivil estadoCivil;
 
     @NotNull
     @Column(name = "recursos_suficientes")
@@ -47,8 +55,7 @@ public class MisDatos {
     @Column(name = "idioma")
     private String idioma;
 
-    @OneToMany
-    @JoinColumn(name = "idTransporte")
+    @OneToMany(mappedBy = "misDatos", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transporte> transporte;
 
     @OneToMany(mappedBy = "misDatos", cascade = CascadeType.ALL, orphanRemoval = true)

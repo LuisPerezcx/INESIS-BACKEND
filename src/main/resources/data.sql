@@ -90,9 +90,17 @@ INSERT INTO cat_sexo (nombre_sexo)
 SELECT 'Femenino'
 WHERE NOT EXISTS (SELECT 1 FROM cat_sexo WHERE nombre_sexo = 'Femenino');
 
-INSERT INTO cat_sexo (nombre_sexo)
-SELECT 'Otro'
-WHERE NOT EXISTS (SELECT 1 FROM cat_sexo WHERE nombre_sexo = 'Otro');
+
+#------------------- REGISTROS DE ESTADO CIVIL -------------------
+SELECT 1;
+
+INSERT INTO cat_estado_civil (nombre_estado_civil)
+SELECT 'Soltero'
+WHERE NOT EXISTS (SELECT 1 FROM cat_estado_civil WHERE nombre_estado_civil = 'Soltero');
+
+INSERT INTO cat_estado_civil (nombre_estado_civil)
+SELECT 'Casado'
+WHERE NOT EXISTS (SELECT 1 FROM cat_estado_civil WHERE nombre_estado_civil = 'Casado');
 
 #------------------- REGISTROS DE CATMEDIOSTRANSPORTE -------------------
 -- Inicio registros
