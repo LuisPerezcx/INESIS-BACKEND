@@ -102,6 +102,22 @@ INSERT INTO cat_estado_civil (nombre_estado_civil)
 SELECT 'Casado'
 WHERE NOT EXISTS (SELECT 1 FROM cat_estado_civil WHERE nombre_estado_civil = 'Casado');
 
+#-------------------- REGISTROS DE CATTIPOTRANSPORTE
+SELECT 1;
+
+INSERT INTO cat_tipo_transporte (nombre_tipo)
+SELECT 'Particular'
+WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_transporte WHERE nombre_tipo = 'Particular'); 
+
+INSERT INTO cat_tipo_transporte (nombre_tipo)
+SELECT 'Público'
+WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_transporte WHERE nombre_tipo = 'Público');
+
+INSERT INTO cat_tipo_transporte (nombre_tipo)       
+SELECT 'Privado'
+WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_transporte WHERE nombre_tipo = 'Privado');
+
+
 #------------------- REGISTROS DE CATMEDIOSTRANSPORTE -------------------
 -- Inicio registros
 SELECT 1;

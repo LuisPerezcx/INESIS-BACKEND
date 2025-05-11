@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.UNSIJ.INESIS_BACKEND.model.GastosIngresos;
 import com.UNSIJ.INESIS_BACKEND.model.MisDatos;
 import com.UNSIJ.INESIS_BACKEND.repository.CatCarreraRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.CatEstadoCivilRepository;
@@ -32,6 +33,9 @@ public class MisDatosServiceJPA implements IMisDatosService {
 
     @Autowired
     private CatEstadoCivilRepository catEstadoCivilRepository;
+
+    @Autowired
+    private GastosIngresosJPA gastosIngresosJPA;
 
     @Override
     public List<MisDatos> findAll() {
@@ -171,6 +175,12 @@ public class MisDatosServiceJPA implements IMisDatosService {
             if (tieneComputadora == null)
                 throw new IllegalArgumentException("El campo tiene computadora es obligatorio");
             misDatos.setTieneComputadora(tieneComputadora);
+
+            Map<String, Object> gastosIngresosParams = (Map<String, Object>) params.get("gastosIngresos");
+            if(gastosIngresosParams != null) {
+                GastosIngresos gastosIngresos = gastosIngresosJPA.create(gastosIngresosParams);
+                misDatos.setGastosIngresos(gastosIngresos);
+            }   
 
             String idioma = JsonUtils.obtString(params, "idioma");
             if (idioma == null)

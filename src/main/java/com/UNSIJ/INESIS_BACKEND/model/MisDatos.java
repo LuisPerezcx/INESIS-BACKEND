@@ -55,6 +55,10 @@ public class MisDatos {
     @Column(name = "idioma")
     private String idioma;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_gastos_ingresos")
+    private GastosIngresos gastosIngresos;
+
     @OneToMany(mappedBy = "misDatos", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Transporte> transporte;
 

@@ -38,4 +38,7 @@ public class GastosIngresos {
     @JoinColumn(name = "id_trabajo")
     private Trabajo trabajo;
 
+    @OneToOne(mappedBy = "gastosIngresos")
+    private MisDatos misDatos;
+
 }
