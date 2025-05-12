@@ -1,4 +1,4 @@
-package com.UNSIJ.INESIS_BACKEND.model;
+package com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,13 +10,14 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "cat_escolaridad")
-public class CatEscolaridadModel {
-     @Id
+@Table(name = "cat_situacion_vivienda")
+public class CatSituacionViviendaModel {
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_cat_escolaridad")
+    @Column(name = "id_cat_situacion_vivienda")
     private Long id;
 
-    @Column(name = "nombre_escolaridad")
-    private String nombreEscolaridad;
+    @Column(name = "nombre_situacion")
+    private String nombreSituacion;
+    
 }
