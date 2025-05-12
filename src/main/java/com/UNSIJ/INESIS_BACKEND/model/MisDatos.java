@@ -20,7 +20,7 @@ public class MisDatos {
     private String nombreCompleto;
 
     @ManyToOne
-    @JoinColumn(name = "id_cat_carrera", nullable = false)
+    @JoinColumn(name = "id_cat_carrera", nullable = true) // NO NULO
     private CatCarreraModel carrera;
 
     @ManyToOne
@@ -59,8 +59,9 @@ public class MisDatos {
     @JoinColumn(name = "id_gastos_ingresos")
     private GastosIngresos gastosIngresos;
 
-    @OneToMany(mappedBy = "misDatos", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Transporte> transporte;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_transporte")
+    private Transporte transporte;
 
     @OneToMany(mappedBy = "misDatos", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MedioTraslado> mediosTraslado;

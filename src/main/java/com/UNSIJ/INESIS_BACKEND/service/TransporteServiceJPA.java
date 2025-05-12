@@ -48,7 +48,7 @@ public class TransporteServiceJPA implements ITransporteService {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
-            throw new IllegalArgumentException("Error al construir el ejemplo");
+            throw new IllegalArgumentException("Error al construir el trnasporte (create)");
         }
         return this.save(transporte);
     }
@@ -63,7 +63,7 @@ public class TransporteServiceJPA implements ITransporteService {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
-            throw new IllegalArgumentException("Error al construir el transporte");
+            throw new IllegalArgumentException("Error al construir el transporte (update)");
         }
         return this.save(transporte);
     }
@@ -106,7 +106,7 @@ public class TransporteServiceJPA implements ITransporteService {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
-            throw new IllegalArgumentException("Error al construir el ejemplo");
+            throw new IllegalArgumentException("Error al construir el transporte (build)");
         }
         return transporte;
     }

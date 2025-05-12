@@ -1,11 +1,13 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -16,6 +18,7 @@ import lombok.Data;
 public class Transporte {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_transporte")
     private Long idTransporte;
 
     @NotNull
@@ -34,8 +37,7 @@ public class Transporte {
     @JoinColumn(name = "id_cat_tipo_transporte")
     private CatTipoTransporte catTipoTransporte;
 
-    @ManyToOne
-    @JoinColumn(name = "id_mis_datos", nullable = false)
+    @OneToOne(mappedBy = "transporte")
     private MisDatos misDatos;
 
 }

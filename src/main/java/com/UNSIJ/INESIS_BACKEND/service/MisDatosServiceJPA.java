@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.UNSIJ.INESIS_BACKEND.model.GastosIngresos;
 import com.UNSIJ.INESIS_BACKEND.model.MisDatos;
+import com.UNSIJ.INESIS_BACKEND.model.Transporte;
 import com.UNSIJ.INESIS_BACKEND.repository.CatCarreraRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.CatEstadoCivilRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.CatSemestreRepository;
@@ -36,6 +37,9 @@ public class MisDatosServiceJPA implements IMisDatosService {
 
     @Autowired
     private GastosIngresosJPA gastosIngresosJPA;
+
+    @Autowired
+    private TransporteServiceJPA transporteServiceJPA;
 
     @Override
     public List<MisDatos> findAll() {
@@ -68,7 +72,7 @@ public class MisDatosServiceJPA implements IMisDatosService {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
-            throw new IllegalArgumentException("Error al construir misDatos");
+            throw new IllegalArgumentException("Error al construir misDatos (create)");
         }
         return this.save(misDatos);
     }
@@ -81,7 +85,7 @@ public class MisDatosServiceJPA implements IMisDatosService {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
-            throw new IllegalArgumentException("Error al construir a misDatos");
+            throw new IllegalArgumentException("Error al construir a misDatos (update)");
         }
         return this.save(misDatos);
     }
@@ -94,26 +98,26 @@ public class MisDatosServiceJPA implements IMisDatosService {
                 throw new IllegalArgumentException("El campo nombre Completo es obligatorio");
             misDatos.setNombreCompleto(nombreCompleto);
 
-            Long idCarrera = JsonUtils.obtLong(params, "idCarrera");
-            if (idCarrera == null)
-                throw new IllegalArgumentException("El campo idCarrera es obligatorio");
-            misDatos.setCarrera(catCarreraRepository.findById(idCarrera)
-                    .orElseThrow(() -> new IllegalArgumentException("No se encontró la carrera con ID: " + idCarrera)));
+            // Long idCarrera = JsonUtils.obtLong(params, "carrera");
+            // if (idCarrera == null)
+            //     throw new IllegalArgumentException("El campo idCarrera es obligatorio");
+            // misDatos.setCarrera(catCarreraRepository.findById(idCarrera)
+            //         .orElseThrow(() -> new IllegalArgumentException("No se encontró la carrera con ID: " + idCarrera)));
 
-            Long idSemestre = JsonUtils.obtLong(params, "idSemestre");
+            Long idSemestre = JsonUtils.obtLong(params, "semestre");
             if (idSemestre == null)
                 throw new IllegalArgumentException("El campo idSemestre es obligatorio");
             misDatos.setSemestre(catSemestreRepository.findById(idSemestre)
                     .orElseThrow(
                             () -> new IllegalArgumentException("No se encontró el semestre con ID: " + idSemestre)));
 
-            Long idSexo = JsonUtils.obtLong(params, "idSexo");
+            Long idSexo = JsonUtils.obtLong(params, "sexo");
             if (idSexo == null)
                 throw new IllegalArgumentException("El campo idSexo es obligatorio");
             misDatos.setSexo(catSexoRepository.findById(idSexo)
                     .orElseThrow(() -> new IllegalArgumentException("No se encontró el sexo con ID: " + idSexo)));
 
-            Long idEstadoCivil = JsonUtils.obtLong(params, "idEstadoCivil");
+            Long idEstadoCivil = JsonUtils.obtLong(params, "estadoCivil");
             if (idEstadoCivil == null)
                 throw new IllegalArgumentException("El campo idEstadoCivil es obligatorio");
             misDatos.setEstadoCivil(catEstadoCivilRepository.findById(idEstadoCivil)
@@ -180,7 +184,14 @@ public class MisDatosServiceJPA implements IMisDatosService {
             if(gastosIngresosParams != null) {
                 GastosIngresos gastosIngresos = gastosIngresosJPA.create(gastosIngresosParams);
                 misDatos.setGastosIngresos(gastosIngresos);
-            }   
+            } 
+            
+            Map<String, Object> transporteParams = (Map<String, Object>) params.get("transporte");
+            if (transporteParams != null) {
+                Transporte transporte = transporteServiceJPA.create(transporteParams);
+                transporte.setMisDatos(misDatos);
+                misDatos.setTransporte(transporte);
+            }
 
             String idioma = JsonUtils.obtString(params, "idioma");
             if (idioma == null)
@@ -190,7 +201,7 @@ public class MisDatosServiceJPA implements IMisDatosService {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
-            throw new IllegalArgumentException("Error al construir el ejemplo");
+            throw new IllegalArgumentException("Error al construir el transporte (build)");
         }
         return misDatos;
     }
