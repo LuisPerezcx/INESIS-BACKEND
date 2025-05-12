@@ -1,5 +1,6 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -7,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.UNSIJ.INESIS_BACKEND.model.CatMediosTransporte;
 import com.UNSIJ.INESIS_BACKEND.model.GastosIngresos;
+import com.UNSIJ.INESIS_BACKEND.model.MedioTraslado;
 import com.UNSIJ.INESIS_BACKEND.model.MisDatos;
 import com.UNSIJ.INESIS_BACKEND.model.Transporte;
 import com.UNSIJ.INESIS_BACKEND.repository.CatCarreraRepository;
@@ -40,6 +43,9 @@ public class MisDatosServiceJPA implements IMisDatosService {
 
     @Autowired
     private TransporteServiceJPA transporteServiceJPA;
+
+    @Autowired
+    private CatMediosTransporteService catMediosTransporteService;
 
     @Override
     public List<MisDatos> findAll() {
@@ -100,9 +106,10 @@ public class MisDatosServiceJPA implements IMisDatosService {
 
             // Long idCarrera = JsonUtils.obtLong(params, "carrera");
             // if (idCarrera == null)
-            //     throw new IllegalArgumentException("El campo idCarrera es obligatorio");
+            // throw new IllegalArgumentException("El campo idCarrera es obligatorio");
             // misDatos.setCarrera(catCarreraRepository.findById(idCarrera)
-            //         .orElseThrow(() -> new IllegalArgumentException("No se encontró la carrera con ID: " + idCarrera)));
+            // .orElseThrow(() -> new IllegalArgumentException("No se encontró la carrera
+            // con ID: " + idCarrera)));
 
             Long idSemestre = JsonUtils.obtLong(params, "semestre");
             if (idSemestre == null)
@@ -124,7 +131,7 @@ public class MisDatosServiceJPA implements IMisDatosService {
                     .orElseThrow(() -> new IllegalArgumentException(
                             "No se encontró el estado civil con ID: " + idEstadoCivil)));
 
-            String recursosSuficientesString = JsonUtils.obtString(params, "recursosSuficientes"); 
+            String recursosSuficientesString = JsonUtils.obtString(params, "recursosSuficientes");
             Boolean recursosSuficientes = null;
             if ("Si".equalsIgnoreCase(recursosSuficientesString)) {
                 recursosSuficientes = true;
@@ -144,7 +151,7 @@ public class MisDatosServiceJPA implements IMisDatosService {
             } else if ("No".equalsIgnoreCase(familiarComuneroString)) {
                 familiarComunero = false;
             } else if (familiarComuneroString != null) {
-                throw new IllegalArgumentException("El valor de 'familiarComunero' debe ser 'Si' o 'No'.");   
+                throw new IllegalArgumentException("El valor de 'familiarComunero' debe ser 'Si' o 'No'.");
             }
             if (familiarComunero == null)
                 throw new IllegalArgumentException("El campo familiar comunero es obligatorio");
@@ -181,16 +188,31 @@ public class MisDatosServiceJPA implements IMisDatosService {
             misDatos.setTieneComputadora(tieneComputadora);
 
             Map<String, Object> gastosIngresosParams = (Map<String, Object>) params.get("gastosIngresos");
-            if(gastosIngresosParams != null) {
+            if (gastosIngresosParams != null) {
                 GastosIngresos gastosIngresos = gastosIngresosJPA.create(gastosIngresosParams);
                 misDatos.setGastosIngresos(gastosIngresos);
-            } 
-            
+            }
+
             Map<String, Object> transporteParams = (Map<String, Object>) params.get("transporte");
             if (transporteParams != null) {
                 Transporte transporte = transporteServiceJPA.create(transporteParams);
                 transporte.setMisDatos(misDatos);
                 misDatos.setTransporte(transporte);
+            }
+
+            List<Map<String, Object>> mediosTrasladoParams = (List<Map<String, Object>>) params.get("mediosTraslado");
+            List<MedioTraslado> mediosTraslado = new ArrayList<>();
+            for (Map<String, Object> item : mediosTrasladoParams) {
+                Map<String, Object> catTransporteMap = (Map<String, Object>) item.get("catMediosTransporte");
+
+                Long idCatMedio = Long.valueOf(catTransporteMap.get("id").toString());
+
+                MedioTraslado medio = new MedioTraslado();
+                medio.setCatMediosTransporte(catMediosTransporteService.findById(idCatMedio));
+                medio.setMisDatos(misDatos); // Relación bidireccional
+                mediosTraslado.add(medio);
+                misDatos.setMediosTraslado(mediosTraslado);
+
             }
 
             String idioma = JsonUtils.obtString(params, "idioma");
