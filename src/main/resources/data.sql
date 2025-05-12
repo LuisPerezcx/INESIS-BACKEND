@@ -487,3 +487,4 @@ SELECT 'Microbús'
 WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Microbús');
 
 
+

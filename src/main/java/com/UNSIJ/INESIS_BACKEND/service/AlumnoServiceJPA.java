@@ -123,13 +123,12 @@ public class AlumnoServiceJPA implements IAlumnoService {
             usuarioParams.put("rol", rolMap);
 
             Map<String, Object> alumnoMap = new HashMap<>();
-            alumnoMap.put("idAlumno", alumnoModel.getIdAlumno());
+            alumnoMap.put("idAlumno", alumnoModel.getId());
             usuarioParams.put("alumno", alumnoMap);
 
-            usuarioParams.put("alumno", alumnoMap);
+            UsuarioModel usuario = usuarioServiceJPA.create(usuarioParams);
 
-            usuarioServiceJPA.create(usuarioParams);
-            // Relación bidireccional
+            // Relación bidireccional explícita
             usuario.setAlumno(alumnoModel);
             alumnoModel.setUsuario(usuario);
 
@@ -148,5 +147,11 @@ public class AlumnoServiceJPA implements IAlumnoService {
         if (alumnoModel != null) {
             alumnoRepository.deleteById(id);
         }
+    }
+
+     public boolean checkIfExists(String curp, String matricula, String correo) {
+        return alumnoRepository.existsByCurp(curp) || 
+               alumnoRepository.existsByMatricula(matricula) || 
+               alumnoRepository.existsByCorreo(correo);
     }
 }

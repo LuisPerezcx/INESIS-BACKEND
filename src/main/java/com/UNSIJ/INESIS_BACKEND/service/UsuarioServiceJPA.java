@@ -14,9 +14,12 @@ import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 
 @Service
 public class UsuarioServiceJPA implements IUsuarioService {
-    
+
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private CatRolServiceJPA rolServiceJPA;
 
     @Override
     public List<UsuarioModel> findAll() {
@@ -25,8 +28,8 @@ public class UsuarioServiceJPA implements IUsuarioService {
 
     @Override
     public UsuarioModel findById(Long id) {
-        return usuarioRepository.findById(id).orElseThrow(() -> 
-                new IllegalArgumentException("Usuario no encontrado con el ID: " + id));
+        return usuarioRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con el ID: " + id));
     }
 
     @Override
@@ -67,16 +70,27 @@ public class UsuarioServiceJPA implements IUsuarioService {
     public UsuarioModel build(Map<String, Object> params, UsuarioModel usuarioModel) {
         try {
             String usuario = JsonUtils.obtString(params, "usuario");
-            if (usuario == null) throw new IllegalArgumentException("El campo usuario es obligatorio");
+            if (usuario == null)
+                throw new IllegalArgumentException("El campo usuario es obligatorio");
             usuarioModel.setUsuario(usuario);
 
             String contrasenia = JsonUtils.obtString(params, "contrasenia");
-            if (contrasenia == null) throw new IllegalArgumentException("El campo contraseña es obligatorio");
+            if (contrasenia == null)
+                throw new IllegalArgumentException("El campo contraseña es obligatorio");
             usuarioModel.setContrasenia(contrasenia);
 
             String estatus = JsonUtils.obtString(params, "estatus");
-            if (estatus == null) throw new IllegalArgumentException("El campo estatus es obligatorio");
+            if (estatus == null)
+                throw new IllegalArgumentException("El campo estatus es obligatorio");
             usuarioModel.setEstatus(estatus);
+
+            Map<String, Object> rolMap = (Map<String, Object>) params.get("rol");
+            if (rolMap == null || rolMap.get("idCatRol") == null) {
+                throw new IllegalArgumentException("El campo rol.idCatRol es obligatorio");
+            }
+
+            Long idRol = Long.parseLong(rolMap.get("idCatRol").toString());
+            usuarioModel.setRol(rolServiceJPA.findById(idRol));
 
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());

@@ -1,5 +1,7 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -25,7 +27,7 @@ public class AlumnoModel {
     private String apellido;
 
     @NotNull
-    @Column(name = "curp", unique = true) 
+    @Column(name = "curp", unique = true)
     private String curp;
 
     @NotNull
@@ -61,5 +63,7 @@ public class AlumnoModel {
 
     @OneToOne
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
+    @JsonBackReference
     private UsuarioModel usuario;
+
 }

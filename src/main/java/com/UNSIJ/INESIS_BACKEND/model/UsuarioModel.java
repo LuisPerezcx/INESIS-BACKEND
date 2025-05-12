@@ -1,5 +1,7 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -35,5 +37,6 @@ public class UsuarioModel {
     private CatRolModel rol;
 
     @OneToOne(mappedBy = "usuario")
+    @JsonManagedReference
     private AlumnoModel alumno;
 }

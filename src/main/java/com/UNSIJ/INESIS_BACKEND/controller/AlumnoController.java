@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +16,7 @@ import java.util.Map;
 public class AlumnoController {
 
     @Autowired
-    private AlumnoServiceJPA alumnoServiceJPA; 
+    private AlumnoServiceJPA alumnoServiceJPA;
 
     @GetMapping
     public List<AlumnoModel> list() {
@@ -70,5 +71,18 @@ public class AlumnoController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
+    }
+
+    @GetMapping("/checkExists")
+    public ResponseEntity<Map<String, Boolean>> checkIfExists(
+            @RequestParam String curp,
+            @RequestParam String matricula,
+            @RequestParam String correo) {
+
+        boolean exists = alumnoServiceJPA.checkIfExists(curp, matricula, correo);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("exists", exists);
+
+        return ResponseEntity.ok(response);
     }
 }
