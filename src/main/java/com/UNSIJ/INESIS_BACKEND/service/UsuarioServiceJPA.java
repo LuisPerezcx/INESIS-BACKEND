@@ -118,4 +118,11 @@ public class UsuarioServiceJPA implements IUsuarioService {
         }
     }
 
+    @Override
+    public UsuarioModel findByAlumnoId(Long idAlumno) {
+        return usuarioRepository.findByAlumnoId(idAlumno)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "No se encontró un usuario para el alumno con ID: " + idAlumno));
+    }
+
 }

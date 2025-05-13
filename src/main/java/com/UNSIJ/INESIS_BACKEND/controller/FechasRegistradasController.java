@@ -1,7 +1,7 @@
 package com.UNSIJ.INESIS_BACKEND.controller;
 
-import com.UNSIJ.INESIS_BACKEND.model.UsuarioModel;
-import com.UNSIJ.INESIS_BACKEND.service.UsuarioServiceJPA;
+import com.UNSIJ.INESIS_BACKEND.model.FechasRegistradasModel;
+import com.UNSIJ.INESIS_BACKEND.service.FechasRegistradasServiceJPA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,22 +11,22 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/usuario")
-public class UsuarioController {
+@RequestMapping("/fechas-registradas") 
+public class FechasRegistradasController {
 
     @Autowired
-    private UsuarioServiceJPA usuarioServiceJPA;
+    private FechasRegistradasServiceJPA fechasRegistradasServiceJPA; 
 
     @GetMapping
-    public List<UsuarioModel> list() {
-        return usuarioServiceJPA.findAll();
+    public List<FechasRegistradasModel> list() {
+        return fechasRegistradasServiceJPA.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id) {
         try {
-            UsuarioModel usuario = usuarioServiceJPA.findById(id);
-            return ResponseEntity.ok(usuario);
+            FechasRegistradasModel fechasRegistradas = fechasRegistradasServiceJPA.findById(id);
+            return ResponseEntity.ok(fechasRegistradas);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
@@ -37,8 +37,8 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            UsuarioModel usuario = usuarioServiceJPA.create(params);
-            return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
+            FechasRegistradasModel fechasRegistradas = fechasRegistradasServiceJPA.create(params);
+            return ResponseEntity.status(HttpStatus.CREATED).body(fechasRegistradas);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -49,8 +49,8 @@ public class UsuarioController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            UsuarioModel usuarioUpdated = usuarioServiceJPA.update(usuarioServiceJPA.findById(id), params);
-            return ResponseEntity.status(HttpStatus.CREATED).body(usuarioUpdated);
+            FechasRegistradasModel fechasRegistradasUpdated = fechasRegistradasServiceJPA.update(fechasRegistradasServiceJPA.findById(id), params);
+            return ResponseEntity.status(HttpStatus.CREATED).body(fechasRegistradasUpdated);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
@@ -61,8 +61,8 @@ public class UsuarioController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> remove(@PathVariable Long id) {
         try {
-            usuarioServiceJPA.findById(id); // Lanza la excepción si no se encuentra el registro
-            usuarioServiceJPA.deleteById(id);
+            fechasRegistradasServiceJPA.findById(id); // Para lanzar excepción si no se encuentra el registro
+            fechasRegistradasServiceJPA.deleteById(id);
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -70,16 +70,4 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
     }
-
-    @GetMapping("/byAlumno/{idAlumno}")
-public ResponseEntity<?> obtenerUsuarioPorAlumno(@PathVariable Long idAlumno) {
-    try {
-        UsuarioModel usuario = usuarioServiceJPA.findByAlumnoId(idAlumno);
-        return ResponseEntity.ok(usuario);
-    } catch (IllegalArgumentException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-    }
-}
-
-
 }

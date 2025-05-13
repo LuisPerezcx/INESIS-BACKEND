@@ -14,4 +14,6 @@ public interface IUsuarioService {
     UsuarioModel build(Map<String, Object> params, UsuarioModel usuarioModel) throws IllegalArgumentException;
     UsuarioModel updateInstance(UsuarioModel usuarioModel) throws Exception;
     void deleteById(Long id);
+    UsuarioModel findByAlumnoId(Long idAlumno);
+
 }
