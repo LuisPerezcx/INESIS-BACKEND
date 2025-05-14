@@ -1,33 +1,33 @@
 package com.UNSIJ.INESIS_BACKEND.controller;
 
-import java.util.List;
-import java.util.Map;
-
+import com.UNSIJ.INESIS_BACKEND.model.AlumnoModel;
+import com.UNSIJ.INESIS_BACKEND.service.AlumnoServiceJPA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.UNSIJ.INESIS_BACKEND.model.CatGrupoModel;
-import com.UNSIJ.INESIS_BACKEND.service.CatGrupoServiceJPA;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/grupo")
-public class CatGrupoController {
+@RequestMapping("/alumno")
+public class AlumnoController {
 
     @Autowired
-    private CatGrupoServiceJPA grupoServiceJPA;
+    private AlumnoServiceJPA alumnoServiceJPA;
 
     @GetMapping
-    public List<CatGrupoModel> list() {
-        return grupoServiceJPA.findAll();
+    public List<AlumnoModel> list() {
+        return alumnoServiceJPA.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id) {
         try {
-            CatGrupoModel grupo = grupoServiceJPA.findById(id);
-            return ResponseEntity.ok(grupo);
+            AlumnoModel alumno = alumnoServiceJPA.findById(id);
+            return ResponseEntity.ok(alumno);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
@@ -38,11 +38,12 @@ public class CatGrupoController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            CatGrupoModel grupo = grupoServiceJPA.create(params);
-            return ResponseEntity.status(HttpStatus.CREATED).body(grupo);
+            AlumnoModel alumno = alumnoServiceJPA.create(params);
+            return ResponseEntity.status(HttpStatus.CREATED).body(alumno);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
     }
@@ -50,8 +51,8 @@ public class CatGrupoController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            CatGrupoModel grupoUpdate = grupoServiceJPA.update(grupoServiceJPA.findById(id), params);
-            return ResponseEntity.status(HttpStatus.CREATED).body(grupoUpdate);
+            AlumnoModel alumnoUpdated = alumnoServiceJPA.update(alumnoServiceJPA.findById(id), params);
+            return ResponseEntity.status(HttpStatus.CREATED).body(alumnoUpdated);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
@@ -62,8 +63,8 @@ public class CatGrupoController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> remove(@PathVariable Long id) {
         try {
-            grupoServiceJPA.findById(id); // Lanza excepción si no encuentra el registro
-            grupoServiceJPA.deleteById(id);
+            alumnoServiceJPA.findById(id); // Lanza la excepción si no se encuentra el registro
+            alumnoServiceJPA.deleteById(id);
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -72,14 +73,16 @@ public class CatGrupoController {
         }
     }
 
-    //Endpoint para obtener el grupo basado en carrera y semestre seleccionados
-    @GetMapping("/carrera/{idCarrera}/semestre/{idSemestre}")
-    public ResponseEntity<?> obtenerGrupo(@PathVariable Long idCarrera, @PathVariable Long idSemestre) {
-        try {
-            CatGrupoModel nombreGrupo = grupoServiceJPA.obtenerNombreGrupo(idCarrera, idSemestre);
-            return ResponseEntity.ok(nombreGrupo);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al generar el grupo");
-        }
-    }    
+    @GetMapping("/checkExists")
+    public ResponseEntity<Map<String, Boolean>> checkIfExists(
+            @RequestParam String curp,
+            @RequestParam String matricula,
+            @RequestParam String correo) {
+
+        boolean exists = alumnoServiceJPA.checkIfExists(curp, matricula, correo);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("exists", exists);
+
+        return ResponseEntity.ok(response);
+    }
 }

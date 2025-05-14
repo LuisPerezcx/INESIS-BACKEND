@@ -6,28 +6,35 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import com.UNSIJ.INESIS_BACKEND.model.CatGrupoModel;
-import com.UNSIJ.INESIS_BACKEND.service.CatGrupoServiceJPA;
+import com.UNSIJ.INESIS_BACKEND.model.CatRolModel;
+import com.UNSIJ.INESIS_BACKEND.service.CatRolServiceJPA;
 
 @RestController
-@RequestMapping("/grupo")
-public class CatGrupoController {
+@RequestMapping("/rol")
+public class CatRolController {
 
     @Autowired
-    private CatGrupoServiceJPA grupoServiceJPA;
+    private CatRolServiceJPA rolServiceJPA;
 
     @GetMapping
-    public List<CatGrupoModel> list() {
-        return grupoServiceJPA.findAll();
+    public List<CatRolModel> list() {
+        return rolServiceJPA.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id) {
         try {
-            CatGrupoModel grupo = grupoServiceJPA.findById(id);
-            return ResponseEntity.ok(grupo);
+            CatRolModel catRolModel = rolServiceJPA.findById(id);
+            return ResponseEntity.ok(catRolModel);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
@@ -38,8 +45,8 @@ public class CatGrupoController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            CatGrupoModel grupo = grupoServiceJPA.create(params);
-            return ResponseEntity.status(HttpStatus.CREATED).body(grupo);
+            CatRolModel catRolModel = rolServiceJPA.create(params);
+            return ResponseEntity.status(HttpStatus.CREATED).body(catRolModel);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -50,8 +57,8 @@ public class CatGrupoController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            CatGrupoModel grupoUpdate = grupoServiceJPA.update(grupoServiceJPA.findById(id), params);
-            return ResponseEntity.status(HttpStatus.CREATED).body(grupoUpdate);
+            CatRolModel catRolUpdate = rolServiceJPA.update(rolServiceJPA.findById(id), params);
+            return ResponseEntity.status(HttpStatus.CREATED).body(catRolUpdate);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
@@ -62,8 +69,8 @@ public class CatGrupoController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> remove(@PathVariable Long id) {
         try {
-            grupoServiceJPA.findById(id); // Lanza excepción si no encuentra el registro
-            grupoServiceJPA.deleteById(id);
+            rolServiceJPA.findById(id); // Verificación previa
+            rolServiceJPA.deleteById(id);
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -71,15 +78,4 @@ public class CatGrupoController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
     }
-
-    //Endpoint para obtener el grupo basado en carrera y semestre seleccionados
-    @GetMapping("/carrera/{idCarrera}/semestre/{idSemestre}")
-    public ResponseEntity<?> obtenerGrupo(@PathVariable Long idCarrera, @PathVariable Long idSemestre) {
-        try {
-            CatGrupoModel nombreGrupo = grupoServiceJPA.obtenerNombreGrupo(idCarrera, idSemestre);
-            return ResponseEntity.ok(nombreGrupo);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al generar el grupo");
-        }
-    }    
 }

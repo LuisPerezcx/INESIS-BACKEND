@@ -3,6 +3,7 @@ package com.UNSIJ.INESIS_BACKEND.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -14,7 +15,7 @@ public class CatGrupoModel {
     @Column(name = "id_cat_grupo")
     private Long id;
 
-    @Column(name = "nombre_grupo", unique = true, nullable = false)
+    @Column(name = "nombre_grupo", nullable = false)
     private String nombreGrupo;
 
     @NotNull
@@ -26,4 +27,10 @@ public class CatGrupoModel {
     @ManyToOne
     @JoinColumn(name = "id_cat_semestre", referencedColumnName = "id_cat_semestre")
     private CatSemestreModel catSemestreModel;
+
+    @ManyToOne
+    @JoinColumn(name = "id_alumno", referencedColumnName = "id_alumno")
+    @ToString.Exclude
+    private AlumnoModel alumnoModel;
+
 }
