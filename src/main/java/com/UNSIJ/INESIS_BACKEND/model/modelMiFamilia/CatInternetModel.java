@@ -20,4 +20,16 @@ public class CatInternetModel {
 
     @Column(name = "nombre_internet")
     private String nombreInternet;
+
+    public void setNombreInternet(String nombreInternet) {
+        this.nombreInternet = nombreInternet;
+    }
+
+    public String getNombreInternet() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public Long getId() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
