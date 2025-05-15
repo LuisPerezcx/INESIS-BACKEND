@@ -3,6 +3,7 @@ package com.UNSIJ.INESIS_BACKEND.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import java.util.Date;  
 
 @Data
 @Entity
@@ -20,15 +21,15 @@ public class FechasRegistradasModel {
     private CatCarreraModel carrera;
 
     @NotNull
+    @Temporal(TemporalType.DATE)
     @Column(name = "fecha_inicio")
-    private Long fechaInicio;
+    private Date fechaInicio; 
 
     @NotNull
+    @Temporal(TemporalType.DATE)
     @Column(name = "fecha_fin")
-    private Long fechaFin;
-
+    private Date fechaFin;
     @NotNull
     @Column(name = "status")
     private String status; 
-
 }

@@ -11,11 +11,11 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/fechas-registradas") 
+@RequestMapping("/fechas-registradas")
 public class FechasRegistradasController {
 
     @Autowired
-    private FechasRegistradasServiceJPA fechasRegistradasServiceJPA; 
+    private FechasRegistradasServiceJPA fechasRegistradasServiceJPA;
 
     @GetMapping
     public List<FechasRegistradasModel> list() {
@@ -49,7 +49,8 @@ public class FechasRegistradasController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            FechasRegistradasModel fechasRegistradasUpdated = fechasRegistradasServiceJPA.update(fechasRegistradasServiceJPA.findById(id), params);
+            FechasRegistradasModel fechasRegistradasUpdated = fechasRegistradasServiceJPA
+                    .update(fechasRegistradasServiceJPA.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(fechasRegistradasUpdated);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -70,4 +71,20 @@ public class FechasRegistradasController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
     }
+
+    @GetMapping("/carrera/{idCarrera}")
+public ResponseEntity<?> getByCarrera(@PathVariable Long idCarrera) {
+    try {
+        FechasRegistradasModel fecha = fechasRegistradasServiceJPA.findByCarreraId(idCarrera);
+        return ResponseEntity.ok(fecha);
+    } catch (IllegalArgumentException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    } catch (Exception e) {
+        e.printStackTrace(); 
+        
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al buscar la fecha por carrera.");
+    }
+}
+
+
 }

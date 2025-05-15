@@ -72,49 +72,47 @@ public class FechasRegistradasServiceJPA implements IFechasRegistradasService {
         return this.save(fechasRegistradas);
     }
 
-@Override
-public FechasRegistradasModel build(Map<String, Object> params, FechasRegistradasModel fechasRegistradas) {
+   @Override
+public FechasRegistradasModel build(Map<String, Object> params, FechasRegistradasModel fechasRegistradas)
+        throws IllegalArgumentException {
     try {
-        // Obtener ID de la carrera
         Long idCarrera = JsonUtils.obtLong(params, "idCarrera");
         if (idCarrera == null) {
             throw new IllegalArgumentException("El campo 'carrera' es obligatorio");
         }
 
-        // Buscar la carrera
         CatCarreraModel carrera = carreraServiceJPA.findById(idCarrera);
         if (carrera == null) {
             throw new IllegalArgumentException("Carrera no encontrada con el ID: " + idCarrera);
         }
         fechasRegistradas.setCarrera(carrera);
 
-        // Obtener las fechas como java.util.Date
-        java.util.Date fechaInicioUtil = JsonUtils.obtDate(params, "fechaInicio");
-        java.util.Date fechaFinUtil = JsonUtils.obtDate(params, "fechaFin");
+        // Obtener fechas
+        java.sql.Date fechaInicio = JsonUtils.obtDate(params, "fechaInicio");
+        java.sql.Date fechaFin = JsonUtils.obtDate(params, "fechaFin");
 
-        // Validar fechas
-        if (fechaInicioUtil == null || fechaFinUtil == null) {
+        if (fechaInicio == null || fechaFin == null) {
             throw new IllegalArgumentException("Las fechas son obligatorias");
         }
 
-        // Convertir a milisegundos
-        long inicioMillis = fechaInicioUtil.getTime();
-        long finMillis = fechaFinUtil.getTime();
+        fechasRegistradas.setFechaInicio(fechaInicio);
+        fechasRegistradas.setFechaFin(fechaFin);
 
-        // Asignar en el modelo (asegúrate que sean tipo Long en el modelo)
-        fechasRegistradas.setFechaInicio(inicioMillis);
-        fechasRegistradas.setFechaFin(finMillis);
+        // Asignar valor al campo obligatorio 'status' (ejemplo con valor por defecto)
+        String status = JsonUtils.obtString(params, "status");
+        if (status == null) {
+            status = "ACTIVO"; // Valor por defecto si no se envía
+        }
+        fechasRegistradas.setStatus(status);
 
     } catch (IllegalArgumentException e) {
-        throw new IllegalArgumentException(e.getMessage());
+        throw e;
     } catch (Exception e) {
         e.printStackTrace();
         throw new IllegalArgumentException("Error al construir la fecha registrada: " + e.getMessage());
     }
     return fechasRegistradas;
 }
-
-
     @Override
     public FechasRegistradasModel updateInstance(FechasRegistradasModel fechasRegistradasInstance) throws Exception {
         FechasRegistradasModel fechasRegistradasBD = this.findById(fechasRegistradasInstance.getId());
@@ -139,5 +137,11 @@ public FechasRegistradasModel build(Map<String, Object> params, FechasRegistrada
             return sdf.format(date); // Convertimos la fecha a String con el formato deseado
         }
     }
+
+public FechasRegistradasModel findByCarreraId(Long idCarrera) {
+    return fechasRegistradasRepository.findByCarrera_Id(idCarrera)
+            .orElseThrow(() -> new IllegalArgumentException("No se encontró fecha registrada para la carrera con id: " + idCarrera));
+}
+
 
 }
