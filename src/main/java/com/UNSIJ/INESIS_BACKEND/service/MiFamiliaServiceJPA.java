@@ -70,7 +70,7 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService{
     public MiFamiliaModel build(Map<String, Object> params, MiFamiliaModel model) {
         model.setNombreCompleto(JsonUtils.obtString(params, "nombre_completo"));
         model.setIdDomicilio(JsonUtils.obtInteger(params, "id_domicilio"));
-        model.setTelefono(JsonUtils.obtInteger(params, "telefono"));
+        model.setTelefono(JsonUtils.obtString(params, "telefono"));
         model.setEscolaridadPadre(JsonUtils.obtString(params, "escolaridadPadre"));
         model.setEscolaridadMadre(JsonUtils.obtString(params, "escolaridadMadre"));
         model.setNumHermanos(JsonUtils.obtInteger(params, "num_hermanos"));
@@ -78,7 +78,7 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService{
         model.setNumHermanosNoEstudiando(JsonUtils.obtInteger(params, "num_hermanos_no_estudiando"));
         model.setNumHermanosLicenciatura(JsonUtils.obtInteger(params, "num_hermanos_licenciatura"));
 
-        Long idVivienda = JsonUtils.obtLong(params, "id_vivienda_familiar");
+        Long idVivienda = JsonUtils.obtLong(params, "id_cat_vivienda_familiar");
         Long idMedios = JsonUtils.obtLong(params, "id_medios_estudio");
 
         if (idVivienda != null) {
