@@ -28,10 +28,10 @@ public class MiFamiliaModel {
     private String telefono;
 
     @Column(name = "escolaridadPadre")
-    private Integer escolaridadPadre;
+    private String escolaridadPadre;
 
     @Column(name = "escolaridadMadre")
-    private Integer escolaridadMadre;
+    private String escolaridadMadre;
 
     @Column(name = "num_hermanos")
     private Integer numHermanos;
