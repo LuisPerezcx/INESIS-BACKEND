@@ -99,7 +99,8 @@ public class GastosIngresosJPA implements IGastosIngresosService {
             System.out.println("Parametros gastosIngresos: " + params);
 
             Map<String, Object> trabajoMap = (Map<String, Object>) params.get("trabajo");
-            if (trabajoMap != null) {
+            if (trabajoMap != null
+                    && trabajoMap.values().stream().anyMatch(v -> v != null && !v.toString().trim().isEmpty())) {
                 Trabajo trabajo = trabajoServiceJPA.create(trabajoMap);
                 gastosIngresos.setTrabajo(trabajo);
             }

@@ -212,7 +212,6 @@ public class MisDatosServiceJPA implements IMisDatosService {
                 medio.setMisDatos(misDatos); // Relación bidireccional
                 mediosTraslado.add(medio);
                 misDatos.setMediosTraslado(mediosTraslado);
-
             }
 
             String idioma = JsonUtils.obtString(params, "idioma");

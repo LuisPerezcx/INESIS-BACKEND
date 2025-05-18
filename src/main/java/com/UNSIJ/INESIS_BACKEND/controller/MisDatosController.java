@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.UNSIJ.INESIS_BACKEND.DTO.MisDatosDTO;
 import com.UNSIJ.INESIS_BACKEND.model.Ejemplo;
 import com.UNSIJ.INESIS_BACKEND.model.MisDatos;
 import com.UNSIJ.INESIS_BACKEND.service.MisDatosServiceJPA;
@@ -48,7 +49,8 @@ public class MisDatosController {
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
             MisDatos misDatos = misDatosServiceJPA.create(params);
-            return ResponseEntity.status(HttpStatus.CREATED).body(misDatos);
+            MisDatosDTO dto = convertirAMisDatosDTO(misDatos);
+            return ResponseEntity.status(HttpStatus.CREATED).body(dto);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -81,6 +83,34 @@ public class MisDatosController {
         }
     }
 
+private MisDatosDTO convertirAMisDatosDTO(MisDatos misDatos) {
+    MisDatosDTO dto = new MisDatosDTO();
+
+    dto.setId(misDatos.getId());
+    dto.setNombreCompleto(misDatos.getNombreCompleto());
+    dto.setIdioma(misDatos.getIdioma());
+    dto.setRecursosSuficientes(misDatos.getRecursosSuficientes());
+    dto.setFamiliarComunero(misDatos.getFamiliarComunero());
+    dto.setUtilizaCelular(misDatos.getUtilizaCelular());
+    dto.setTieneComputadora(misDatos.getTieneComputadora());
+
+    // Extraer los nombres de entidades relacionadas
+    dto.setCarrera(misDatos.getCarrera() != null ? misDatos.getCarrera().getNombreCarrera() : null);
+    dto.setSemestre(misDatos.getSemestre() != null ? misDatos.getSemestre().getNombreSemestre() : null);
+    dto.setSexo(misDatos.getSexo() != null ? misDatos.getSexo().getNombreSexo() : null);
+    dto.setEstadoCivil(misDatos.getEstadoCivil() != null ? misDatos.getEstadoCivil().getNombreEstadoCivil() : null);
+
+    // Mapear solo los nombres de medios de traslado
+    if (misDatos.getMediosTraslado() != null) {
+        dto.setMediosTraslado(
+            misDatos.getMediosTraslado().stream()
+                .map(mt -> mt.getCatMediosTransporte().getNombreMedio())
+                .toList()
+        );
+    }
+
+    return dto;
+}
 
 
 }
