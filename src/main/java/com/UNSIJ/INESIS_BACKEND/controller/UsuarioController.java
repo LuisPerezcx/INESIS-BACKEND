@@ -1,33 +1,32 @@
 package com.UNSIJ.INESIS_BACKEND.controller;
 
-import java.util.List;
-import java.util.Map;
-
+import com.UNSIJ.INESIS_BACKEND.model.UsuarioModel;
+import com.UNSIJ.INESIS_BACKEND.service.UsuarioServiceJPA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.UNSIJ.INESIS_BACKEND.model.CatGrupoModel;
-import com.UNSIJ.INESIS_BACKEND.service.CatGrupoServiceJPA;
+import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/grupo")
-public class CatGrupoController {
-
+@RequestMapping("/usuario") 
+public class UsuarioController {
+    
     @Autowired
-    private CatGrupoServiceJPA grupoServiceJPA;
-
+    private UsuarioServiceJPA usuarioServiceJPA; 
+    
     @GetMapping
-    public List<CatGrupoModel> list() {
-        return grupoServiceJPA.findAll();
+    public List<UsuarioModel> list() {
+        return usuarioServiceJPA.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id) {
         try {
-            CatGrupoModel grupo = grupoServiceJPA.findById(id);
-            return ResponseEntity.ok(grupo);
+            UsuarioModel usuario = usuarioServiceJPA.findById(id);
+            return ResponseEntity.ok(usuario);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
@@ -38,8 +37,8 @@ public class CatGrupoController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            CatGrupoModel grupo = grupoServiceJPA.create(params);
-            return ResponseEntity.status(HttpStatus.CREATED).body(grupo);
+            UsuarioModel usuario = usuarioServiceJPA.create(params);
+            return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -50,8 +49,8 @@ public class CatGrupoController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            CatGrupoModel grupoUpdate = grupoServiceJPA.update(grupoServiceJPA.findById(id), params);
-            return ResponseEntity.status(HttpStatus.CREATED).body(grupoUpdate);
+            UsuarioModel usuarioUpdated = usuarioServiceJPA.update(usuarioServiceJPA.findById(id), params);
+            return ResponseEntity.status(HttpStatus.CREATED).body(usuarioUpdated);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
@@ -62,8 +61,8 @@ public class CatGrupoController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> remove(@PathVariable Long id) {
         try {
-            grupoServiceJPA.findById(id); // Lanza excepción si no encuentra el registro
-            grupoServiceJPA.deleteById(id);
+            usuarioServiceJPA.findById(id); // Lanza la excepción si no se encuentra el registro
+            usuarioServiceJPA.deleteById(id);
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -71,15 +70,4 @@ public class CatGrupoController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
     }
-
-    //Endpoint para obtener el grupo basado en carrera y semestre seleccionados
-    @GetMapping("/carrera/{idCarrera}/semestre/{idSemestre}")
-    public ResponseEntity<?> obtenerGrupo(@PathVariable Long idCarrera, @PathVariable Long idSemestre) {
-        try {
-            CatGrupoModel nombreGrupo = grupoServiceJPA.obtenerNombreGrupo(idCarrera, idSemestre);
-            return ResponseEntity.ok(nombreGrupo);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al generar el grupo");
-        }
-    }    
 }

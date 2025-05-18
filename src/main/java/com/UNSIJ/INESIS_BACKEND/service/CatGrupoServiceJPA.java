@@ -92,13 +92,6 @@ public class CatGrupoServiceJPA implements ICatGrupoService {
             catGrupoModel.setCatCarreraModel(carrera);
             catGrupoModel.setCatSemestreModel(semestre);
 
-            // Generar nombre de grupo con la lógica de combinación (ejemplo: 803)
-            String codigoCarrera = carrera.getCodigoCarrera(); // Recuperar el código de la carrera
-            // Obtener el semestre sin formateo
-            String nombreGrupo = idSemestre + codigoCarrera;
-
-            // Establecer el nombre del grupo en el modelo
-            catGrupoModel.setNombreGrupo(nombreGrupo);
 
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
@@ -126,16 +119,14 @@ public class CatGrupoServiceJPA implements ICatGrupoService {
         }
     }
 
-    // 📌 Método para obtener el nombre del grupo basado en carrera y semestre
-    public String obtenerNombreGrupo(Long idCarrera, Long idSemestre) {
-        CatCarreraModel carrera = catCarreraRepository.findById(idCarrera)
-                .orElseThrow(() -> new IllegalArgumentException("Carrera no encontrada con ID: " + idCarrera));
-        CatSemestreModel semestre = catSemestreRepository.findById(idSemestre)
-                .orElseThrow(() -> new IllegalArgumentException("Semestre no encontrado con ID: " + idSemestre));
+   @Override
+public CatGrupoModel obtenerNombreGrupo(Long idCarrera, Long idSemestre) {
+    CatGrupoModel grupo = catGrupoRepository.findByCatCarreraModel_IdAndCatSemestreModel_Id(idCarrera, idSemestre);
 
-        String codigoCarrera = carrera.getCodigoCarrera();
-       
-        // Concatenar el semestre y el código de la carrera
-        return idSemestre + codigoCarrera; // Ejemplo: "803"
+    if (grupo != null) {
+        return grupo; 
+    } else {
+        throw new IllegalArgumentException("No existe un grupo con esa carrera y semestre.");
     }
+}
 }

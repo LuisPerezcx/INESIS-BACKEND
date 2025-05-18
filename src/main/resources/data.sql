@@ -1,37 +1,53 @@
+#------------------- REGISTROS DE CATROL -------------------
+-- Inicio registros
+SELECT 1;
+
+INSERT INTO cat_rol (nombre_rol)
+SELECT 'Alumno'
+WHERE NOT EXISTS (SELECT 1 FROM cat_rol WHERE nombre_rol = 'Alumno');
+
+INSERT INTO cat_rol (nombre_rol)
+SELECT 'Administrador'
+WHERE NOT EXISTS (SELECT 1 FROM cat_rol WHERE nombre_rol = 'Administrador');
+
+INSERT INTO cat_rol (nombre_rol)
+SELECT 'Revisor'
+WHERE NOT EXISTS (SELECT 1 FROM cat_rol WHERE nombre_rol = 'Revisor');
+
 #------------------- REGISTROS DE CATCARRERA -------------------
 -- Inicio registros
 SELECT 1;
 
-INSERT INTO cat_carrera (nombre_carrera, codigo_carrera)
-SELECT 'Licenciatura en Informática', '03'
-WHERE NOT EXISTS (SELECT 1 FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Informática');
-
-INSERT INTO cat_carrera (nombre_carrera, codigo_carrera)
-SELECT 'Ingeniería en Desarrollo de Software y Sistemas Inteligentes', '03'
-WHERE NOT EXISTS (SELECT 1 FROM cat_carrera WHERE nombre_carrera = 'Ingeniería en Desarrollo de Software y Sistemas Inteligentes');
-
-INSERT INTO cat_carrera (nombre_carrera, codigo_carrera)
-SELECT 'Licenciatura en Administración Turística', '05'
-WHERE NOT EXISTS (SELECT 1 FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Administración Turística');
-
-INSERT INTO cat_carrera (nombre_carrera, codigo_carrera)
-SELECT 'Licenciatura en Biología', '06'
-WHERE NOT EXISTS (SELECT 1 FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Biología');
-
-INSERT INTO cat_carrera (nombre_carrera, codigo_carrera)
-SELECT 'Licenciatura en Ciencias Ambientales', '07'
+INSERT INTO cat_carrera (nombre_carrera)
+SELECT 'Licenciatura en Ciencias Ambientales'
 WHERE NOT EXISTS (SELECT 1 FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Ciencias Ambientales');
 
-INSERT INTO cat_carrera (nombre_carrera, codigo_carrera)
-SELECT 'Ingeniería Forestal', '08'
+INSERT INTO cat_carrera (nombre_carrera)
+SELECT 'Ingeniería Forestal'
 WHERE NOT EXISTS (SELECT 1 FROM cat_carrera WHERE nombre_carrera = 'Ingeniería Forestal');
 
-INSERT INTO cat_carrera (nombre_carrera, codigo_carrera)
-SELECT 'Maestría en Ciencias en Conservación de los Recursos Forestales', '09'
+INSERT INTO cat_carrera (nombre_carrera)
+SELECT 'Licenciatura en Informática'
+WHERE NOT EXISTS (SELECT 1 FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Informática');
+
+INSERT INTO cat_carrera (nombre_carrera)
+SELECT 'Ingeniería en Desarrollo de Software y Sistemas Inteligentes'
+WHERE NOT EXISTS (SELECT 1 FROM cat_carrera WHERE nombre_carrera = 'Ingeniería en Desarrollo de Software y Sistemas Inteligentes');
+
+INSERT INTO cat_carrera (nombre_carrera)
+SELECT 'Licenciatura en Biología'
+WHERE NOT EXISTS (SELECT 1 FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Biología');
+
+INSERT INTO cat_carrera (nombre_carrera)
+SELECT 'Licenciatura en Administración Turística'
+WHERE NOT EXISTS (SELECT 1 FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Administración Turística');
+
+INSERT INTO cat_carrera (nombre_carrera)
+SELECT 'Maestría en Ciencias en Conservación de los Recursos Forestales'
 WHERE NOT EXISTS (SELECT 1 FROM cat_carrera WHERE nombre_carrera = 'Maestría en Ciencias en Conservación de los Recursos Forestales');
 
-INSERT INTO cat_carrera (nombre_carrera, codigo_carrera)
-SELECT 'Maestría en Ciencias en Gestión Ambiental', '10'
+INSERT INTO cat_carrera (nombre_carrera)
+SELECT 'Maestría en Ciencias en Gestión Ambiental'
 WHERE NOT EXISTS (SELECT 1 FROM cat_carrera WHERE nombre_carrera = 'Maestría en Ciencias en Gestión Ambiental');
 
 #------------------- REGISTROS DE CATSEMESTRE -------------------
@@ -77,6 +93,346 @@ WHERE NOT EXISTS (SELECT 1 FROM cat_semestre WHERE nombre_semestre = 'Noveno');
 INSERT INTO cat_semestre (nombre_semestre)
 SELECT 'Décimo'
 WHERE NOT EXISTS (SELECT 1 FROM cat_semestre WHERE nombre_semestre = 'Décimo');
+
+#------------------- REGISTROS DE CATGRUPO -------------------
+-- Inicio registros
+SELECT 1;
+
+-- Licenciatura en ciencias ambientales
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '101', 1, 1
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '101' AND id_cat_carrera = 1 AND id_cat_semestre = 1);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '201', 1, 2
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '201' AND id_cat_carrera = 1 AND id_cat_semestre = 2);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '301', 1, 3
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '301' AND id_cat_carrera = 1 AND id_cat_semestre = 3);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '401', 1, 4
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '401' AND id_cat_carrera = 1 AND id_cat_semestre = 4);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '501', 1, 5
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '501' AND id_cat_carrera = 1 AND id_cat_semestre = 5);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '601', 1, 6
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '601' AND id_cat_carrera = 1 AND id_cat_semestre = 6);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '701', 1, 7
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '701' AND id_cat_carrera = 1 AND id_cat_semestre = 7);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '801', 1, 8
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '801' AND id_cat_carrera = 1 AND id_cat_semestre = 8);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '901', 1, 9
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '901' AND id_cat_carrera = 1 AND id_cat_semestre = 9);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '1001', 1, 10
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '1001' AND id_cat_carrera = 1 AND id_cat_semestre = 10);
+
+--Ingeniria Forestal 
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '102', 2, 1
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '102' AND id_cat_carrera = 2 AND id_cat_semestre = 1);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '202', 2, 2
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '202' AND id_cat_carrera = 2 AND id_cat_semestre = 2);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '302', 2, 3
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '302' AND id_cat_carrera = 2 AND id_cat_semestre = 3);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '402', 2, 4
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '402' AND id_cat_carrera = 2 AND id_cat_semestre = 4);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '502', 2, 5
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '502' AND id_cat_carrera = 2 AND id_cat_semestre = 5);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '602', 2, 6
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '602' AND id_cat_carrera = 2 AND id_cat_semestre = 6);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '702', 2, 7
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '702' AND id_cat_carrera = 2 AND id_cat_semestre = 7);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '802', 2, 8
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '802' AND id_cat_carrera = 2 AND id_cat_semestre = 8);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '902', 2, 9
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '902' AND id_cat_carrera = 2 AND id_cat_semestre = 9);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '1002', 2, 10
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '1002' AND id_cat_carrera = 2 AND id_cat_semestre = 10);
+
+--Licenciatura en Informatica
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '103', 3, 1
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '103' AND id_cat_carrera = 3 AND id_cat_semestre = 1);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '203', 3, 2
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '203' AND id_cat_carrera = 3 AND id_cat_semestre = 2);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '303', 3, 3
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '303' AND id_cat_carrera = 3 AND id_cat_semestre = 3);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '403', 3, 4
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '403' AND id_cat_carrera = 3 AND id_cat_semestre = 4);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '503', 3, 5
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '503' AND id_cat_carrera = 3 AND id_cat_semestre = 5);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '603', 3, 6
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '603' AND id_cat_carrera = 3 AND id_cat_semestre = 6);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '703', 3, 7
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '703' AND id_cat_carrera = 3 AND id_cat_semestre = 7);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '803', 3, 8
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '803' AND id_cat_carrera = 3 AND id_cat_semestre = 8);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '903', 3, 9
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '903' AND id_cat_carrera = 3 AND id_cat_semestre = 9);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '1003', 3, 10
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '1003' AND id_cat_carrera = 3 AND id_cat_semestre = 10);
+
+--Ingenieria en Desarrollo de software y sistemas inteligentes
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '103', 4, 1
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '103' AND id_cat_carrera = 4 AND id_cat_semestre = 1);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '203', 4, 2
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '203' AND id_cat_carrera = 4 AND id_cat_semestre = 2);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '303', 4, 3
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '303' AND id_cat_carrera = 4 AND id_cat_semestre = 3);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '403', 4, 4
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '403' AND id_cat_carrera = 4 AND id_cat_semestre = 4);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '503', 4, 5
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '503' AND id_cat_carrera = 4 AND id_cat_semestre = 5);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '603', 4, 6
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '603' AND id_cat_carrera = 4 AND id_cat_semestre = 6);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '703', 4, 7
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '703' AND id_cat_carrera = 4 AND id_cat_semestre = 7);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '803', 4, 8
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '803' AND id_cat_carrera = 4 AND id_cat_semestre = 8);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '903', 4, 9
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '903' AND id_cat_carrera = 4 AND id_cat_semestre = 9);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '1003', 4, 10
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '1003' AND id_cat_carrera = 4 AND id_cat_semestre = 10);
+
+--Liceniatura en Biologia
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '104', 5, 1
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '104' AND id_cat_carrera = 5 AND id_cat_semestre = 1);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '204', 5, 2
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '204' AND id_cat_carrera = 5 AND id_cat_semestre = 2);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '304', 5, 3
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '304' AND id_cat_carrera = 5 AND id_cat_semestre = 3);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '404', 5, 4
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '404' AND id_cat_carrera = 5 AND id_cat_semestre = 4);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '504', 5, 5
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '504' AND id_cat_carrera = 5 AND id_cat_semestre = 5);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '604', 5, 6
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '604' AND id_cat_carrera = 5 AND id_cat_semestre = 6);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '704', 5, 7
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '704' AND id_cat_carrera = 5 AND id_cat_semestre = 7);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '804', 5, 8
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '804' AND id_cat_carrera = 5 AND id_cat_semestre = 8);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '904', 5, 9
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '904' AND id_cat_carrera = 5 AND id_cat_semestre = 9);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '1004', 5, 10
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '1004' AND id_cat_carrera = 5 AND id_cat_semestre = 10);
+
+--Licenciatura en Administración Turistica
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '105', 6, 1 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '105' AND id_cat_carrera = 6 AND id_cat_semestre = 1);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '205', 6, 2 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '205' AND id_cat_carrera = 6 AND id_cat_semestre = 2);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '305', 6, 3 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '305' AND id_cat_carrera = 6 AND id_cat_semestre = 3);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '405', 6, 4 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '405' AND id_cat_carrera = 6 AND id_cat_semestre = 4);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '505', 6, 5 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '505' AND id_cat_carrera = 6 AND id_cat_semestre = 5);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '605', 6, 6 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '605' AND id_cat_carrera = 6 AND id_cat_semestre = 6);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '705', 6, 7 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '705' AND id_cat_carrera = 6 AND id_cat_semestre = 7);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '805', 6, 8 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '805' AND id_cat_carrera = 6 AND id_cat_semestre = 8);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '905', 6, 9 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '905' AND id_cat_carrera = 6 AND id_cat_semestre = 9);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '1005', 6, 10 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '1005' AND id_cat_carrera = 6 AND id_cat_semestre = 10);
+
+--Maestria en ciencias de la conservacion
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '106', 7, 1 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '106' AND id_cat_carrera = 7 AND id_cat_semestre = 1);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '206', 7, 2 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '206' AND id_cat_carrera = 7 AND id_cat_semestre = 2);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '306', 7, 3 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '306' AND id_cat_carrera = 7 AND id_cat_semestre = 3);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '406', 7, 4 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '406' AND id_cat_carrera = 7 AND id_cat_semestre = 4);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '506', 7, 5 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '506' AND id_cat_carrera = 7 AND id_cat_semestre = 5);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '606', 7, 6 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '606' AND id_cat_carrera = 7 AND id_cat_semestre = 6);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '706', 7, 7 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '706' AND id_cat_carrera = 7 AND id_cat_semestre = 7);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '806', 7, 8 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '806' AND id_cat_carrera = 7 AND id_cat_semestre = 8);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '906', 7, 9 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '906' AND id_cat_carrera = 7 AND id_cat_semestre = 9);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '1006', 7, 10 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '1006' AND id_cat_carrera = 7 AND id_cat_semestre = 10);
+
+--Maestria en ciencia de la gestión ambiental
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '107', 8, 1 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '107' AND id_cat_carrera = 8 AND id_cat_semestre = 1);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '207', 8, 2 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '207' AND id_cat_carrera = 8 AND id_cat_semestre = 2);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '307', 8, 3 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '307' AND id_cat_carrera = 8 AND id_cat_semestre = 3);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '407', 8, 4 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '407' AND id_cat_carrera = 8 AND id_cat_semestre = 4);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '507', 8, 5 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '507' AND id_cat_carrera = 8 AND id_cat_semestre = 5);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '607', 8, 6 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '607' AND id_cat_carrera = 8 AND id_cat_semestre = 6);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '707', 8, 7 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '707' AND id_cat_carrera = 8 AND id_cat_semestre = 7);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '807', 8, 8 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '807' AND id_cat_carrera = 8 AND id_cat_semestre = 8);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '907', 8, 9 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '907' AND id_cat_carrera = 8 AND id_cat_semestre = 9);
+
+INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
+SELECT '1007', 8, 10 
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '1007' AND id_cat_carrera = 8 AND id_cat_semestre = 10);
 
 #------------------- REGISTROS DE CATSEXO -------------------
 -- Inicio registros
@@ -155,443 +511,4 @@ SELECT 'Microbús'
 WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Microbús');
 
 
-#------------------- REGISTROS DE CATGRUPO -------------------
--- Inicio registros
-
-SELECT 1;
-
---1 semestre
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '101', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Ciencias Ambientales'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Primero')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '101');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '102', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Ingeniería Forestal'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Primero')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '102');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '103', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Informática'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Primero')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '103');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '103', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Ingeniería en Desarrollo de Software y Sistemas Inteligentes'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Primero')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '103');
-
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '104', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Biología'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Primero')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '104');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '107', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Administración Turística'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Primero')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '107');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '106', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Maestría en Ciencias en Conservación de los Recursos Forestales'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Primero')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '106');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '108', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Maestría en Ciencias en Gestión Ambiental'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Primero')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '108');
-
---2 Semestre
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '201', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Ciencias Ambientales'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Segundo')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '201');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '202', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Ingeniería Forestal'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Segundo')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '202');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '103', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Informática'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Segundo')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '103');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '103', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Ingeniería en Desarrollo de Software y Sistemas Inteligentes'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Segundo')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '103');
-
-
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '204', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Biología'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Segundo')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '204');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '207', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Administración Turística'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'segundo')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '207');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '206', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Maestría en Ciencias en Conservación de los Recursos Forestales'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Segundo')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '106');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '208', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Maestría en Ciencias en Gestión Ambiental'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Segundo')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '208');
-
---3 Semestre
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '301', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Ciencias Ambientales'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Tercero')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '301');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '302', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Ingeniería Forestal'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Tercero')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '302');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '303', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Informática'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Tercero')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '303');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '303', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Ingeniería en Desarrollo de Software y Sistemas Inteligentes'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Tercero')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '303');
-
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '304', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Biología'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Tercero')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '304');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '307', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Administración Turística'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Tercero')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '307');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '306', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Maestría en Ciencias en Conservación de los Recursos Forestales'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Tercero')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '306');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '308', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Maestría en Ciencias en Gestión Ambiental'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Tercero')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '308');
-
---4 Semestre
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '401', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Ciencias Ambientales'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Cuarto')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '401');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '402', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Ingeniería Forestal'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Cuarto')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '402');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '403', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Informática'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Cuarto')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '403');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '403', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Ingeniería en Desarrollo de Software y Sistemas Inteligentes'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Cuarto')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '403');
-
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '404', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Biología'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Cuarto')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '404');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '407', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Administración Turística'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Cuarto')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '407');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '406', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Maestría en Ciencias en Conservación de los Recursos Forestales'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Cuarto')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '406');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '408', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Maestría en Ciencias en Gestión Ambiental'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Cuarto')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '408');
-
---5 Semestre 
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '501', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Ciencias Ambientales'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Quinto')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '501');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '502', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Ingeniería Forestal'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Quinto')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '502');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '503', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Informática'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Quinto')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '503');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '503', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Ingeniería en Desarrollo de Software y Sistemas Inteligentes'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Quinto')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '503');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '504', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Biología'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Quinto')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '504');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '507', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Administración Turística'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Quinto')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '507');
-
-
----6 semestre 
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '601', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Ciencias Ambientales'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Sexto')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '601');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '602', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Ingeniería Forestal'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Sexto')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '602');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '603', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Informática'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Sexto')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '603');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '603', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Ingeniería en Desarrollo de Software y Sistemas Inteligentes'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Sexto')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '603');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '604', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Biología'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Sexto')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '604');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '607', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Administración Turística'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Sexto')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '607');
-
---7 Semestre
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '701', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Ciencias Ambientales'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Séptimo')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '701');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '702', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Ingeniería Forestal'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Séptimo')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '702');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '703', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Informática'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Séptimo')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '703');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '703', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Ingeniería en Desarrollo de Software y Sistemas Inteligentes'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Séptimo')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '703');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '704', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Biología'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Séptimo')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '704');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '707', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Administración Turística'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Séptimo')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '707');
-
---8 Semestre 
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '801', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Ciencias Ambientales'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Octavo')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '801');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '802', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Ingeniería Forestal'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Octavo')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '802');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '803', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Informática'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Octavo')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '803');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '803', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Ingeniería en Desarrollo de Software y Sistemas Inteligentes'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Octavo')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '803');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '804', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Biología'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Octavo')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '804');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '807', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Administración Turística'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Octavo')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '807');
-
-
---9 Semestre 
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '901', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Ciencias Ambientales'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Noveno')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '901');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '902', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Ingeniería Forestal'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Noveno')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '902');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '903', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Informática'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Noveno')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '903');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '903', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Ingeniería en Desarrollo de Software y Sistemas Inteligentes'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Noveno')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '903');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '904', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Biología'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Noveno')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '904');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '907', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Administración Turística'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Noveno')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '907');
-
-
---10 Semestre
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '1001', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Ciencias Ambientales'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Décimo')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '1001');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '1002', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Ingeniería Forestal'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Décimo')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '1002');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '1003', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Informática'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Décimo')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '1003');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '1003', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Ingeniería en Desarrollo de Software y Sistemas Inteligentes'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Décimo')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '1003');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '1004', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Biología'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Décimo')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '1004');
-
-INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '1007', 
-       (SELECT id_cat_carrera FROM cat_carrera WHERE nombre_carrera = 'Licenciatura en Administración Turística'),
-       (SELECT id_cat_semestre FROM cat_semestre WHERE nombre_semestre = 'Décimo')
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '1007');
 

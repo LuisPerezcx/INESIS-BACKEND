@@ -13,4 +13,6 @@ public interface ICatGrupoService {
     CatGrupoModel build(Map<String, Object> params, CatGrupoModel catGrupoModel);
     CatGrupoModel updateInstance(CatGrupoModel catGrupoInstance) throws Exception;
     void deleteById(Long id);
+    CatGrupoModel obtenerNombreGrupo(Long idCarrera, Long idSemestre);
+
 }
