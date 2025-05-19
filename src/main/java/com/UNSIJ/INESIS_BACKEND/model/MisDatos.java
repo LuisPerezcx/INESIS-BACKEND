@@ -2,6 +2,7 @@ package com.UNSIJ.INESIS_BACKEND.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
@@ -71,6 +72,7 @@ public class MisDatos {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_transporte")
+    @JsonIgnore
     private Transporte transporte;
 
     @OneToMany(mappedBy = "misDatos", cascade = CascadeType.ALL, orphanRemoval = true)

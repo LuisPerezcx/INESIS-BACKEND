@@ -200,28 +200,9 @@ public class MisDatosServiceJPA implements IMisDatosService {
             Map<String, Object> transporteParams = (Map<String, Object>) params.get("transporte");
             if (transporteParams != null) {
                 Transporte transporte = transporteServiceJPA.create(transporteParams);
-                transporte.setMisDatos(misDatos);
                 misDatos.setTransporte(transporte);
             }
 
-            Map<String, Object> domicilioParams = (Map<String, Object>) params.get("domicilio");
-            if (domicilioParams != null) {
-                // Domicilio domicilio = domicilioServiceJPA.create(domicilioParams);
-                // // domicilio.setMisDatos(misDatos);
-                // misDatos.setDomicilio(domicilio);
-
-                Domicilio domicilio = new Domicilio();
-                domicilio.setEstado(JsonUtils.obtString(domicilioParams, "estado"));
-                domicilio.setMunicipio(JsonUtils.obtString(domicilioParams, "municipio"));
-                domicilio.setLocalidad(JsonUtils.obtString(domicilioParams, "localidad"));
-                domicilio.setColonia(JsonUtils.obtString(domicilioParams, "colonia"));
-                domicilio.setCalle(JsonUtils.obtString(domicilioParams, "calle"));
-                domicilio.setNumero(JsonUtils.obtString(domicilioParams, "numero"));
-                domicilio.setCp(JsonUtils.obtString(domicilioParams, "cp"));
-
-                misDatos.setDomicilio(domicilio);
-
-            }
 
             List<Map<String, Object>> mediosTrasladoParams = (List<Map<String, Object>>) params.get("mediosTraslado");
             List<MedioTraslado> mediosTraslado = new ArrayList<>();
@@ -252,7 +233,12 @@ public class MisDatosServiceJPA implements IMisDatosService {
                 throw new IllegalArgumentException("El campo nombre casa huespedes es obligatorio");
             misDatos.setNombreCasaHuesped(nombreCasaHuesped);
 
-            
+            misDatos = this.save(misDatos);
+            Map<String, Object> domicilioParams = (Map<String, Object>) params.get("domicilio");
+            if (domicilioParams != null) {
+                Domicilio domicilio = domicilioServiceJPA.create(domicilioParams);
+                misDatos.setDomicilio(domicilio);
+            }
 
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());

@@ -1,7 +1,9 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -39,6 +41,7 @@ public class GastosIngresos {
     private Trabajo trabajo;
 
     @OneToOne(mappedBy = "gastosIngresos")
+    @ToString.Exclude
     private MisDatos misDatos;
 
 }

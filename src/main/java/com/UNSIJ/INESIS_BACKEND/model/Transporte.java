@@ -13,6 +13,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -38,9 +39,5 @@ public class Transporte {
     @ManyToOne
     @JoinColumn(name = "id_cat_tipo_transporte")
     private CatTipoTransporte catTipoTransporte;
-
-    @OneToOne(mappedBy = "transporte")
-    @JsonIgnore
-    private MisDatos misDatos;
 
 }
