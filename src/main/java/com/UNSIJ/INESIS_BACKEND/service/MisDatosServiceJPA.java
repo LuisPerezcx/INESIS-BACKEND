@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.UNSIJ.INESIS_BACKEND.model.CatMediosTransporte;
+import com.UNSIJ.INESIS_BACKEND.model.Domicilio;
 import com.UNSIJ.INESIS_BACKEND.model.GastosIngresos;
 import com.UNSIJ.INESIS_BACKEND.model.MedioTraslado;
 import com.UNSIJ.INESIS_BACKEND.model.MisDatos;
@@ -46,6 +47,9 @@ public class MisDatosServiceJPA implements IMisDatosService {
 
     @Autowired
     private CatMediosTransporteService catMediosTransporteService;
+
+    @Autowired
+    private DomicilioServiceJPA domicilioServiceJPA;
 
     @Override
     public List<MisDatos> findAll() {
@@ -200,6 +204,25 @@ public class MisDatosServiceJPA implements IMisDatosService {
                 misDatos.setTransporte(transporte);
             }
 
+            Map<String, Object> domicilioParams = (Map<String, Object>) params.get("domicilio");
+            if (domicilioParams != null) {
+                // Domicilio domicilio = domicilioServiceJPA.create(domicilioParams);
+                // // domicilio.setMisDatos(misDatos);
+                // misDatos.setDomicilio(domicilio);
+
+                Domicilio domicilio = new Domicilio();
+                domicilio.setEstado(JsonUtils.obtString(domicilioParams, "estado"));
+                domicilio.setMunicipio(JsonUtils.obtString(domicilioParams, "municipio"));
+                domicilio.setLocalidad(JsonUtils.obtString(domicilioParams, "localidad"));
+                domicilio.setColonia(JsonUtils.obtString(domicilioParams, "colonia"));
+                domicilio.setCalle(JsonUtils.obtString(domicilioParams, "calle"));
+                domicilio.setNumero(JsonUtils.obtString(domicilioParams, "numero"));
+                domicilio.setCp(JsonUtils.obtString(domicilioParams, "cp"));
+
+                misDatos.setDomicilio(domicilio);
+
+            }
+
             List<Map<String, Object>> mediosTrasladoParams = (List<Map<String, Object>>) params.get("mediosTraslado");
             List<MedioTraslado> mediosTraslado = new ArrayList<>();
             for (Map<String, Object> item : mediosTrasladoParams) {
@@ -218,11 +241,24 @@ public class MisDatosServiceJPA implements IMisDatosService {
             if (idioma == null)
                 throw new IllegalArgumentException("El campo idioma es obligatorio");
             misDatos.setIdioma(idioma);
+
+            String situacionVivienda = JsonUtils.obtString(params, "situacionVivienda");
+            if (situacionVivienda == null)
+                throw new IllegalArgumentException("El campo situacion vivienda es obligatorio");
+            misDatos.setSituacionVivienda(situacionVivienda);
+
+            String nombreCasaHuesped = JsonUtils.obtString(params, "nombreCasaHuesped");
+            if (nombreCasaHuesped == null)
+                throw new IllegalArgumentException("El campo nombre casa huespedes es obligatorio");
+            misDatos.setNombreCasaHuesped(nombreCasaHuesped);
+
+            
+
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
-            throw new IllegalArgumentException("Error al construir el transporte (build)");
+            throw new IllegalArgumentException("Error al construir el misDatos (build)");
         }
         return misDatos;
     }

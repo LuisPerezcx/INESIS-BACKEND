@@ -57,6 +57,14 @@ public class MisDatos {
     @Column(name = "idioma")
     private String idioma;
 
+    @NotNull
+    @Column(name = "situacion_vivienda")
+    private String situacionVivienda;
+
+    @NotNull
+    @Column(name = "nombre_casa_huesped")
+    private String nombreCasaHuesped;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_gastos_ingresos")
     private GastosIngresos gastosIngresos;
@@ -68,4 +76,9 @@ public class MisDatos {
     @OneToMany(mappedBy = "misDatos", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<MedioTraslado> mediosTraslado;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "id_domicilio")
+    private Domicilio domicilio;
+
 }
