@@ -47,7 +47,7 @@ public class GastosIngresosJPA implements IGastosIngresosService {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
-            throw new IllegalArgumentException("Error al construir el ejemplo");
+            throw new IllegalArgumentException("Error al construir el gastosIngresos(create)");
         }
         return this.save(gastosIngresos);
     }
@@ -62,7 +62,7 @@ public class GastosIngresosJPA implements IGastosIngresosService {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
-            throw new IllegalArgumentException("Error al construir el ejemplo");
+            throw new IllegalArgumentException("Error al construir el gastosIngresos(update)");
         }
         return this.save(gastosIngresos);
     }
@@ -108,7 +108,7 @@ public class GastosIngresosJPA implements IGastosIngresosService {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
-            throw new IllegalArgumentException("Error al construir el ejemplo");
+            throw new IllegalArgumentException("Error al construir el gatosIngresos(buil)");
         }
         return gastosIngresos;
     }

@@ -1,5 +1,7 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
+import org.hibernate.validator.constraints.Length;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -17,7 +19,6 @@ public class Trabajo {
     private String nombreTrabajo;
 
     @Column(name = "telefono_trabajo")
-    @Size(max = 10)
     private String telefonoTrabajo;
 
     @Column(name = "ingreso_mensual")

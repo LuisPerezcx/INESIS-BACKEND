@@ -46,7 +46,7 @@ public class CatMediosTransporteService implements ICatMediosTransporteService {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
-            throw new IllegalArgumentException("Error al construir el ejemplo");
+            throw new IllegalArgumentException("Error al construir el transporte(create)");
         }
         return this.save(catMediosTransporte);
     }
@@ -60,7 +60,7 @@ public class CatMediosTransporteService implements ICatMediosTransporteService {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
-            throw new IllegalArgumentException("Error al construir el ejemplo");
+            throw new IllegalArgumentException("Error al construir el transporte(update)");
         }
         return this.save(catMediosTransporte);
     }
@@ -73,7 +73,7 @@ public class CatMediosTransporteService implements ICatMediosTransporteService {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
-            throw new IllegalArgumentException("Error al construir el ejemplo");
+            throw new IllegalArgumentException("Error al construir el transporte(build)");
         }
         return catMediosTransporte;
     }

@@ -44,7 +44,7 @@ public class TrabajoServiceJPA implements ITrabajoService {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
-            throw new IllegalArgumentException("Error al construir el ejemplo");
+            throw new IllegalArgumentException("Error al construir el trabajo(create)");
         }
         return this.save(trabajo);
     }
@@ -58,7 +58,7 @@ public class TrabajoServiceJPA implements ITrabajoService {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
-            throw new IllegalArgumentException("Error al construir el ejemplo");
+            throw new IllegalArgumentException("Error al construir el trabajo(update)");
         }
         return this.save(trabajo);
     }
@@ -81,7 +81,7 @@ public class TrabajoServiceJPA implements ITrabajoService {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
-            throw new IllegalArgumentException("Error al construir el ejemplo");
+            throw new IllegalArgumentException("Error al construir el trabajo(build)");
         }
         return trabajo;
     }
