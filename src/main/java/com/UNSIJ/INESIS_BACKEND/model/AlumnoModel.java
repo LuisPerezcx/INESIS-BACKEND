@@ -23,8 +23,12 @@ public class AlumnoModel {
     private String nombre;
 
     @NotNull
-    @Column(name = "apellido")
-    private String apellido;
+    @Column(name = "apellido_paterno")
+    private String apellidoPaterno;
+
+    @NotNull
+    @Column(name = "apellido_materno")
+    private String apellidoMaterno;
 
     @NotNull
     @Column(name = "curp", unique = true)

@@ -96,7 +96,8 @@ public AlumnoModel build(Map<String, Object> params, AlumnoModel alumnoModel) {
     try {
         // Asignar campos del alumno
         alumnoModel.setNombre(JsonUtils.obtString(params, "nombre"));
-        alumnoModel.setApellido(JsonUtils.obtString(params, "apellido"));
+        alumnoModel.setApellidoPaterno(JsonUtils.obtString(params, "apellidoPaterno"));
+        alumnoModel.setApellidoMaterno(JsonUtils.obtString(params, "apellidoMaterno"));
         alumnoModel.setCurp(JsonUtils.obtString(params, "curp"));
         alumnoModel.setCorreo(JsonUtils.obtString(params, "correo"));
         alumnoModel.setTelefono(JsonUtils.obtString(params, "telefono"));
@@ -153,6 +154,8 @@ public AlumnoModel build(Map<String, Object> params, AlumnoModel alumnoModel) {
             UsuarioModel usuario = usuarioServiceJPA.create(usuarioParams);
 
             // Relación bidireccional explícita
+
+
             usuario.setAlumno(alumnoModel);
             alumnoModel.setUsuario(usuario);
         }
