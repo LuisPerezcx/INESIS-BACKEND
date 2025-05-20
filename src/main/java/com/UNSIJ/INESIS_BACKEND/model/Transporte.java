@@ -1,13 +1,19 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -15,14 +21,23 @@ import lombok.Data;
 public class Transporte {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_transporte")
     private Long idTransporte;
 
-    private Boolean llevaVehiculo;
+    @NotNull
+    private String llevaVehiculo;
+
+    @NotNull
     private String marca;
+
+    @NotNull
     private String modelo;
+
+    @NotNull
     private Integer anio;
 
     @ManyToOne
     @JoinColumn(name = "id_cat_tipo_transporte")
     private CatTipoTransporte catTipoTransporte;
+
 }

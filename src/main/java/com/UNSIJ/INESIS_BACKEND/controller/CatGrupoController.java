@@ -72,11 +72,11 @@ public class CatGrupoController {
         }
     }
 
-    // 📌 Endpoint para obtener el grupo basado en carrera y semestre seleccionados
+    //Endpoint para obtener el grupo basado en carrera y semestre seleccionados
     @GetMapping("/carrera/{idCarrera}/semestre/{idSemestre}")
     public ResponseEntity<?> obtenerGrupo(@PathVariable Long idCarrera, @PathVariable Long idSemestre) {
         try {
-            String nombreGrupo = grupoServiceJPA.obtenerNombreGrupo(idCarrera, idSemestre);
+            CatGrupoModel nombreGrupo = grupoServiceJPA.obtenerNombreGrupo(idCarrera, idSemestre);
             return ResponseEntity.ok(nombreGrupo);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al generar el grupo");

@@ -10,30 +10,35 @@ import java.util.Map;
 
 public class JsonUtils {
 
-    public static Object obtObject(Map<String, Object> map, String key){
-        if(map==null || key == null || key.isEmpty()) return null;
+    public static Object obtObject(Map<String, Object> map, String key) {
+        if (map == null || key == null || key.isEmpty())
+            return null;
 
         String[] keys = key.split("\\.");
         Object current = map;
 
-        for(String k : keys) {
-            if(current instanceof Map){
+        for (String k : keys) {
+            if (current instanceof Map) {
                 current = ((Map<String, Object>) current).get(k);
-            }else return null;
+            } else
+                return null;
         }
         return current;
     }
 
-    public static String obtString (Map<String, Object> map, String key) {
+    public static String obtString(Map<String, Object> map, String key) {
         Object value = obtObject(map, key);
-        if(value == null) return null;
+        if (value == null)
+            return null;
         return value instanceof String ? (String) value : null;
     }
 
     public static Integer obtInteger(Map<String, Object> map, String key) {
         Object value = obtObject(map, key);
-        if (value == null) return null;
-        if (value instanceof Integer) return (Integer) value;
+        if (value == null)
+            return null;
+        if (value instanceof Integer)
+            return (Integer) value;
 
         if (value instanceof String) {
             try {
@@ -45,19 +50,21 @@ public class JsonUtils {
         return null;
     }
 
-
-    public static Double obtDouble (Map<String, Object> map, String key) {
+    public static Double obtDouble(Map<String, Object> map, String key) {
         Object value = obtObject(map, key);
-        if(value == null){
+        if (value == null) {
             return null;
         }
-        if(value instanceof Double) return (Double) value;
+        if (value instanceof Double)
+            return (Double) value;
 
-        if (value instanceof Integer) return ((Integer) value).doubleValue();
+        if (value instanceof Integer)
+            return ((Integer) value).doubleValue();
 
-        if (value instanceof Long) return ((Long) value).doubleValue();
+        if (value instanceof Long)
+            return ((Long) value).doubleValue();
 
-        if(value instanceof String){
+        if (value instanceof String) {
             try {
                 return Double.parseDouble((String) value);
             } catch (NumberFormatException e) {
@@ -68,59 +75,69 @@ public class JsonUtils {
         return null;
     }
 
-    public static Long obtLong (Map<String, Object> map, String key) {
+    public static Long obtLong(Map<String, Object> map, String key) {
         Object value = obtObject(map, key);
-        if(value == null) return null;
-        if(value instanceof Long) return (Long) value;
+        if (value == null)
+            return null;
+        if (value instanceof Long)
+            return (Long) value;
 
         try {
-            if(value instanceof String) return Long.parseLong((String) value);
-            if(value instanceof Number) return ((Number) value).longValue();
+            if (value instanceof String)
+                return Long.parseLong((String) value);
+            if (value instanceof Number)
+                return ((Number) value).longValue();
         } catch (NumberFormatException e) {
             return null;
         }
         return null;
     }
 
-    public static Date obtDate(Map<String, Object> map, String key) {
+    public static java.sql.Date obtDate(Map<String, Object> map, String key) {
         String value = obtString(map, key);
         if (value == null) {
             return null;
         }
         try {
+            // Formato esperado: "yyyy-MM-dd" (ejemplo: "2025-05-15")
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate localDate = LocalDate.parse(value, formatter);  // Convertir el String a LocalDate
-            // Convertir el LocalDate a Date
-            return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+            LocalDate localDate = LocalDate.parse(value, formatter);
+            // Convertir directamente a java.sql.Date (sin zonas horarias)
+            return java.sql.Date.valueOf(localDate);
         } catch (DateTimeParseException e) {
-            return null;
+            // Lanza excepción para manejar errores claramente
+            throw new IllegalArgumentException("Formato de fecha inválido para '" + key + "'. Use yyyy-MM-dd");
         }
     }
 
     public static LocalDate obtLocalDate(Map<String, Object> map, String key) {
-        String value = obtString(map,key);
-        if(value == null) return null;
+        String value = obtString(map, key);
+        if (value == null)
+            return null;
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            return  LocalDate.parse(value, formatter);
+            return LocalDate.parse(value, formatter);
         } catch (DateTimeParseException e) {
             return null;
         }
     }
 
     public static LocalTime obtLocalTime(Map<String, Object> map, String key) {
-        String value = obtString(map,key);
-        if(value == null) return null;
+        String value = obtString(map, key);
+        if (value == null)
+            return null;
         try {
-            return  LocalTime.parse(value);
+            return LocalTime.parse(value);
         } catch (DateTimeParseException e) {
             return null;
         }
     }
+
     public static boolean obtBoolean(Map<String, Object> map, String key) {
         Object value = obtObject(map, key);
 
-        if (value instanceof Boolean) return (boolean) value;
+        if (value instanceof Boolean)
+            return (boolean) value;
 
         if (value instanceof String) {
             String strValue = ((String) value).trim().toLowerCase();

@@ -62,7 +62,7 @@ public class EjemploController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> remove(@PathVariable Long id){
         try {
-            ejemploServiceJPA.findById(id); // PARA TIRAR LA EXEPCION SI NO SE ENCUENTRA EL REGISTRO
+            ejemploServiceJPA.findById(id);
             ejemploServiceJPA.deleteById(id);
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
