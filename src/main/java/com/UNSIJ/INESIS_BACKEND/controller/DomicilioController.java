@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,29 +16,32 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
-import com.UNSIJ.INESIS_BACKEND.DTO.MisDatosDTO;
+import com.UNSIJ.INESIS_BACKEND.model.Domicilio;
 import com.UNSIJ.INESIS_BACKEND.model.Ejemplo;
-import com.UNSIJ.INESIS_BACKEND.model.MisDatos;
-import com.UNSIJ.INESIS_BACKEND.service.MisDatosServiceJPA;
+import com.UNSIJ.INESIS_BACKEND.service.DomicilioServiceJPA;
+import com.UNSIJ.INESIS_BACKEND.service.EjemploServiceJPA;
 
 @RestController
-@RequestMapping("/misDatos")
-public class MisDatosController {
+@RequestMapping("/domicilio")
+public class DomicilioController {
+
     @Autowired
-    private MisDatosServiceJPA misDatosServiceJPA; // Aquí siempre es el service no la interfaz
+    private DomicilioServiceJPA domicilioServiceJPA; // aquí siempre es el service no la interfaz
 
     @GetMapping
-    public List<MisDatos> list() {
-        return misDatosServiceJPA.findAll();
+    public List<Domicilio> list() {
+        return domicilioServiceJPA.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id){
         try {
-            MisDatos misDatos = misDatosServiceJPA.findById(id);
-            return ResponseEntity.ok(misDatos);
+            Domicilio domicilio = domicilioServiceJPA.findById(id);
+            return ResponseEntity.ok(domicilio);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
@@ -48,9 +54,8 @@ public class MisDatosController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            MisDatos misDatos = misDatosServiceJPA.create(params);
-            MisDatosDTO dto = convertirAMisDatosDTO(misDatos);
-            return ResponseEntity.status(HttpStatus.CREATED).body(dto);
+            Domicilio domicilio = domicilioServiceJPA.create(params);
+            return ResponseEntity.status(HttpStatus.CREATED).body(domicilio);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -61,8 +66,8 @@ public class MisDatosController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            MisDatos misDatosUpdate = misDatosServiceJPA.update(misDatosServiceJPA.findById(id),params);
-            return ResponseEntity.status(HttpStatus.CREATED).body(misDatosUpdate);
+            Domicilio domicilioUpdated = domicilioServiceJPA.update(domicilioServiceJPA.findById(id),params);
+            return ResponseEntity.status(HttpStatus.CREATED).body(domicilioUpdated);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
@@ -73,8 +78,8 @@ public class MisDatosController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> remove(@PathVariable Long id){
         try {
-            misDatosServiceJPA.findById(id); // PARA TIRAR LA EXEPCION SI NO SE ENCUENTRA EL REGISTRO
-            misDatosServiceJPA.deleteById(id);
+            domicilioServiceJPA.findById(id);
+            domicilioServiceJPA.deleteById(id);
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -83,34 +88,32 @@ public class MisDatosController {
         }
     }
 
-private MisDatosDTO convertirAMisDatosDTO(MisDatos misDatos) {
-    MisDatosDTO dto = new MisDatosDTO();
+    @GetMapping("/codigo_postal")
+    public ResponseEntity<String> obtenerColoniasPorCP(@RequestParam String cp) {
+        String urlApiExterna = "https://api.tau.com.mx/dipomex/v1/codigo_postal?cp=" + cp;
 
-    dto.setId(misDatos.getId());
-    dto.setNombreCompleto(misDatos.getNombreCompleto());
-    dto.setIdioma(misDatos.getIdioma());
-    dto.setRecursosSuficientes(misDatos.getRecursosSuficientes());
-    dto.setFamiliarComunero(misDatos.getFamiliarComunero());
-    dto.setUtilizaCelular(misDatos.getUtilizaCelular());
-    dto.setTieneComputadora(misDatos.getTieneComputadora());
+        RestTemplate restTemplate = new RestTemplate();
 
-    // Extraer los nombres de entidades relacionadas
-    dto.setCarrera(misDatos.getCarrera() != null ? misDatos.getCarrera().getNombreCarrera() : null);
-    dto.setSemestre(misDatos.getSemestre() != null ? misDatos.getSemestre().getNombreSemestre() : null);
-    dto.setSexo(misDatos.getSexo() != null ? misDatos.getSexo().getNombreSexo() : null);
-    dto.setEstadoCivil(misDatos.getEstadoCivil() != null ? misDatos.getEstadoCivil().getNombreEstadoCivil() : null);
+        // Aquí si la API requiere headers, como APIKEY, los agregas:
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("APIKEY", "b502adbdb721f79c3f1a40435af924b071d5b637");
 
-    // Mapear solo los nombres de medios de traslado
-    if (misDatos.getMediosTraslado() != null) {
-        dto.setMediosTraslado(
-            misDatos.getMediosTraslado().stream()
-                .map(mt -> mt.getCatMediosTransporte().getNombreMedio())
-                .toList()
-        );
+        HttpEntity<String> entity = new HttpEntity<>(headers);
+
+        try {
+            ResponseEntity<String> response = restTemplate.exchange(
+                urlApiExterna,
+                HttpMethod.GET,
+                entity,
+                String.class
+            );
+
+            // Retornas la respuesta tal cual a tu frontend
+            return ResponseEntity.ok(response.getBody());
+        } catch (Exception e) {
+            // Manejo básico de errores
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("{\"error\":\"No se pudo obtener datos del CP\"}");
+        }
     }
-
-    return dto;
-}
-
-
 }
