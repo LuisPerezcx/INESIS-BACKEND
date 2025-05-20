@@ -37,4 +37,7 @@ public class MiTutor {
 
     @Column(name = "ocupacion_otro")
     private String ocupacionOtro;
+
+    @Column(name = "modulo_completo")
+    private Boolean moduloCompleto;
 }

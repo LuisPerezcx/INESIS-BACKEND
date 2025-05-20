@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -36,6 +37,9 @@ public class DomicilioController {
     public List<Domicilio> list() {
         return domicilioServiceJPA.findAll();
     }
+
+    @Value("{api.key}")
+    private String apiKey;
 
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id){
@@ -96,7 +100,7 @@ public class DomicilioController {
 
         // Aquí si la API requiere headers, como APIKEY, los agregas:
         HttpHeaders headers = new HttpHeaders();
-        headers.set("APIKEY", "b502adbdb721f79c3f1a40435af924b071d5b637");
+        headers.set("APIKEY", apiKey);
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
