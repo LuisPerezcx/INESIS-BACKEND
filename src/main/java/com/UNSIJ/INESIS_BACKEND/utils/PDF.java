@@ -33,7 +33,6 @@ public class PDF {
         public static String telOCorreo="telOCorreo";
         public static String trabajadorSuneo="trabajadorSuneo";
         public static String domicilioCompletoTutor="domicilioCompletoTutor";
-
         public static String observaciones="observaciones";
         public static String apellidoP="apellidoP";
         public static String apellidoM="apellidoM";
