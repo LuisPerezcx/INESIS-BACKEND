@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -72,14 +73,40 @@ public class UsuarioController {
     }
 
     @GetMapping("/byAlumno/{idAlumno}")
-public ResponseEntity<?> obtenerUsuarioPorAlumno(@PathVariable Long idAlumno) {
-    try {
-        UsuarioModel usuario = usuarioServiceJPA.findByAlumnoId(idAlumno);
-        return ResponseEntity.ok(usuario);
-    } catch (IllegalArgumentException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+    public ResponseEntity<?> obtenerUsuarioPorAlumno(@PathVariable Long idAlumno) {
+        try {
+            UsuarioModel usuario = usuarioServiceJPA.findByAlumnoId(idAlumno);
+            return ResponseEntity.ok(usuario);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
-}
 
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
+        try {
+            String usuario = credentials.get("usuario");
+            String contrasenia = credentials.get("contrasenia");
+
+            if (usuario == null || contrasenia == null) {
+                Map<String, String> error = new HashMap<>();
+                error.put("mensaje", "Usuario y contraseña son obligatorios");
+                return ResponseEntity.badRequest().body(error);
+            }
+
+            UsuarioModel usuarioLogueado = usuarioServiceJPA.validarLogin(usuario, contrasenia);
+            return ResponseEntity.ok(usuarioLogueado);
+
+        } catch (IllegalArgumentException e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("mensaje", e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+
+        } catch (Exception e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("mensaje", "Error interno del servidor");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
+    }
 
 }
