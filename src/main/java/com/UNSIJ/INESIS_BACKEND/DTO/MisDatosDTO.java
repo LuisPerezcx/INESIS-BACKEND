@@ -1,4 +1,4 @@
-package com.UNSIJ.INESIS_BACKEND.dto;
+package com.UNSIJ.INESIS_BACKEND.DTO;
 
 import java.util.List;
 

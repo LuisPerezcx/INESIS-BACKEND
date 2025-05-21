@@ -1,4 +1,4 @@
-package com.UNSIJ.INESIS_BACKEND.dto;
+package com.UNSIJ.INESIS_BACKEND.DTO;
 
 public class LoginDTO {
     private String usuario;
