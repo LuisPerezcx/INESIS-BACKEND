@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.UNSIJ.INESIS_BACKEND.model.GastosIngresos;
 import com.UNSIJ.INESIS_BACKEND.service.GastosIngresosJPA;
+import com.UNSIJ.INESIS_BACKEND.service.GastosIngresosService;
 
 @RestController
 @RequestMapping("/gastosIngresos") // esta es la ruta para este controlador
@@ -24,13 +25,16 @@ public class GastosIngresosController {
     @Autowired
     private GastosIngresosJPA gastosIngresosServiceJPA; // aquí siempre es el service no la interfaz
 
+    @Autowired
+    private GastosIngresosService gastosService;
+
     @GetMapping
     public List<GastosIngresos> list() {
         return gastosIngresosServiceJPA.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> show(@PathVariable Long id){
+    public ResponseEntity<?> show(@PathVariable Long id) {
         try {
             GastosIngresos gastosIngresos = gastosIngresosServiceJPA.findById(id);
             return ResponseEntity.ok(gastosIngresos);
@@ -41,8 +45,8 @@ public class GastosIngresosController {
         }
     }
 
-    //AQUI SIEMPRE RECIBIR UN MAPA, ES LA FORMA DE RECIBIR UN JSON
-    //NO RECIBIR UNA INSTANCIA DE LA CLASE
+    // AQUI SIEMPRE RECIBIR UN MAPA, ES LA FORMA DE RECIBIR UN JSON
+    // NO RECIBIR UNA INSTANCIA DE LA CLASE
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
@@ -58,7 +62,8 @@ public class GastosIngresosController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            GastosIngresos gastosIngresosUpdate = gastosIngresosServiceJPA.update(gastosIngresosServiceJPA.findById(id),params);
+            GastosIngresos gastosIngresosUpdate = gastosIngresosServiceJPA.update(gastosIngresosServiceJPA.findById(id),
+                    params);
             return ResponseEntity.status(HttpStatus.CREATED).body(gastosIngresosUpdate);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -68,7 +73,7 @@ public class GastosIngresosController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> remove(@PathVariable Long id){
+    public ResponseEntity<?> remove(@PathVariable Long id) {
         try {
             gastosIngresosServiceJPA.findById(id); // PARA TIRAR LA EXEPCION SI NO SE ENCUENTRA EL REGISTRO
             gastosIngresosServiceJPA.deleteById(id);

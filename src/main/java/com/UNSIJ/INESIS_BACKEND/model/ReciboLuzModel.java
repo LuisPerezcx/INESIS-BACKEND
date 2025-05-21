@@ -1,0 +1,58 @@
+package com.UNSIJ.INESIS_BACKEND.model;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
+import lombok.Data;
+
+@Data
+@Entity
+@Table(name = "recibo_luz")
+public class ReciboLuzModel {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_recibo_luz")
+    private Long id;
+
+    @NotNull
+    @Column(name = "titular")
+    private String titular;
+
+    @NotNull
+    @Column(name = "periodo_inicio")
+    private String periodoInicio;
+
+    @NotNull
+    @Column(name = "periodo_fin")
+    private String periodoFin;
+
+    @NotNull
+    @Column(name = "nombre_archivo")
+    private String nombreArchivo;
+
+    @NotNull
+    @Column(name = "nombre_original")
+    private String nombreOriginal;
+
+    @NotNull
+    @Column(name = "ruta_recibo")
+    private String rutaRecibo;
+
+    @NotNull
+    @Column(name = "pago_bimestral")
+    private String pagoBimestral;
+    
+    @NotNull
+    @Column(name = "pago_promedio_mes")
+    private String pagoPromedioMes;
+
+    @Lob
+@Column(name = "contenido_base64")
+private String contenidoBase64;
+
+}

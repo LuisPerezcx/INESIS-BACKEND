@@ -14,6 +14,13 @@ INSERT INTO cat_rol (nombre_rol)
 SELECT 'Revisor'
 WHERE NOT EXISTS (SELECT 1 FROM cat_rol WHERE nombre_rol = 'Revisor');
 
+
+#------------------- REGISTROS DE USUARIO -------------------
+
+INSERT INTO usuario (id_cat_rol, usuario, contrasenia, estatus)
+SELECT 2, 'admin', 'admin123', 'ACTIVO'
+WHERE NOT EXISTS (SELECT 1 FROM usuario WHERE usuario = 'admin');
+
 #------------------- REGISTROS DE CATCARRERA -------------------
 -- Inicio registros
 SELECT 1;
