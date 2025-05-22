@@ -61,7 +61,7 @@ public class AlumnoModel {
     @JoinColumn(name = "id_cat_grupo")
     private CatGrupoModel grupo;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
     @JsonBackReference
     private UsuarioModel usuario;
