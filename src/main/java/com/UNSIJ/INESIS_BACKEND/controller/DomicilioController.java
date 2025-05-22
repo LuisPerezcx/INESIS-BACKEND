@@ -24,7 +24,6 @@ import org.springframework.web.client.RestTemplate;
 import com.UNSIJ.INESIS_BACKEND.model.Domicilio;
 import com.UNSIJ.INESIS_BACKEND.model.Ejemplo;
 import com.UNSIJ.INESIS_BACKEND.service.DomicilioServiceJPA;
-import com.UNSIJ.INESIS_BACKEND.service.EjemploServiceJPA;
 
 @RestController
 @RequestMapping("/domicilio")

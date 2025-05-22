@@ -2,7 +2,6 @@ package com.UNSIJ.INESIS_BACKEND.service;
 
 import com.UNSIJ.INESIS_BACKEND.model.Ejemplo;
 import com.UNSIJ.INESIS_BACKEND.model.MiTutor;
-import com.UNSIJ.INESIS_BACKEND.repository.EjemploRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.MiTutorRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IMiTutorService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;

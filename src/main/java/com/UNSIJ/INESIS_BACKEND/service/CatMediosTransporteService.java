@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.UNSIJ.INESIS_BACKEND.model.CatMediosTransporte;
 import com.UNSIJ.INESIS_BACKEND.model.Ejemplo;
 import com.UNSIJ.INESIS_BACKEND.repository.CatMediosTransporteRepository;
-import com.UNSIJ.INESIS_BACKEND.repository.EjemploRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatMediosTransporteService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 

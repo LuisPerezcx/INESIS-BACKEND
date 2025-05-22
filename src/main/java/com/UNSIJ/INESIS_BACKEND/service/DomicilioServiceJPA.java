@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.UNSIJ.INESIS_BACKEND.model.Domicilio;
 import com.UNSIJ.INESIS_BACKEND.model.Ejemplo;
 import com.UNSIJ.INESIS_BACKEND.repository.DomicilioRepository;
-import com.UNSIJ.INESIS_BACKEND.repository.EjemploRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IDomicilioService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 
