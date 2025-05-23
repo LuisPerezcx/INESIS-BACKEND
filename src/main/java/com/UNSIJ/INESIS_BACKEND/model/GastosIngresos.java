@@ -30,8 +30,9 @@ public class GastosIngresos {
     @Column(name = "trabajo_tipo")
     private String trabajoTipo;
 
-    @Column(name = "ocupacion")
-    private String ocupacion;
+    @ManyToOne
+    @JoinColumn(name = "id_cat_ocupacion")
+    private OcupacionModel ocupacionModel;
 
     @Column(name = "otro")
     private String otro;

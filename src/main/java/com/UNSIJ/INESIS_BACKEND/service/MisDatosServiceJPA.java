@@ -35,7 +35,7 @@ public class MisDatosServiceJPA implements IMisDatosService {
     private CatEstadoCivilRepository catEstadoCivilRepository;
 
     @Autowired
-    private GastosIngresosJPA gastosIngresosJPA;
+    private GastosIngresosServiceJPA gastosIngresosServiceJPA;
 
     @Autowired
     private TransporteServiceJPA transporteServiceJPA;
@@ -197,7 +197,7 @@ public class MisDatosServiceJPA implements IMisDatosService {
 
             Map<String, Object> gastosIngresosParams = (Map<String, Object>) params.get("gastosIngresos");
             if (gastosIngresosParams != null) {
-                GastosIngresos gastosIngresos = gastosIngresosJPA.create(gastosIngresosParams);
+                GastosIngresos gastosIngresos = gastosIngresosServiceJPA.create(gastosIngresosParams);
                 misDatos.setGastosIngresos(gastosIngresos);
             }
 

@@ -66,9 +66,9 @@ public class MiTutorServiceJPA implements IMiTutorService {
     @Override
     public MiTutor build(Map<String, Object> params, MiTutor miTutor){
         try {
-            String nombreCompleto = JsonUtils.obtString(params,"nombreCompleto");
-            if(nombreCompleto == null) throw new IllegalArgumentException("El campo nombre completo es obligatorio");
-            miTutor.setNombreCompleto(nombreCompleto);
+            String nombreTutor = JsonUtils.obtString(params,"nombreTutor");
+            if(nombreTutor == null) throw new IllegalArgumentException("El campo nombre completo es obligatorio");
+            miTutor.setNombreTutor(nombreTutor);
 
             String telefono = JsonUtils.obtString(params,"telefono");
             if(telefono == null) throw new IllegalArgumentException("El campo telefono es obligatorio");

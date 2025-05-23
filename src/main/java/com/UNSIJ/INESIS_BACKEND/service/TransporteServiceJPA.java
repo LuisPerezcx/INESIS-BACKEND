@@ -113,6 +113,7 @@ public class TransporteServiceJPA implements ITransporteService {
         transporteBD.setMarca(transporteInstance.getMarca());
         transporteBD.setModelo(transporteInstance.getModelo());
         transporteBD.setAnio(transporteInstance.getAnio());
+        transporteBD.setCatTipoTransporte(transporteInstance.getCatTipoTransporte());
 
         return this.save(transporteBD);
     }

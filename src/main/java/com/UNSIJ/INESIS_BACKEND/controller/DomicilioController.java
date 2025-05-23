@@ -99,7 +99,7 @@ public class DomicilioController {
 
         // Aquí si la API requiere headers, como APIKEY, los agregas:
         HttpHeaders headers = new HttpHeaders();
-        headers.set("APIKEY", apiKey);
+        headers.set("APIKEY", "b502adbdb721f79c3f1a40435af924b071d5b637");
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
@@ -114,6 +114,7 @@ public class DomicilioController {
             // Retornas la respuesta tal cual a tu frontend
             return ResponseEntity.ok(response.getBody());
         } catch (Exception e) {
+            e.printStackTrace();
             // Manejo básico de errores
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("{\"error\":\"No se pudo obtener datos del CP\"}");

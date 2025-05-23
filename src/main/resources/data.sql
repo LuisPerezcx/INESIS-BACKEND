@@ -519,5 +519,40 @@ INSERT INTO cat_medios_transporte (nombre_medio)
 SELECT 'Microbús'
 WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Microbús');
 
+# ------------------------------------------- REGISTRO DE CAT_OCUPACION
+
+SELECT 1;
+
+INSERT INTO cat_ocupacion (nombre_ocupacion)
+SELECT 'Comerciante'
+WHERE NOT EXISTS (SELECT 1 FROM cat_ocupacion WHERE nombre_ocupacion = 'Comerciante');
+
+INSERT INTO cat_ocupacion (nombre_ocupacion)
+SELECT 'Jubilado o pensionado'
+WHERE NOT EXISTS (SELECT 1 FROM cat_ocupacion WHERE nombre_ocupacion = 'Jubilado o pensionado');
+
+INSERT INTO cat_ocupacion (nombre_ocupacion)
+SELECT 'Empleado de gobierno'
+WHERE NOT EXISTS (SELECT 1 FROM cat_ocupacion WHERE nombre_ocupacion = 'Empleado de gobierno');
+
+INSERT INTO cat_ocupacion (nombre_ocupacion)
+SELECT 'Labores del campo o de la pesca'
+WHERE NOT EXISTS (SELECT 1 FROM cat_ocupacion WHERE nombre_ocupacion = 'Labores del campo o de la pesca');
+
+INSERT INTO cat_ocupacion (nombre_ocupacion)
+SELECT 'Empleado de empresa privada'
+WHERE NOT EXISTS (SELECT 1 FROM cat_ocupacion WHERE nombre_ocupacion = 'Empleado de empresa privada');
+
+INSERT INTO cat_ocupacion (nombre_ocupacion)
+SELECT 'Empleado empresa ejidal o comunal'
+WHERE NOT EXISTS (SELECT 1 FROM cat_ocupacion WHERE nombre_ocupacion = 'Empleado empresa ejidal o comunal');
+
+INSERT INTO cat_ocupacion (nombre_ocupacion)
+SELECT 'Tiene negocio propio'
+WHERE NOT EXISTS (SELECT 1 FROM cat_ocupacion WHERE nombre_ocupacion = 'Tiene negocio propio');
+
+INSERT INTO cat_ocupacion (nombre_ocupacion)
+SELECT 'Otro'
+WHERE NOT EXISTS (SELECT 1 FROM cat_ocupacion WHERE nombre_ocupacion = 'Otro');
 
 
