@@ -54,6 +54,7 @@ public class MisDatosController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
     }
@@ -87,7 +88,7 @@ private MisDatosDTO convertirAMisDatosDTO(MisDatos misDatos) {
     MisDatosDTO dto = new MisDatosDTO();
 
     dto.setId(misDatos.getId());
-    dto.setNombreCompleto(misDatos.getNombreCompleto());
+    //dto.setNombreCompleto(misDatos.getNombreCompleto());
     dto.setIdioma(misDatos.getIdioma());
     dto.setRecursosSuficientes(misDatos.getRecursosSuficientes());
     dto.setFamiliarComunero(misDatos.getFamiliarComunero());
@@ -95,8 +96,8 @@ private MisDatosDTO convertirAMisDatosDTO(MisDatos misDatos) {
     dto.setTieneComputadora(misDatos.getTieneComputadora());
 
     // Extraer los nombres de entidades relacionadas
-    dto.setCarrera(misDatos.getCarrera() != null ? misDatos.getCarrera().getNombreCarrera() : null);
-    dto.setSemestre(misDatos.getSemestre() != null ? misDatos.getSemestre().getNombreSemestre() : null);
+    //dto.setCarrera(misDatos.getCarrera() != null ? misDatos.getCarrera().getNombreCarrera() : null);
+    //dto.setSemestre(misDatos.getSemestre() != null ? misDatos.getSemestre().getNombreSemestre() : null);
     dto.setSexo(misDatos.getSexo() != null ? misDatos.getSexo().getNombreSexo() : null);
     dto.setEstadoCivil(misDatos.getEstadoCivil() != null ? misDatos.getEstadoCivil().getNombreEstadoCivil() : null);
 

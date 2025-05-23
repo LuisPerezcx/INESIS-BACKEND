@@ -42,6 +42,7 @@ public class GastosIngresos {
 
     @OneToOne(mappedBy = "gastosIngresos")
     @ToString.Exclude
+    @JsonIgnore
     private MisDatos misDatos;
 
 }

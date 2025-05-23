@@ -27,10 +27,4 @@ public class CatGrupoModel {
     @ManyToOne
     @JoinColumn(name = "id_cat_semestre", referencedColumnName = "id_cat_semestre")
     private CatSemestreModel catSemestreModel;
-
-    @ManyToOne
-    @JoinColumn(name = "id_alumno", referencedColumnName = "id_alumno")
-    @ToString.Exclude
-    private AlumnoModel alumnoModel;
-
 }

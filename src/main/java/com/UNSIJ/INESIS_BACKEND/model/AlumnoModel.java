@@ -66,4 +66,6 @@ public class AlumnoModel {
     @JsonBackReference
     private UsuarioModel usuario;
 
+    @OneToOne(mappedBy = "alumno")
+    private MisDatos misDatos;
 }
