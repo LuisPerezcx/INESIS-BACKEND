@@ -66,6 +66,11 @@ public class MisDatos {
     @Column(name = "nombre_casa_huesped")
     private String nombreCasaHuesped;
 
+    @NotNull
+    @Column(name = "lleva_vehiculo")
+    private Boolean llevaVehiculo;
+
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_gastos_ingresos")
     private GastosIngresos gastosIngresos;

@@ -67,8 +67,8 @@ public class DomicilioServiceJPA implements IDomicilioService {
     @Override
     public Domicilio build(Map<String, Object> params, Domicilio domicilio){
         try {
-            domicilio.setEstado(JsonUtils.obtString(params, "estado"));
-            domicilio.setMunicipio(JsonUtils.obtString(params, "municipio"));
+            //domicilio.setEstado(JsonUtils.obtString(params, "estado"));
+            //domicilio.setMunicipio(JsonUtils.obtString(params, "municipio"));
             domicilio.setLocalidad(JsonUtils.obtString(params, "localidad"));
             domicilio.setColonia(JsonUtils.obtString(params, "colonia"));
             domicilio.setCalle(JsonUtils.obtString(params, "calle"));
@@ -87,8 +87,8 @@ public class DomicilioServiceJPA implements IDomicilioService {
     @Override
     public Domicilio updateInstance(Domicilio domicilioInstance) throws Exception {
         Domicilio domicilioBD = this.findById(domicilioInstance.getIdDomicilio());
-        domicilioBD.setEstado(domicilioInstance.getEstado());
-        domicilioBD.setMunicipio(domicilioInstance.getMunicipio());
+        //domicilioBD.setEstado(domicilioInstance.getEstado());
+        //domicilioBD.setMunicipio(domicilioInstance.getMunicipio());
         domicilioBD.setLocalidad(domicilioInstance.getLocalidad());
         domicilioBD.setColonia(domicilioInstance.getColonia());
         domicilioBD.setCalle(domicilioInstance.getCalle());

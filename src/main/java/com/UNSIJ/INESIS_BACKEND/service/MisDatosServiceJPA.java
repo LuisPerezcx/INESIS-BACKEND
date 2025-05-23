@@ -197,12 +197,26 @@ public class MisDatosServiceJPA implements IMisDatosService {
                 misDatos.setGastosIngresos(gastosIngresos);
             }
 
+            String llevaVehiculoString = JsonUtils.obtString(params, "llevaVehiculo");
+            Boolean llevaVehiculo = JsonUtils.obtBoolean(params, "llevaVehiculo");
+            if (llevaVehiculoString != null) {
+                if ("Si".equalsIgnoreCase(llevaVehiculoString)) {
+                    llevaVehiculo = true;
+                } else if ("No".equalsIgnoreCase(llevaVehiculoString)) {
+                    llevaVehiculo = false;
+                } else {
+                    throw new IllegalArgumentException("El valor de 'lleva vehiculo' debe ser 'Si' o 'No'.");
+                }
+            }
+            if (llevaVehiculo == null)
+                throw new IllegalArgumentException("El campo lleva vehivulo es obligatorio");
+            misDatos.setLlevaVehiculo(llevaVehiculo);
+
             Map<String, Object> transporteParams = (Map<String, Object>) params.get("transporte");
-            if (transporteParams != null) {
+            if (transporteParams != null && transporteParams.values().stream().anyMatch(v -> v != null && !v.toString().trim().isEmpty())) {
                 Transporte transporte = transporteServiceJPA.create(transporteParams);
                 misDatos.setTransporte(transporte);
             }
-
 
             List<Map<String, Object>> mediosTrasladoParams = (List<Map<String, Object>>) params.get("mediosTraslado");
             List<MedioTraslado> mediosTraslado = new ArrayList<>();

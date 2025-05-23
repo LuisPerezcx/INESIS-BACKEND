@@ -17,11 +17,11 @@ public class Domicilio {
     @Column(name = "id_domicilio")
     private Long idDomicilio;
 
-    @NotNull
-    private String estado;
+    //@NotNull
+    //private String estado;
 
-    @NotNull
-    private String municipio;
+    //@NotNull
+    //private String municipio;
 
     @NotNull
     private String localidad;
