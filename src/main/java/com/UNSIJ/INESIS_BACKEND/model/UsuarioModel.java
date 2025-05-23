@@ -30,7 +30,7 @@ public class UsuarioModel {
     private String contrasenia;
 
     @Column(name = "estatus")
-    private String estatus;
+    private Boolean estatus;
 
     @ManyToOne
     @JoinColumn(name = "id_cat_rol")
