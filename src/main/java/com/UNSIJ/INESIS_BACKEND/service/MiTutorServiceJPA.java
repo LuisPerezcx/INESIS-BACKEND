@@ -1,5 +1,6 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
+import com.UNSIJ.INESIS_BACKEND.model.Domicilio;
 import com.UNSIJ.INESIS_BACKEND.model.Ejemplo;
 import com.UNSIJ.INESIS_BACKEND.model.MiTutor;
 import com.UNSIJ.INESIS_BACKEND.repository.MiTutorRepository;
@@ -16,6 +17,9 @@ import java.util.Map;
 public class MiTutorServiceJPA implements IMiTutorService {
     @Autowired
     private MiTutorRepository miTutorRepository;
+
+    @Autowired
+    private DomicilioServiceJPA domicilioServiceJPA;
 
     @Override
     public List<MiTutor> findAll() {
@@ -114,6 +118,13 @@ public class MiTutorServiceJPA implements IMiTutorService {
 
             String ocupacionOtro = JsonUtils.obtString(params,"ocupacionOtro");
             miTutor.setOcupacionOtro(ocupacionOtro);
+
+            miTutor = this.save(miTutor);
+            Map<String, Object> domicilioParams = (Map<String, Object>) params.get("domicilio");
+            if (domicilioParams != null) {
+                Domicilio domicilio = domicilioServiceJPA.create(domicilioParams);
+                miTutor.setDomicilio(domicilio);
+            }
 
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());

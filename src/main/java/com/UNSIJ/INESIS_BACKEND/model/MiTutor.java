@@ -44,4 +44,7 @@ public class MiTutor {
     @JoinColumn(name = "id_cat_ocupacion")
     private OcupacionModel ocupacionModel;
 
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "id_domicilio")
+    private Domicilio domicilio;
 }

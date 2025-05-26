@@ -17,12 +17,6 @@ public class Domicilio {
     @Column(name = "id_domicilio")
     private Long idDomicilio;
 
-    //@NotNull
-    //private String estado;
-
-    //@NotNull
-    //private String municipio;
-
     @NotNull
     private String localidad;
 
@@ -36,8 +30,4 @@ public class Domicilio {
 
     @NotNull
     private String cp;
-
-    // @OneToOne(mappedBy = "domicilio", cascade = CascadeType.ALL)
-    // @JsonIgnore
-    // private MisDatos misDatos;
 }
