@@ -15,27 +15,25 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.UNSIJ.INESIS_BACKEND.DTO.MisDatosDTO;
-import com.UNSIJ.INESIS_BACKEND.model.Ejemplo;
-import com.UNSIJ.INESIS_BACKEND.model.MisDatos;
-import com.UNSIJ.INESIS_BACKEND.service.MisDatosServiceJPA;
+import com.UNSIJ.INESIS_BACKEND.model.CatEstadoCivil;
+import com.UNSIJ.INESIS_BACKEND.service.CatEstadoCivilServiceJPA;
 
 @RestController
-@RequestMapping("/misDatos")
-public class MisDatosController {
-    @Autowired
-    private MisDatosServiceJPA misDatosServiceJPA; // Aquí siempre es el service no la interfaz
+@RequestMapping("/estadoCivil") // esta es la ruta para este controlador
+public class CatEstadoCivilController {
+ @Autowired
+    private CatEstadoCivilServiceJPA catEstadoCivilServiceJPA; // aquí siempre es el service no la interfaz
 
     @GetMapping
-    public List<MisDatos> list() {
-        return misDatosServiceJPA.findAll();
+    public List<CatEstadoCivil> list() {
+        return catEstadoCivilServiceJPA.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id){
         try {
-            MisDatos misDatos = misDatosServiceJPA.findById(id);
-            return ResponseEntity.ok(misDatos);
+            CatEstadoCivil catEstadoCivil = catEstadoCivilServiceJPA.findById(id);
+            return ResponseEntity.ok(catEstadoCivil);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
@@ -48,9 +46,8 @@ public class MisDatosController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            MisDatos misDatos = misDatosServiceJPA.create(params);
-            MisDatosDTO dto = convertirAMisDatosDTO(misDatos);
-            return ResponseEntity.status(HttpStatus.CREATED).body(dto);
+            CatEstadoCivil catEstadoCivil = catEstadoCivilServiceJPA.create(params);
+            return ResponseEntity.status(HttpStatus.CREATED).body(catEstadoCivil);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -61,8 +58,8 @@ public class MisDatosController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            MisDatos misDatosUpdate = misDatosServiceJPA.update(misDatosServiceJPA.findById(id),params);
-            return ResponseEntity.status(HttpStatus.CREATED).body(misDatosUpdate);
+            CatEstadoCivil catEstadoCivilUpdate = catEstadoCivilServiceJPA.update(catEstadoCivilServiceJPA.findById(id),params);
+            return ResponseEntity.status(HttpStatus.CREATED).body(catEstadoCivilUpdate);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
@@ -73,44 +70,13 @@ public class MisDatosController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> remove(@PathVariable Long id){
         try {
-            misDatosServiceJPA.findById(id); // PARA TIRAR LA EXEPCION SI NO SE ENCUENTRA EL REGISTRO
-            misDatosServiceJPA.deleteById(id);
+            catEstadoCivilServiceJPA.findById(id); // PARA TIRAR LA EXEPCION SI NO SE ENCUENTRA EL REGISTRO
+            catEstadoCivilServiceJPA.deleteById(id);
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
-    }
-
-private MisDatosDTO convertirAMisDatosDTO(MisDatos misDatos) {
-    MisDatosDTO dto = new MisDatosDTO();
-
-    dto.setId(misDatos.getId());
-    dto.setNombreCompleto(misDatos.getNombreCompleto());
-    dto.setIdioma(misDatos.getIdioma());
-    dto.setRecursosSuficientes(misDatos.getRecursosSuficientes());
-    dto.setFamiliarComunero(misDatos.getFamiliarComunero());
-    dto.setUtilizaCelular(misDatos.getUtilizaCelular());
-    dto.setTieneComputadora(misDatos.getTieneComputadora());
-
-    // Extraer los nombres de entidades relacionadas
-    dto.setCarrera(misDatos.getCarrera() != null ? misDatos.getCarrera().getNombreCarrera() : null);
-    dto.setSemestre(misDatos.getSemestre() != null ? misDatos.getSemestre().getNombreSemestre() : null);
-    dto.setSexo(misDatos.getSexo() != null ? misDatos.getSexo().getNombreSexo() : null);
-    dto.setEstadoCivil(misDatos.getEstadoCivil() != null ? misDatos.getEstadoCivil().getNombreEstadoCivil() : null);
-
-    // Mapear solo los nombres de medios de traslado
-    if (misDatos.getMediosTraslado() != null) {
-        dto.setMediosTraslado(
-            misDatos.getMediosTraslado().stream()
-                .map(mt -> mt.getCatMediosTransporte().getNombreMedio())
-                .toList()
-        );
-    }
-
-    return dto;
-}
-
-
+    }   
 }

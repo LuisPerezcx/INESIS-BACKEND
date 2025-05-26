@@ -1,6 +1,9 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
+import org.hibernate.validator.constraints.Length;
+
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
@@ -16,16 +19,11 @@ public class Trabajo {
     private String nombreTrabajo;
 
     @Column(name = "telefono_trabajo")
-    private Integer telefonoTrabajo;
+    private String telefonoTrabajo;
 
     @Column(name = "ingreso_mensual")
     private Double ingresoMensual;
 
     @Column(name = "domicilio")
-    private String domicilio;
-
-    @ManyToOne
-    @JoinColumn(name = "id_gastos_ingresos")
-    private GastosIngresos gastosIngresos;
-
+    private String domicilioTrabajo;
 }
