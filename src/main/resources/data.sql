@@ -744,29 +744,16 @@ WHERE NOT EXISTS (SELECT 1 FROM cat_medios_estudio WHERE nombre_medios = 'Otro')
 SELECT 1;
 
 INSERT INTO cat_situacion_vivienda (nombre_situacion)
-SELECT 'Propia'
-WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Propia');
+SELECT 'Rento cuarto'
+WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Rento cuarto');
 
 INSERT INTO cat_situacion_vivienda (nombre_situacion)
-SELECT 'Rentada'
-WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Rentada');
+SELECT 'Rento casa'
+WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Rento casa');
 
 INSERT INTO cat_situacion_vivienda (nombre_situacion)
-SELECT 'Prestada'
-WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Prestada');
-
-INSERT INTO cat_situacion_vivienda (nombre_situacion)
-SELECT 'Alquilada'
-WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Alquilada');
-
-INSERT INTO cat_situacion_vivienda (nombre_situacion)
-SELECT 'Vivienda institucional'
-WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Vivienda institucional');
-
-INSERT INTO cat_situacion_vivienda (nombre_situacion)
-SELECT 'Otro'
-WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Otro');
-
+SELECT 'Vivo con familiares'
+WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Vivo con familiares');
 
 #------------------- REGISTROS DE CAT_TIPO_VIVIENDA -------------------
 -- Inicio de inserciones
@@ -799,3 +786,17 @@ WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_vivienda WHERE nombre_tipo = 'Condomini
 INSERT INTO cat_tipo_vivienda (nombre_tipo)
 SELECT 'Otro'
 WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_vivienda WHERE nombre_tipo = 'Otro');
+
+
+
+# ----------------------------------- REGISTROS DE CAT_TIPO_TRABAJO ----------------------------------------
+
+SELECT 1;
+
+INSERT INTO cat_tipo_trabajo (nombre_tipo)
+SELECT 'Temporal'
+WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_trabajo WHERE nombre_tipo = 'Temporal');
+
+INSERT INTO cat_tipo_trabajo (nombre_tipo)
+SELECT 'Permanente'
+WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_trabajo WHERE nombre_tipo = 'Permanente');
