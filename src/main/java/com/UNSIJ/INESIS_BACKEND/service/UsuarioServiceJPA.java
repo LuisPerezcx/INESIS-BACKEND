@@ -118,4 +118,21 @@ public class UsuarioServiceJPA implements IUsuarioService {
         }
     }
 
+    @Override
+    public UsuarioModel findByAlumnoId(Long idAlumno) {
+        return usuarioRepository.findByAlumnoId(idAlumno)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "No se encontró un usuario para el alumno con ID: " + idAlumno));
+    }
+
+    public UsuarioModel validarLogin(String usuario, String contrasenia) {
+        UsuarioModel user = usuarioRepository.findByUsuario(usuario)
+            .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+    
+        if (!user.getContrasenia().equals(contrasenia)) {
+            throw new IllegalArgumentException("Contraseña incorrecta");
+        }
+    
+        return user;
+    }
 }

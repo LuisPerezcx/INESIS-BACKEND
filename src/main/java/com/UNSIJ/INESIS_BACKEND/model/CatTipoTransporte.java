@@ -2,6 +2,9 @@ package com.UNSIJ.INESIS_BACKEND.model;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -19,9 +22,10 @@ public class CatTipoTransporte {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idCatTipoTransporte;
 
+    @Column(name = "nombre_tipo")
     private String nombreTipo;
-    private String abrevTipo;
 
     @OneToMany(mappedBy = "catTipoTransporte")
+    @JsonIgnore
     private List<Transporte> transportes;
 }

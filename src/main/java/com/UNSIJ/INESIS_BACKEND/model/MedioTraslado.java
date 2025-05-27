@@ -1,5 +1,8 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,6 +18,7 @@ public class MedioTraslado {
 
     @ManyToOne
     @JoinColumn(name = "id_mis_datos", nullable = false)
+    @JsonIgnore
     private MisDatos misDatos;
 
     @ManyToOne

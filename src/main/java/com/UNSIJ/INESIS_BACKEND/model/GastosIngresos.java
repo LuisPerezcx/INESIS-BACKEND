@@ -1,40 +1,34 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.text.StyledEditorKit.BoldAction;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
-@Data  
+@Data
 @Entity
-@Table(name = "gatos_ingresos")
+@Table(name = "gastos_ingresos")
 public class GastosIngresos {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_gatos_ingresos")
     private Long idGatosIngresos;
 
-    @Column(name = "cuanto_hacienden")
-    private Double cuantoHacienden;
+    @Column(name = "gasto_mensual")
+    private Double gastoMensual;
 
-    @Column (name = "depende_economicamente")
+    @Column(name = "depende_economicamente")
     private String dependeEconomicamente;
 
     @Column(name = "nombre_quien_dependes")
     private String nombreQuienDependes;
 
-    @Column(name = "gasto_mensual")
-    private Double gastoMensual;
-
     @Column(name = "solicita_beca_alimenticia")
-    private Boolean solicitaBecaAlimenticia;
+    private String solicitaBecaAlimenticia;
 
-    @Column(name = "trabajo_temporal")
-    private Boolean trabajoTemporal;
+    @Column(name = "trabajo_tipo")
+    private String trabajoTipo;
 
     @Column(name = "ocupacion")
     private String ocupacion;
@@ -42,7 +36,12 @@ public class GastosIngresos {
     @Column(name = "otro")
     private String otro;
 
-    @OneToMany(mappedBy = "gastosIngresos", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Trabajo> trabajos = new ArrayList<>();
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_trabajo")
+    private Trabajo trabajo;
+
+    @OneToOne(mappedBy = "gastosIngresos")
+    @ToString.Exclude
+    private MisDatos misDatos;
 
 }

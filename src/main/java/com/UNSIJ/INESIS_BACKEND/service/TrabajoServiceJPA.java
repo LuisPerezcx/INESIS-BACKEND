@@ -44,7 +44,7 @@ public class TrabajoServiceJPA implements ITrabajoService {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
-            throw new IllegalArgumentException("Error al construir el ejemplo");
+            throw new IllegalArgumentException("Error al construir el trabajo(create)");
         }
         return this.save(trabajo);
     }
@@ -58,7 +58,7 @@ public class TrabajoServiceJPA implements ITrabajoService {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
-            throw new IllegalArgumentException("Error al construir el ejemplo");
+            throw new IllegalArgumentException("Error al construir el trabajo(update)");
         }
         return this.save(trabajo);
     }
@@ -67,27 +67,21 @@ public class TrabajoServiceJPA implements ITrabajoService {
     public Trabajo build(Map<String, Object> params, Trabajo trabajo){
         try {
             String nombreTrabajo = JsonUtils.obtString(params,"nombreTrabajo");
-            if(nombreTrabajo == null) throw new IllegalArgumentException("El campo nombreTrabajo es obligatorio");
             trabajo.setNombreTrabajo(nombreTrabajo);
 
-            Integer telefonoTrabajo = JsonUtils.obtInteger(params,"telefonoTrabajo");
-            if(telefonoTrabajo == null) throw new IllegalArgumentException("El campo telefonoTrabajo es obligatorio");
+            String telefonoTrabajo = JsonUtils.obtString(params,"telefonoTrabajo");
             trabajo.setTelefonoTrabajo(telefonoTrabajo);
 
             Double ingresoMensual = JsonUtils.obtDouble(params,"ingresoMensual");
-            if(ingresoMensual == null) throw new IllegalArgumentException("El campo ingresoMensual es obligatorio");
             trabajo.setIngresoMensual(ingresoMensual);
 
-            String domicilio = JsonUtils.obtString(params,"domicilio");
-            if(domicilio == null) throw new IllegalArgumentException("El campo domicilio es obligatorio");
-            trabajo.setDomicilio(domicilio);
-            
-
+            String domicilioTrabajo = JsonUtils.obtString(params,"domicilioTrabajo");
+            trabajo.setDomicilioTrabajo(domicilioTrabajo);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
-            throw new IllegalArgumentException("Error al construir el ejemplo");
+            throw new IllegalArgumentException("Error al construir el trabajo(build)");
         }
         return trabajo;
     }
@@ -99,7 +93,7 @@ public class TrabajoServiceJPA implements ITrabajoService {
         trabajoBD.setNombreTrabajo(trabajoInstance.getNombreTrabajo());
         trabajoBD.setTelefonoTrabajo(trabajoInstance.getTelefonoTrabajo());
         trabajoBD.setIngresoMensual(trabajoInstance.getIngresoMensual());
-        trabajoBD.setDomicilio(trabajoInstance.getDomicilio());
+        trabajoBD.setDomicilioTrabajo(trabajoInstance.getDomicilioTrabajo());
 
         return this.save(trabajoBD);
     }
