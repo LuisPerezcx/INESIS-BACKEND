@@ -74,7 +74,50 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.telOCorreo, " ", true);
             form.setField(PDF.ESE.trabajadorSuneo, " ", true);
             form.setField(PDF.ESE.domicilioCompletoTutor, " ", true);
+            form.setField(PDF.ESE.nombreParentesco1," ",true);
+            form.setField(PDF.ESE.nombreParentesco2," ",true);
+            form.setField(PDF.ESE.nombreParentesco3," ",true);
+            form.setField(PDF.ESE.empresaLugar1," ",true);
+            form.setField(PDF.ESE.empresaLugar2," ",true);
+            form.setField(PDF.ESE.empresaLugar3," ",true);
+            form.setField(PDF.ESE.puestoTipo1," ",true);
+            form.setField(PDF.ESE.puestoTipo2," ",true);
+            form.setField(PDF.ESE.puestoTipo3," ",true);
+            form.setField(PDF.ESE.bruto1," ",true);
+            form.setField(PDF.ESE.bruto2," ",true);
+            form.setField(PDF.ESE.bruto3," ",true);
+            form.setField(PDF.ESE.brutoTotal," ",true);
+            form.setField(PDF.ESE.neto1," ",true);
+            form.setField(PDF.ESE.neto2," ",true);
+            form.setField(PDF.ESE.neto3," ",true);
+            form.setField(PDF.ESE.netoTotal," ",true);
+            form.setField(PDF.ESE.reciboTitular," ",true);
+            form.setField(PDF.ESE.reciboDomicilio," ",true);
+            form.setField(PDF.ESE.periodoReportado," ",true);
+            form.setField(PDF.ESE.promedioMes," ",true);
+            form.setField(PDF.ESE.dependiente1," ",true);
+            form.setField(PDF.ESE.dependiente2," ",true);
+            form.setField(PDF.ESE.dependiente3," ",true);
+            form.setField(PDF.ESE.dependiente4," ",true);
+            form.setField(PDF.ESE.dependiente5," ",true);
+            form.setField(PDF.ESE.edad1," ",true);
+            form.setField(PDF.ESE.edad2," ",true);
+            form.setField(PDF.ESE.edad3," ",true);
+            form.setField(PDF.ESE.edad4," ",true);
+            form.setField(PDF.ESE.edad5," ",true);
+            form.setField(PDF.ESE.parentescoDependiente1," ",true);
+            form.setField(PDF.ESE.parentescoDependiente2," ",true);
+            form.setField(PDF.ESE.parentescoDependiente3," ",true);
+            form.setField(PDF.ESE.parentescoDependiente4," ",true);
+            form.setField(PDF.ESE.parentescoDependiente5," ",true);
+            form.setField(PDF.ESE.tipoComprobante1," ",true);
+            form.setField(PDF.ESE.tipoComprobante2," ",true);
+            form.setField(PDF.ESE.tipoComprobante3," ",true);
+            form.setField(PDF.ESE.tipoComprobante4," ",true);
+            form.setField(PDF.ESE.tipoComprobante5," ",true);
             form.setField(PDF.ESE.observaciones, " ", true);
+
+
             form.setField(PDF.ESE.apellidoP, valorSeguro(alumno.getApellido()," "), true);
             form.setField(PDF.ESE.apellidoM, " ", true);
             form.setField(PDF.ESE.nombreAlum, valorSeguro(alumno.getNombre()," "), true);
@@ -94,9 +137,12 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.nombreEmpresa, " ", true);
             form.setField(PDF.ESE.ingresoMensual, " ", true);
             form.setField(PDF.ESE.domicilioTrabajo, " ", true);
+
+
             form.setField(PDF.ESE.aportanGasto, " ", true);
             form.setField(PDF.ESE.ingresoMensualPromedio, " ", true);
             form.setField(PDF.ESE.numDependeMencionado, " ", true);
+            form.setField(PDF.ESE.promedioMensual," ",true);
             form.setField(PDF.ESE.alimentacion, "0", true);
             form.setField(PDF.ESE.renta, "0", true);
             form.setField(PDF.ESE.servicios, "0", true);
@@ -151,6 +197,8 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.numHermanosEstudiando, " ", true);
             form.setField(PDF.ESE.numHermanosNoEstudian, " ", true);
             form.setField(PDF.ESE.numHermanosLicenciatura, " ", true);
+
+
             form.setField(PDF.ESE.aguaCaliente, "X", true);
             form.setField(PDF.ESE.refrigerador, "X", true);
             form.setField(PDF.ESE.estufa, "X", true);
@@ -176,6 +224,7 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.autoPropio, "X", true);
             form.setField(PDF.ESE.autoFamiliar, "X", true);
             form.setField(PDF.ESE.autoAmigos, "X", true);
+            form.setField(PDF.ESE.firmaAlumno,nombreCompletoSeguro(alumno.getNombre(), alumno.getApellido()),true);
 
             //imprime los campos encontrados en el pdf
             for (String campo : form.getFields().keySet()) {

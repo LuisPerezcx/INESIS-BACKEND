@@ -33,6 +33,47 @@ public class PDF {
         public static String telOCorreo="telOCorreo";
         public static String trabajadorSuneo="trabajadorSuneo";
         public static String domicilioCompletoTutor="domicilioCompletoTutor";
+        public static String nombreParentesco1="nombreParentesco1";
+        public static String nombreParentesco2="nombreParentesco2";
+        public static String nombreParentesco3="nombreParentesco3";
+        public static String empresaLugar1="empresaLugar1";
+        public static String empresaLugar2="empresaLugar2";
+        public static String empresaLugar3="empresaLugar3";
+        public static String puestoTipo1="puestoTipo1";
+        public static String puestoTipo2="puestoTipo2";
+        public static String puestoTipo3="puestoTipo3";
+        public static String bruto1="bruto1";
+        public static String bruto2="bruto2";
+        public static String bruto3="bruto3";
+        public static String brutoTotal="brutoTotal";
+        public static String neto1="neto1";
+        public static String neto2="neto2";
+        public static String neto3="neto3";
+        public static String netoTotal="netoTotal";
+        public static String reciboTitular="reciboTitular";
+        public static String reciboDomicilio="reciboDomicilio";
+        public static String periodoReportado="periodoReportado";
+        public static String promedioMes="promedioMes";
+        public static String dependiente1="dependiente1";
+        public static String dependiente2="dependiente2";
+        public static String dependiente3="dependiente3";
+        public static String dependiente4="dependiente4";
+        public static String dependiente5="dependiente5";
+        public static String edad1="edad1";
+        public static String edad2="edad2";
+        public static String edad3="edad3";
+        public static String edad4="edad4";
+        public static String edad5="edad5";
+        public static String parentescoDependiente1="parentescoDependiente1";
+        public static String parentescoDependiente2="parentescoDependiente2";
+        public static String parentescoDependiente3="parentescoDependiente3";
+        public static String parentescoDependiente4="parentescoDependiente4";
+        public static String parentescoDependiente5="parentescoDependiente5";
+        public static String tipoComprobante1="tipoComprobante1";
+        public static String tipoComprobante2="tipoComprobante2";
+        public static String tipoComprobante3="tipoComprobante3";
+        public static String tipoComprobante4="tipoComprobante4";
+        public static String tipoComprobante5="tipoComprobante5";
         public static String observaciones="observaciones";
         public static String apellidoP="apellidoP";
         public static String apellidoM="apellidoM";
@@ -56,6 +97,7 @@ public class PDF {
         public static String aportanGasto="aportanGasto";
         public static String ingresoMensualPromedio="ingresoMensualPromedio";
         public static String numDependeMencionado="numDependeMencionado";
+        public static String promedioMensual="promedioMensual";
         public static String alimentacion="alimentacion";
         public static String renta="renta";
         public static String servicios="servicios";
@@ -135,6 +177,6 @@ public class PDF {
         public static String autoPropio="autoPropio";
         public static String autoFamiliar="autoFamiliar";
         public static String autoAmigos="autoAmigos";
-
+        public static String firmaAlumno="firmaAlumno";
     }
 }
