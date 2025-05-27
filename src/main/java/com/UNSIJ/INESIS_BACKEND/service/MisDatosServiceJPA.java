@@ -75,10 +75,10 @@ public class MisDatosServiceJPA implements IMisDatosService {
             if(idAlumno == null) throw new IllegalArgumentException("El campo idAlumno es obligatorio");
             AlumnoModel alumno = alumnoService.findById(idAlumno);
             misDatos.setAlumno(alumno);
-            misDatos.setCompleto(false);
             this.build(params, misDatos);
             misDatos = this.save(misDatos);
             alumno.setMisDatos(misDatos);
+            misDatos.setCompleto(true);
             alumnoService.save(alumno);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
