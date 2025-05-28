@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.UNSIJ.INESIS_BACKEND.model.*;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatSituacionViviendaModel;
+import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.CatSituacionViviendaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,6 +50,9 @@ public class MisDatosServiceJPA implements IMisDatosService {
 
     @Autowired
     private AlumnoServiceJPA alumnoService;
+
+    @Autowired
+    private CatSituacionViviendaRepository catSituacionViviendaRepository;
 
     @Override
     public List<MisDatos> findAll() {
@@ -241,10 +246,13 @@ public class MisDatosServiceJPA implements IMisDatosService {
                 throw new IllegalArgumentException("El campo idioma es obligatorio");
             misDatos.setIdioma(idioma);
 
-            String situacionVivienda = JsonUtils.obtString(params, "situacionVivienda");
-            if (situacionVivienda == null)
-                throw new IllegalArgumentException("El campo situacion vivienda es obligatorio");
-            misDatos.setSituacionVivienda(situacionVivienda);
+            Long idSituacionVivienda = JsonUtils.obtLong(params, "situacionVivienda");
+            System.out.println("Situacion vivienda: " + idSituacionVivienda);
+            if (idSituacionVivienda == null)
+                throw new IllegalArgumentException("El campo 'situacionVivienda' es obligatorio");
+            CatSituacionViviendaModel cat = catSituacionViviendaRepository.findById(idSituacionVivienda)
+                    .orElseThrow(() -> new IllegalArgumentException("Situación de vivienda no encontrada"));
+            misDatos.setSituacionVivienda(cat);
 
             String nombreCasaHuesped = JsonUtils.obtString(params, "nombreCasaHuesped");
             if (nombreCasaHuesped == null)

@@ -2,6 +2,7 @@ package com.UNSIJ.INESIS_BACKEND.model;
 
 import java.util.List;
 
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatSituacionViviendaModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -51,9 +52,9 @@ public class MisDatos {
     @Column(name = "idioma")
     private String idioma;
 
-    @NotNull
-    @Column(name = "situacion_vivienda")
-    private String situacionVivienda;
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "id_cat_situacion_vivienda")
+    private CatSituacionViviendaModel situacionVivienda;
 
     @NotNull
     @Column(name = "nombre_casa_huesped")
