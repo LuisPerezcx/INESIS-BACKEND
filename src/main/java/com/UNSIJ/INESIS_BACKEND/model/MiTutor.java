@@ -1,11 +1,6 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
@@ -17,8 +12,8 @@ public class MiTutor {
     @Column(name = "id_tutor")
     private Long idTutor;
 
-    @Column(name = "nombre_completo")
-    private String nombreCompleto;
+    @Column(name = "nombre_tutor")
+    private String nombreTutor;
 
     @Column(name = "telefono")
     private String telefono;
@@ -37,4 +32,19 @@ public class MiTutor {
 
     @Column(name = "ocupacion_otro")
     private String ocupacionOtro;
+
+    @Column(name = "modulo_completo")
+    private Boolean moduloCompleto;
+
+    @ManyToOne
+    @JoinColumn(name = "id_cat_parentesco")
+    private ParentescoModel parentesco;
+
+    @ManyToOne
+    @JoinColumn(name = "id_cat_ocupacion")
+    private OcupacionModel ocupacionModel;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "id_domicilio")
+    private Domicilio domicilio;
 }

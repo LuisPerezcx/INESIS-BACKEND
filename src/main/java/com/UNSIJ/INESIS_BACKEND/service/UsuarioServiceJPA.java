@@ -79,7 +79,7 @@ public class UsuarioServiceJPA implements IUsuarioService {
                 throw new IllegalArgumentException("El campo contraseña es obligatorio");
             usuarioModel.setContrasenia(contrasenia);
 
-            String estatus = JsonUtils.obtString(params, "estatus");
+            Boolean estatus = JsonUtils.obtBoolean(params, "estatus");
             if (estatus == null)
                 throw new IllegalArgumentException("El campo estatus es obligatorio");
             usuarioModel.setEstatus(estatus);

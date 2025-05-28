@@ -3,6 +3,8 @@ package com.UNSIJ.INESIS_BACKEND.service;
 import java.util.List;
 import java.util.Map;
 
+import com.UNSIJ.INESIS_BACKEND.model.OcupacionModel;
+import com.UNSIJ.INESIS_BACKEND.repository.OcupacionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,12 +16,15 @@ import com.UNSIJ.INESIS_BACKEND.service.interfaces.IGastosIngresosService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 
 @Service
-public class GastosIngresosJPA implements IGastosIngresosService {
+public class GastosIngresosServiceJPA implements IGastosIngresosService {
     @Autowired
     private GastosIngresosRepository gastosIngresosRepository;
 
     @Autowired
     private TrabajoServiceJPA trabajoServiceJPA;
+
+    @Autowired
+    private OcupacionRepository ocupacionRepository;
 
     @Override
     public List<GastosIngresos> findAll() {
@@ -86,8 +91,14 @@ public class GastosIngresosJPA implements IGastosIngresosService {
             String trabajoTipo = JsonUtils.obtString(params, "trabajoTipo");
             gastosIngresos.setTrabajoTipo(trabajoTipo);
 
-            String ocupacion = JsonUtils.obtString(params, "ocupacion");
-            gastosIngresos.setOcupacion(ocupacion);
+            Long idOcupacion = JsonUtils.obtLong(params, "ocupacion");
+            if (idOcupacion == null) {
+                throw new IllegalArgumentException("El campo 'idOcupacion' es obligatorio.");
+            }
+            OcupacionModel ocupacionModel = ocupacionRepository.findById(idOcupacion)
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Ocupacion no encontrado con el ID: " + idOcupacion));
+            gastosIngresos.setOcupacionModel(ocupacionModel);
 
             String otro = JsonUtils.obtString(params, "otro");
             gastosIngresos.setOtro(otro);
@@ -124,7 +135,7 @@ public class GastosIngresosJPA implements IGastosIngresosService {
         gastosIngresosBD.setGastoMensual(gastosIngresosInstance.getGastoMensual());
         gastosIngresosBD.setSolicitaBecaAlimenticia(gastosIngresosInstance.getSolicitaBecaAlimenticia());
         gastosIngresosBD.setTrabajoTipo(gastosIngresosInstance.getTrabajoTipo());
-        gastosIngresosBD.setOcupacion(gastosIngresosInstance.getOcupacion());
+        gastosIngresosBD.setOcupacionModel(gastosIngresosInstance.getOcupacionModel());
         gastosIngresosBD.setOtro(gastosIngresosInstance.getOtro());
 
         return this.save(gastosIngresosBD);

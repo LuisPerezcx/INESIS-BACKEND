@@ -133,7 +133,7 @@ public class JsonUtils {
         }
     }
 
-    public static boolean obtBoolean(Map<String, Object> map, String key) {
+    public static Boolean obtBoolean(Map<String, Object> map, String key) {
         Object value = obtObject(map, key);
 
         if (value instanceof Boolean)
@@ -148,6 +148,6 @@ public class JsonUtils {
             return ((Number) value).intValue() != 0; // 0 es false, cualquier otro número es true
         }
 
-        return false; // Si el valor es null o no es convertible a boolean, retorna false
+        return null; // Si el valor es null o no es convertible a boolean, retorna false
     }
 }
