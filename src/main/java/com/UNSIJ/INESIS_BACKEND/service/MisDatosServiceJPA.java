@@ -49,6 +49,9 @@ public class MisDatosServiceJPA implements IMisDatosService {
     @Autowired
     private AlumnoServiceJPA alumnoService;
 
+    @Autowired
+    private CatSemestreServiceJPA semestreService;
+
     @Override
     public List<MisDatos> findAll() {
         return misDatosRepository.findAll();
@@ -73,7 +76,7 @@ public class MisDatosServiceJPA implements IMisDatosService {
         try {
             Long idAlumno = JsonUtils.obtLong(params, "alumnoId");
             if(idAlumno == null) throw new IllegalArgumentException("El campo idAlumno es obligatorio");
-            AlumnoModel alumno = alumnoService.findById(idAlumno);
+            Alumno alumno = alumnoService.findById(idAlumno);
             misDatos.setAlumno(alumno);
             this.build(params, misDatos);
             misDatos = this.save(misDatos);
@@ -106,25 +109,18 @@ public class MisDatosServiceJPA implements IMisDatosService {
     @Transactional
     public MisDatos build(Map<String, Object> params, MisDatos misDatos) throws IllegalArgumentException {
         try {
+            Long idAlumno = JsonUtils.obtLong(params, "alumnoId");
+            if(idAlumno != null){
+                Alumno alumno = alumnoService.findById(idAlumno);
+                Long idSemestre = JsonUtils.obtLong(params, "semestre");
+                CatSemestre semestre = semestreService.findById(idSemestre);
+                alumno.setSemestre(semestre);
+                alumnoService.save(alumno);
+            }
             String nombreCompleto = JsonUtils.obtString(params, "nombreCompleto");
             if (nombreCompleto == null)
                 throw new IllegalArgumentException("El campo nombre Completo es obligatorio");
             //misDatos.setNombreCompleto(nombreCompleto);
-
-            // Long idCarrera = JsonUtils.obtLong(params, "carrera");
-            // if (idCarrera == null)
-            // throw new IllegalArgumentException("El campo idCarrera es obligatorio");
-            // misDatos.setCarrera(catCarreraRepository.findById(idCarrera)
-            // .orElseThrow(() -> new IllegalArgumentException("No se encontró la carrera
-            // con ID: " + idCarrera)));
-
-            Long idSemestre = JsonUtils.obtLong(params, "semestre");
-            if (idSemestre == null)
-                throw new IllegalArgumentException("El campo idSemestre es obligatorio");
-            //todo: actualizar semestre alumno
-            /*misDatos.setSemestre(catSemestreRepository.findById(idSemestre)
-                    .orElseThrow(
-                            () -> new IllegalArgumentException("No se encontró el semestre con ID: " + idSemestre)));*/
 
             Long idSexo = JsonUtils.obtLong(params, "sexo");
             if (idSexo == null)
@@ -139,82 +135,17 @@ public class MisDatosServiceJPA implements IMisDatosService {
                     .orElseThrow(() -> new IllegalArgumentException(
                             "No se encontró el estado civil con ID: " + idEstadoCivil)));
 
-            String recursosSuficientesString = JsonUtils.obtString(params, "recursosSuficientes");
-            Boolean recursosSuficientes = null;
-            if ("Si".equalsIgnoreCase(recursosSuficientesString)) {
-                recursosSuficientes = true;
-            } else if ("No".equalsIgnoreCase(recursosSuficientesString)) {
-                recursosSuficientes = false;
-            } else if (recursosSuficientesString != null) {
-                throw new IllegalArgumentException("El valor de 'recursosSuficientes' debe ser 'Si' o 'No'.");
-            }
-            if (recursosSuficientes == null)
-                throw new IllegalArgumentException("El campo recursos suficientes es obligatorio");
-            misDatos.setRecursosSuficientes(recursosSuficientes);
-
-            String familiarComuneroString = JsonUtils.obtString(params, "familiarComunero");
-            Boolean familiarComunero = null;
-            if ("Si".equalsIgnoreCase(familiarComuneroString)) {
-                familiarComunero = true;
-            } else if ("No".equalsIgnoreCase(familiarComuneroString)) {
-                familiarComunero = false;
-            } else if (familiarComuneroString != null) {
-                throw new IllegalArgumentException("El valor de 'familiarComunero' debe ser 'Si' o 'No'.");
-            }
-            if (familiarComunero == null)
-                throw new IllegalArgumentException("El campo familiar comunero es obligatorio");
-            misDatos.setFamiliarComunero(familiarComunero);
-
-            String utilizaCelularString = JsonUtils.obtString(params, "utilizaCelular");
-            Boolean utilizaCelular = JsonUtils.obtBoolean(params, "utilizaCelular");
-            if (utilizaCelularString != null) {
-                if ("Si".equalsIgnoreCase(utilizaCelularString)) {
-                    utilizaCelular = true;
-                } else if ("No".equalsIgnoreCase(utilizaCelularString)) {
-                    utilizaCelular = false;
-                } else {
-                    throw new IllegalArgumentException("El valor de 'utilizaCelular' debe ser 'Si' o 'No'.");
-                }
-            }
-            if (utilizaCelular == null)
-                throw new IllegalArgumentException("El campo utiliza celular es obligatorio");
-            misDatos.setUtilizaCelular(utilizaCelular);
-
-            String tieneComputadoraString = JsonUtils.obtString(params, "tieneComputadora");
-            Boolean tieneComputadora = JsonUtils.obtBoolean(params, "tieneComputadora");
-            if (tieneComputadoraString != null) {
-                if ("Si".equalsIgnoreCase(tieneComputadoraString)) {
-                    tieneComputadora = true;
-                } else if ("No".equalsIgnoreCase(tieneComputadoraString)) {
-                    tieneComputadora = false;
-                } else {
-                    throw new IllegalArgumentException("El valor de 'tieneComputadora' debe ser 'Si' o 'No'.");
-                }
-            }
-            if (tieneComputadora == null)
-                throw new IllegalArgumentException("El campo tiene computadora es obligatorio");
-            misDatos.setTieneComputadora(tieneComputadora);
+            misDatos.setRecursosSuficientes(JsonUtils.parseBooleanFlexible(params.get("recursosSuficientes"), "recursosSuficientes"));
+            misDatos.setFamiliarComunero(JsonUtils.parseBooleanFlexible(params.get("familiarComunero"), "familiarComunero"));
+            misDatos.setUtilizaCelular(JsonUtils.parseBooleanFlexible(params.get("utilizaCelular"), "utilizaCelular"));
+            misDatos.setTieneComputadora(JsonUtils.parseBooleanFlexible(params.get("tieneComputadora"), "tieneComputadora"));
+            misDatos.setLlevaVehiculo(JsonUtils.parseBooleanFlexible(params.get("llevaVehiculo"), "llevaVehiculo"));
 
             Map<String, Object> gastosIngresosParams = (Map<String, Object>) params.get("gastosIngresos");
             if (gastosIngresosParams != null) {
                 GastosIngresos gastosIngresos = gastosIngresosServiceJPA.create(gastosIngresosParams);
                 misDatos.setGastosIngresos(gastosIngresos);
             }
-
-            String llevaVehiculoString = JsonUtils.obtString(params, "llevaVehiculo");
-            Boolean llevaVehiculo = JsonUtils.obtBoolean(params, "llevaVehiculo");
-            if (llevaVehiculoString != null) {
-                if ("Si".equalsIgnoreCase(llevaVehiculoString)) {
-                    llevaVehiculo = true;
-                } else if ("No".equalsIgnoreCase(llevaVehiculoString)) {
-                    llevaVehiculo = false;
-                } else {
-                    throw new IllegalArgumentException("El valor de 'lleva vehiculo' debe ser 'Si' o 'No'.");
-                }
-            }
-            if (llevaVehiculo == null)
-                throw new IllegalArgumentException("El campo lleva vehivulo es obligatorio");
-            misDatos.setLlevaVehiculo(llevaVehiculo);
 
             Map<String, Object> transporteParams = (Map<String, Object>) params.get("transporte");
             if (transporteParams != null && transporteParams.values().stream().anyMatch(v -> v != null && !v.toString().trim().isEmpty())) {

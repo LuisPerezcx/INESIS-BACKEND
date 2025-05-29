@@ -18,7 +18,7 @@ public class FechasRegistradasModel {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "id_cat_carrera", referencedColumnName = "id_cat_carrera")
-    private CatCarreraModel carrera;
+    private CatCarrera carrera;
 
     @NotNull
     @Temporal(TemporalType.DATE)

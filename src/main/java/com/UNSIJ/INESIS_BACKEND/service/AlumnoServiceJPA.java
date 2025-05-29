@@ -1,12 +1,8 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import com.UNSIJ.INESIS_BACKEND.model.AlumnoModel;
+import com.UNSIJ.INESIS_BACKEND.model.Alumno;
 import com.UNSIJ.INESIS_BACKEND.model.UsuarioModel;
 import com.UNSIJ.INESIS_BACKEND.repository.AlumnoRepository;
-import com.UNSIJ.INESIS_BACKEND.repository.CatCarreraRepository;
-import com.UNSIJ.INESIS_BACKEND.repository.CatRolRepository;
-import com.UNSIJ.INESIS_BACKEND.repository.CatSemestreRepository;
-import com.UNSIJ.INESIS_BACKEND.repository.CatSexoRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IAlumnoService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,43 +38,43 @@ public class AlumnoServiceJPA implements IAlumnoService {
     private UsuarioServiceJPA usuarioServiceJPA;
 
     @Override
-    public List<AlumnoModel> findAll() {
+    public List<Alumno> findAll() {
         return alumnoRepository.findAll();
     }
 
     @Override
-    public AlumnoModel findById(Long id) {
+    public Alumno findById(Long id) {
         return alumnoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Alumno no encontrado con el ID: " + id));
     }
 
     @Override
     @Transactional
-    public AlumnoModel save(AlumnoModel alumnoModel) throws Exception {
-        return alumnoRepository.save(alumnoModel);
+    public Alumno save(Alumno alumno) throws Exception {
+        return alumnoRepository.save(alumno);
     }
 
     @Override
     @Transactional
-    public AlumnoModel create(Map<String, Object> params) throws Exception {
-        AlumnoModel alumnoModel = new AlumnoModel();
+    public Alumno create(Map<String, Object> params) throws Exception {
+        Alumno alumno = new Alumno();
         try {
-            this.build(params, alumnoModel);
+            this.build(params, alumno);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             throw new IllegalArgumentException("Error al crear el alumno");
         }
-        return this.save(alumnoModel);
+        return this.save(alumno);
     }
 
 @Override
 @Transactional
-public AlumnoModel update(AlumnoModel alumnoModel, Map<String, Object> params) throws Exception {
+public Alumno update(Alumno alumno, Map<String, Object> params) throws Exception {
     try {
         // Construir los nuevos valores para el alumno y su usuario
-        this.build(params, alumnoModel);
+        this.build(params, alumno);
 
     } catch (IllegalArgumentException e) {
         throw new IllegalArgumentException(e.getMessage());
@@ -86,39 +82,39 @@ public AlumnoModel update(AlumnoModel alumnoModel, Map<String, Object> params) t
         e.printStackTrace();
         throw new IllegalArgumentException("Error al actualizar el alumno");
     }
-    return save(alumnoModel);  // Guardar los cambios en el alumno
+    return save(alumno);  // Guardar los cambios en el alumno
 }
 
 
 @Transactional
 @Override
-public AlumnoModel build(Map<String, Object> params, AlumnoModel alumnoModel) {
+public Alumno build(Map<String, Object> params, Alumno alumno) {
     try {
         // Asignar campos del alumno
-        alumnoModel.setNombre(JsonUtils.obtString(params, "nombre"));
-        alumnoModel.setApellido(JsonUtils.obtString(params, "apellido"));
-        alumnoModel.setCurp(JsonUtils.obtString(params, "curp"));
-        alumnoModel.setCorreo(JsonUtils.obtString(params, "correo"));
-        alumnoModel.setTelefono(JsonUtils.obtString(params, "telefono"));
-        alumnoModel.setMatricula(JsonUtils.obtString(params, "matricula"));
+        alumno.setNombre(JsonUtils.obtString(params, "nombre"));
+        alumno.setApellido(JsonUtils.obtString(params, "apellido"));
+        alumno.setCurp(JsonUtils.obtString(params, "curp"));
+        alumno.setCorreo(JsonUtils.obtString(params, "correo"));
+        alumno.setTelefono(JsonUtils.obtString(params, "telefono"));
+        alumno.setMatricula(JsonUtils.obtString(params, "matricula"));
 
         Long idGrupo = JsonUtils.obtLong(params, "grupo");
-        alumnoModel.setGrupo(grupoServiceJPA.findById(idGrupo));
+        alumno.setGrupo(grupoServiceJPA.findById(idGrupo));
 
         Long idCarrera = JsonUtils.obtLong(params, "carrera");
-        alumnoModel.setCarrera(carreraServiceJPA.findById(idCarrera));
+        alumno.setCarrera(carreraServiceJPA.findById(idCarrera));
 
         Long idSemestre = JsonUtils.obtLong(params, "semestre");
-        alumnoModel.setSemestre(semestreServiceJPA.findById(idSemestre));
+        alumno.setSemestre(semestreServiceJPA.findById(idSemestre));
 
         Long idSexo = JsonUtils.obtLong(params, "sexo");
-        alumnoModel.setSexo(sexoServiceJPA.findById(idSexo));
+        alumno.setSexo(sexoServiceJPA.findById(idSexo));
 
         // Guardar los datos del alumno
-        alumnoModel = save(alumnoModel);
+        alumno = save(alumno);
 
         // Verificar si el alumno ya tiene un usuario
-        if (alumnoModel.getUsuario() != null) {
+        if (alumno.getUsuario() != null) {
             // Si ya existe un usuario, actualizamos su información
             Map<String, Object> usuarioParams = new HashMap<>();
             usuarioParams.put("usuario", JsonUtils.obtString(params, "usuario"));
@@ -131,7 +127,7 @@ public AlumnoModel build(Map<String, Object> params, AlumnoModel alumnoModel) {
             usuarioParams.put("rol", rolMap);
 
             // Actualizar el usuario existente
-            usuarioServiceJPA.update(alumnoModel.getUsuario(), usuarioParams);
+            usuarioServiceJPA.update(alumno.getUsuario(), usuarioParams);
 
         } else {
             // Si no existe un usuario, creamos uno nuevo
@@ -146,15 +142,15 @@ public AlumnoModel build(Map<String, Object> params, AlumnoModel alumnoModel) {
             usuarioParams.put("rol", rolMap);
 
             Map<String, Object> alumnoMap = new HashMap<>();
-            alumnoMap.put("idAlumno", alumnoModel.getId());
+            alumnoMap.put("idAlumno", alumno.getId());
             usuarioParams.put("alumno", alumnoMap);
 
             // Crear un nuevo usuario solo si no existe uno
             UsuarioModel usuario = usuarioServiceJPA.create(usuarioParams);
 
             // Relación bidireccional explícita
-            usuario.setAlumno(alumnoModel);
-            alumnoModel.setUsuario(usuario);
+            usuario.setAlumno(alumno);
+            alumno.setUsuario(usuario);
         }
 
     } catch (IllegalArgumentException e) {
@@ -163,13 +159,13 @@ public AlumnoModel build(Map<String, Object> params, AlumnoModel alumnoModel) {
         e.printStackTrace();
         throw new IllegalArgumentException("Error al construir el alumno");
     }
-    return alumnoModel;
+    return alumno;
 }
 
     @Override
     public void deleteById(Long id) {
-        AlumnoModel alumnoModel = this.findById(id);
-        if (alumnoModel != null) {
+        Alumno alumno = this.findById(id);
+        if (alumno != null) {
             alumnoRepository.deleteById(id);
         }
     }

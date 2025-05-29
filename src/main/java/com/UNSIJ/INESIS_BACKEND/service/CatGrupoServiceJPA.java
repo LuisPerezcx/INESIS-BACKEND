@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.UNSIJ.INESIS_BACKEND.model.CatGrupoModel;
-import com.UNSIJ.INESIS_BACKEND.model.CatCarreraModel;
-import com.UNSIJ.INESIS_BACKEND.model.CatSemestreModel;
+import com.UNSIJ.INESIS_BACKEND.model.CatGrupo;
+import com.UNSIJ.INESIS_BACKEND.model.CatCarrera;
+import com.UNSIJ.INESIS_BACKEND.model.CatSemestre;
 import com.UNSIJ.INESIS_BACKEND.repository.CatGrupoRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.CatCarreraRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.CatSemestreRepository;
@@ -29,51 +29,51 @@ public class CatGrupoServiceJPA implements ICatGrupoService {
     private CatSemestreRepository catSemestreRepository;
 
     @Override
-    public List<CatGrupoModel> findAll() {
+    public List<CatGrupo> findAll() {
         return catGrupoRepository.findAll();
     }
 
     @Override
-    public CatGrupoModel findById(Long id) {
+    public CatGrupo findById(Long id) {
         return catGrupoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Grupo no encontrado con el ID: " + id));
     }
 
     @Override
     @Transactional
-    public CatGrupoModel save(CatGrupoModel catGrupoModel) throws Exception {
-        return catGrupoRepository.save(catGrupoModel);
+    public CatGrupo save(CatGrupo catGrupo) throws Exception {
+        return catGrupoRepository.save(catGrupo);
     }
 
     @Override
-    public CatGrupoModel create(Map<String, Object> params) throws Exception {
-        CatGrupoModel catGrupoModel = new CatGrupoModel();
+    public CatGrupo create(Map<String, Object> params) throws Exception {
+        CatGrupo catGrupo = new CatGrupo();
         try {
-            this.build(params, catGrupoModel);
+            this.build(params, catGrupo);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             throw new IllegalArgumentException("Error al construir el grupo");
         }
-        return this.save(catGrupoModel);
+        return this.save(catGrupo);
     }
 
     @Override
-    public CatGrupoModel update(CatGrupoModel catGrupoModel, Map<String, Object> params) throws Exception {
+    public CatGrupo update(CatGrupo catGrupo, Map<String, Object> params) throws Exception {
         try {
-            this.build(params, catGrupoModel);
+            this.build(params, catGrupo);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             throw new IllegalArgumentException("Error al construir el grupo");
         }
-        return this.save(catGrupoModel);
+        return this.save(catGrupo);
     }
 
     @Override
-    public CatGrupoModel build(Map<String, Object> params, CatGrupoModel catGrupoModel) {
+    public CatGrupo build(Map<String, Object> params, CatGrupo catGrupo) {
         try {
             Long idCarrera = JsonUtils.obtLong(params, "idCarrera");
             Long idSemestre = JsonUtils.obtLong(params, "idSemestre");
@@ -83,14 +83,14 @@ public class CatGrupoServiceJPA implements ICatGrupoService {
             }
 
             // Obtener carrera y semestre
-            CatCarreraModel carrera = catCarreraRepository.findById(idCarrera)
+            CatCarrera carrera = catCarreraRepository.findById(idCarrera)
                     .orElseThrow(() -> new IllegalArgumentException("Carrera no encontrada con ID: " + idCarrera));
-            CatSemestreModel semestre = catSemestreRepository.findById(idSemestre)
+            CatSemestre semestre = catSemestreRepository.findById(idSemestre)
                     .orElseThrow(() -> new IllegalArgumentException("Semestre no encontrado con ID: " + idSemestre));
 
             // Establecer las relaciones
-            catGrupoModel.setCatCarreraModel(carrera);
-            catGrupoModel.setCatSemestreModel(semestre);
+            catGrupo.setCatCarrera(carrera);
+            catGrupo.setCatSemestre(semestre);
 
 
         } catch (IllegalArgumentException e) {
@@ -99,29 +99,29 @@ public class CatGrupoServiceJPA implements ICatGrupoService {
             e.printStackTrace();
             throw new IllegalArgumentException("Error al construir el grupo");
         }
-        return catGrupoModel;
+        return catGrupo;
     }
 
     @Override
-    public CatGrupoModel updateInstance(CatGrupoModel catGrupoInstance) throws Exception {
-        CatGrupoModel catGrupoBD = this.findById(catGrupoInstance.getId());
+    public CatGrupo updateInstance(CatGrupo catGrupoInstance) throws Exception {
+        CatGrupo catGrupoBD = this.findById(catGrupoInstance.getId());
         catGrupoBD.setNombreGrupo(catGrupoInstance.getNombreGrupo());
-        catGrupoBD.setCatCarreraModel(catGrupoInstance.getCatCarreraModel());
-        catGrupoBD.setCatSemestreModel(catGrupoInstance.getCatSemestreModel());
+        catGrupoBD.setCatCarrera(catGrupoInstance.getCatCarrera());
+        catGrupoBD.setCatSemestre(catGrupoInstance.getCatSemestre());
         return this.save(catGrupoBD);
     }
 
     @Override
     public void deleteById(Long id) {
-        CatGrupoModel catGrupoModel = this.findById(id);
-        if (catGrupoModel != null) {
+        CatGrupo catGrupo = this.findById(id);
+        if (catGrupo != null) {
             catGrupoRepository.deleteById(id);
         }
     }
 
    @Override
-public CatGrupoModel obtenerNombreGrupo(Long idCarrera, Long idSemestre) {
-    CatGrupoModel grupo = catGrupoRepository.findByCatCarreraModel_IdAndCatSemestreModel_Id(idCarrera, idSemestre);
+public CatGrupo obtenerNombreGrupo(Long idCarrera, Long idSemestre) {
+    CatGrupo grupo = catGrupoRepository.findByCatCarrera_IdAndCatSemestre_Id(idCarrera, idSemestre);
 
     if (grupo != null) {
         return grupo; 

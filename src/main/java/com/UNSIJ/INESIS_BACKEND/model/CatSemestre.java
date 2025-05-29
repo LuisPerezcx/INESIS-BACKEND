@@ -6,19 +6,18 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "cat_ocupacion")
-public class OcupacionModel {
+@Table(name = "cat_semestre")
+public class CatSemestre {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_cat_ocupacion")
+    @Column(name = "id_cat_semestre")
     private Long id;
 
-    @NotNull
-    @Column(name = "nombre_ocupacion")
-    private String nombreOcupacion;
+    @Column(name = "nombre_semestre")
+    private String nombreSemestre;
 }

@@ -3,12 +3,11 @@ package com.UNSIJ.INESIS_BACKEND.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.ToString;
 
 @Data
 @Entity
 @Table(name = "cat_grupo")
-public class CatGrupoModel {
+public class CatGrupo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,10 +20,10 @@ public class CatGrupoModel {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "id_cat_carrera", referencedColumnName = "id_cat_carrera")
-    private CatCarreraModel catCarreraModel;
+    private CatCarrera catCarrera;
 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "id_cat_semestre", referencedColumnName = "id_cat_semestre")
-    private CatSemestreModel catSemestreModel;
+    private CatSemestre catSemestre;
 }

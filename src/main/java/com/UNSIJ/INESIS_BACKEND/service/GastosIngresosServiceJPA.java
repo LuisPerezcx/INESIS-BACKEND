@@ -3,7 +3,7 @@ package com.UNSIJ.INESIS_BACKEND.service;
 import java.util.List;
 import java.util.Map;
 
-import com.UNSIJ.INESIS_BACKEND.model.OcupacionModel;
+import com.UNSIJ.INESIS_BACKEND.model.Ocupacion;
 import com.UNSIJ.INESIS_BACKEND.repository.OcupacionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -85,23 +85,23 @@ public class GastosIngresosServiceJPA implements IGastosIngresosService {
                 throw new IllegalArgumentException("El campo depende economicamente es obligatorio");
             gastosIngresos.setDependeEconomicamente(dependeEconomicamente);
 
-            String nombreQuienDependes = JsonUtils.obtString(params, "nombreQuienDependes");
-            gastosIngresos.setNombreQuienDependes(nombreQuienDependes);
+            if (dependeEconomicamente.equals("Si")) {
+                String nombreQuienDependes = JsonUtils.obtString(params, "nombreQuienDependes");
+                gastosIngresos.setNombreQuienDependes(nombreQuienDependes);
+                String trabajoTipo = JsonUtils.obtString(params, "trabajoTipo");
+                gastosIngresos.setTrabajoTipo(trabajoTipo);
+                Long idOcupacion = JsonUtils.obtLong(params, "ocupacion");
+                if (idOcupacion == null) {
+                    throw new IllegalArgumentException("El campo 'idOcupacion' es obligatorio.");
+                }
+                Ocupacion ocupacion = ocupacionRepository.findById(idOcupacion)
+                        .orElseThrow(() -> new IllegalArgumentException(
+                                "Ocupacion no encontrado con el ID: " + idOcupacion));
+                gastosIngresos.setOcupacion(ocupacion);
 
-            String trabajoTipo = JsonUtils.obtString(params, "trabajoTipo");
-            gastosIngresos.setTrabajoTipo(trabajoTipo);
-
-            Long idOcupacion = JsonUtils.obtLong(params, "ocupacion");
-            if (idOcupacion == null) {
-                throw new IllegalArgumentException("El campo 'idOcupacion' es obligatorio.");
+                String otro = JsonUtils.obtString(params, "otro");
+                gastosIngresos.setOtro(otro);
             }
-            OcupacionModel ocupacionModel = ocupacionRepository.findById(idOcupacion)
-                    .orElseThrow(() -> new IllegalArgumentException(
-                            "Ocupacion no encontrado con el ID: " + idOcupacion));
-            gastosIngresos.setOcupacionModel(ocupacionModel);
-
-            String otro = JsonUtils.obtString(params, "otro");
-            gastosIngresos.setOtro(otro);
 
             String solicitaBecaAlimenticia = JsonUtils.obtString(params, "solicitaBecaAlimenticia");
             if (solicitaBecaAlimenticia == null)
@@ -135,7 +135,7 @@ public class GastosIngresosServiceJPA implements IGastosIngresosService {
         gastosIngresosBD.setGastoMensual(gastosIngresosInstance.getGastoMensual());
         gastosIngresosBD.setSolicitaBecaAlimenticia(gastosIngresosInstance.getSolicitaBecaAlimenticia());
         gastosIngresosBD.setTrabajoTipo(gastosIngresosInstance.getTrabajoTipo());
-        gastosIngresosBD.setOcupacionModel(gastosIngresosInstance.getOcupacionModel());
+        gastosIngresosBD.setOcupacion(gastosIngresosInstance.getOcupacion());
         gastosIngresosBD.setOtro(gastosIngresosInstance.getOtro());
 
         return this.save(gastosIngresosBD);

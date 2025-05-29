@@ -150,4 +150,21 @@ public class JsonUtils {
 
         return null; // Si el valor es null o no es convertible a boolean, retorna false
     }
+
+    public static Boolean parseBooleanFlexible(Object value, String fieldName) {
+        if (value instanceof Boolean) {
+            return (Boolean) value;
+        }
+        if (value instanceof String) {
+            String str = ((String) value).trim();
+            if ("Si".equalsIgnoreCase(str)) return true;
+            if ("No".equalsIgnoreCase(str)) return false;
+            if ("true".equalsIgnoreCase(str)) return true;
+            if ("false".equalsIgnoreCase(str)) return false;
+        }
+        if (value == null) {
+            throw new IllegalArgumentException("El campo " + fieldName + " es obligatorio");
+        }
+        throw new IllegalArgumentException("El valor de '" + fieldName + "' debe ser 'Si', 'No', true o false.");
+    }
 }

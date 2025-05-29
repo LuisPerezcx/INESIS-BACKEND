@@ -32,7 +32,7 @@ public class GastosIngresos {
 
     @ManyToOne
     @JoinColumn(name = "id_cat_ocupacion")
-    private OcupacionModel ocupacionModel;
+    private Ocupacion ocupacion;
 
     @Column(name = "otro")
     private String otro;

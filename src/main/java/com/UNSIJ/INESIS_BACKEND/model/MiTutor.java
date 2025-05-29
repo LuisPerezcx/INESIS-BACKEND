@@ -38,11 +38,11 @@ public class MiTutor {
 
     @ManyToOne
     @JoinColumn(name = "id_cat_parentesco")
-    private ParentescoModel parentesco;
+    private Parentesco parentesco;
 
     @ManyToOne
     @JoinColumn(name = "id_cat_ocupacion")
-    private OcupacionModel ocupacionModel;
+    private Ocupacion ocupacion;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_domicilio")

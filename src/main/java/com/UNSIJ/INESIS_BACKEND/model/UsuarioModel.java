@@ -38,5 +38,5 @@ public class UsuarioModel {
 
     @OneToOne(mappedBy = "usuario")
     @JsonManagedReference
-    private AlumnoModel alumno;
+    private Alumno alumno;
 }

@@ -6,21 +6,19 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-
 
 @Data
 @Entity
-@Table(name = "cat_parentesco")
+@Table(name = "cat_carrera")
+public class CatCarrera {
 
-public class ParentescoModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_cat_parentesco")
+    @Column(name = "id_cat_carrera")
     private Long id;
 
-    @NotNull
-    @Column(name = "nombre_parentesco")
-    private String nombreParentesco;
+    @Column(name = "nombre_carrera")
+    private String nombreCarrera;
+
 }

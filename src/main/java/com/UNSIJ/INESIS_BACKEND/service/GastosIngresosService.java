@@ -90,7 +90,7 @@ public class GastosIngresosService {
                 if (persona.containsKey("idParentesco")) {
                     Long idParentesco = ((Number) persona.get("idParentesco")).longValue();
                     System.out.println("Buscando Parentesco con ID: " + idParentesco);
-                    ingreso.setParentescoModel(parentescoRepo.findById(idParentesco)
+                    ingreso.setParentesco(parentescoRepo.findById(idParentesco)
                         .orElseThrow(() -> new IllegalArgumentException("Parentesco no encontrado")));
                 } else {
                     System.out.println("ERROR: Persona sin idParentesco");

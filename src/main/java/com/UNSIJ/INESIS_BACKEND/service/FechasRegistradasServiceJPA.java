@@ -1,6 +1,6 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import com.UNSIJ.INESIS_BACKEND.model.CatCarreraModel;
+import com.UNSIJ.INESIS_BACKEND.model.CatCarrera;
 import com.UNSIJ.INESIS_BACKEND.model.FechasRegistradasModel;
 import com.UNSIJ.INESIS_BACKEND.repository.FechasRegistradasRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IFechasRegistradasService;
@@ -81,7 +81,7 @@ public FechasRegistradasModel build(Map<String, Object> params, FechasRegistrada
             throw new IllegalArgumentException("El campo 'carrera' es obligatorio");
         }
 
-        CatCarreraModel carrera = carreraServiceJPA.findById(idCarrera);
+        CatCarrera carrera = carreraServiceJPA.findById(idCarrera);
         if (carrera == null) {
             throw new IllegalArgumentException("Carrera no encontrada con el ID: " + idCarrera);
         }

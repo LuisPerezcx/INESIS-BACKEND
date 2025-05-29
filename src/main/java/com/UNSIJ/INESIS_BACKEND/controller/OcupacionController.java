@@ -1,8 +1,6 @@
 package com.UNSIJ.INESIS_BACKEND.controller;
 
-import com.UNSIJ.INESIS_BACKEND.model.Ejemplo;
-import com.UNSIJ.INESIS_BACKEND.model.OcupacionModel;
-import com.UNSIJ.INESIS_BACKEND.service.EjemploServiceJPA;
+import com.UNSIJ.INESIS_BACKEND.model.Ocupacion;
 import com.UNSIJ.INESIS_BACKEND.service.OcupacionServiceJPA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,15 +19,15 @@ public class OcupacionController {
     private OcupacionServiceJPA ocupacionServiceJPA; // aquí siempre es el service no la interfaz
 
     @GetMapping
-    public List<OcupacionModel> list() {
+    public List<Ocupacion> list() {
         return ocupacionServiceJPA.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id){
         try {
-            OcupacionModel ocupacionModel = ocupacionServiceJPA.findById(id);
-            return ResponseEntity.ok(ocupacionModel);
+            Ocupacion ocupacion = ocupacionServiceJPA.findById(id);
+            return ResponseEntity.ok(ocupacion);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {

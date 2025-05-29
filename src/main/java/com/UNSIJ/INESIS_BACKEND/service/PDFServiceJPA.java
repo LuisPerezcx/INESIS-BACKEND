@@ -1,20 +1,19 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import com.UNSIJ.INESIS_BACKEND.model.AlumnoModel;
+import com.UNSIJ.INESIS_BACKEND.model.Alumno;
 import com.UNSIJ.INESIS_BACKEND.utils.PDF;
 import com.itextpdf.text.pdf.AcroFields;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.util.Base64;
 
 public class PDFServiceJPA {
 
     public static void main(String[] args) {
-        AlumnoModel alumnoModel = new AlumnoModel();
-        generarPdf(alumnoModel);
+        Alumno alumno = new Alumno();
+        generarPdf(alumno);
     }
 
     public static String valorSeguro(String valor, String valorPorDefecto) {
@@ -27,7 +26,7 @@ public class PDFServiceJPA {
         return (nombreSeguro + " " + apellidoSeguro).trim();
     }
 
-    public static void generarPdf(AlumnoModel alumno){
+    public static void generarPdf(Alumno alumno){
         try {
             // Ruta del PDF base (con campos de formulario)
             PdfReader reader = new PdfReader("estudioSocioEconomico.pdf");
