@@ -9,7 +9,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
-
 @Data
 @Entity
 @Table(name = "ViviendaFamiliar")
@@ -21,6 +20,9 @@ public class ViviendaFamiliarModel {
 
     @Column(name = "num_personas_habitan")
     private Integer numPersonasHabitan;
+
+    @Column(name = "servicios_otro")
+    private String serviciosOtro;
 
     @ManyToOne
     @JoinColumn(name = "id_servicio_otro")
