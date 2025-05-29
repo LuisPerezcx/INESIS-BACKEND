@@ -66,6 +66,13 @@ public class MisDatosServiceJPA implements IMisDatosService {
     }
 
     @Override
+    public MisDatos findByAlumno(Long id) {
+        return misDatosRepository.findByAlumno_Id(id)
+                .orElseThrow(() -> new IllegalArgumentException("MisDatos no encontrado para el alumno con ID: " + id));
+    }
+
+
+    @Override
     @Transactional
     public MisDatos save(MisDatos misDatos) throws Exception {
         return misDatosRepository.save(misDatos);

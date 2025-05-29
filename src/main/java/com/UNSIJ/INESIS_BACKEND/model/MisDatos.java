@@ -24,14 +24,6 @@ public class MisDatos {
     @Column(name = "seccion_completa")
     private boolean completo = false;
 
-    @ManyToOne
-    @JoinColumn(name = "id_cat_sexo")
-    private CatSexoModel sexo;
-
-    @ManyToOne
-    @JoinColumn(name = "id_cat_estado_civil")
-    private CatEstadoCivil estadoCivil;
-
     @NotNull
     @Column(name = "recursos_suficientes")
     private Boolean recursosSuficientes;
@@ -52,10 +44,6 @@ public class MisDatos {
     @Column(name = "idioma")
     private String idioma;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "id_cat_situacion_vivienda")
-    private CatSituacionViviendaModel situacionVivienda;
-
     @NotNull
     @Column(name = "nombre_casa_huesped")
     private String nombreCasaHuesped;
@@ -64,6 +52,17 @@ public class MisDatos {
     @Column(name = "lleva_vehiculo")
     private Boolean llevaVehiculo;
 
+    @ManyToOne
+    @JoinColumn(name = "id_cat_estado_civil")
+    private CatEstadoCivil estadoCivil;
+
+    @ManyToOne
+    @JoinColumn(name = "id_cat_sexo")
+    private CatSexoModel sexo;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "id_cat_situacion_vivienda")
+    private CatSituacionViviendaModel situacionVivienda;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_gastos_ingresos")

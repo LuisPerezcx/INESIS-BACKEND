@@ -1,8 +1,7 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import com.UNSIJ.INESIS_BACKEND.model.Domicilio;
-import com.UNSIJ.INESIS_BACKEND.model.Ejemplo;
-import com.UNSIJ.INESIS_BACKEND.model.MiTutor;
+import com.UNSIJ.INESIS_BACKEND.model.*;
+import com.UNSIJ.INESIS_BACKEND.repository.CatParentescoRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.MiTutorRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IMiTutorService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
@@ -20,6 +19,9 @@ public class MiTutorServiceJPA implements IMiTutorService {
 
     @Autowired
     private DomicilioServiceJPA domicilioServiceJPA;
+
+    @Autowired
+    private CatParentescoRepository catParentescoRepository;
 
     @Override
     public List<MiTutor> findAll() {
@@ -73,6 +75,15 @@ public class MiTutorServiceJPA implements IMiTutorService {
             String nombreTutor = JsonUtils.obtString(params,"nombreTutor");
             if(nombreTutor == null) throw new IllegalArgumentException("El campo nombre completo es obligatorio");
             miTutor.setNombreTutor(nombreTutor);
+
+            Long idCatParentesco = JsonUtils.obtLong(params, "parentesco");
+            if (idCatParentesco == null) {
+                throw new IllegalArgumentException("El campo 'idCatParentesco' es obligatorio.");
+            }
+            CatParentesco catParentesco = catParentescoRepository.findById(idCatParentesco)
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Tipo de transporte no encontrado con el ID: " + idCatParentesco));
+            miTutor.setParentesco(catParentesco);
 
             String telefono = JsonUtils.obtString(params,"telefono");
             if(telefono == null) throw new IllegalArgumentException("El campo telefono es obligatorio");
