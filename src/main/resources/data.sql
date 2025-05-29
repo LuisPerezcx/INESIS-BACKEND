@@ -763,3 +763,24 @@ WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_vivienda WHERE nombre_tipo = 'Condomini
 INSERT INTO cat_tipo_vivienda (nombre_tipo)
 SELECT 'Otro'
 WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_vivienda WHERE nombre_tipo = 'Otro');
+
+
+-- -------------------------------
+-- REGISTROS PARA cat_servicio_otro
+-- -------------------------------
+SELECT 1;
+
+INSERT INTO cat_servicio_otro (nombre_servicio)
+SELECT 'Agua' WHERE NOT EXISTS (SELECT 1 FROM cat_servicio_otro WHERE nombre_servicio = 'Internet');
+
+INSERT INTO cat_servicio_otro (nombre_servicio)
+SELECT 'Luz' WHERE NOT EXISTS (SELECT 1 FROM cat_servicio_otro WHERE nombre_servicio = 'Televisión por cable');
+
+INSERT INTO cat_servicio_otro (nombre_servicio)
+SELECT 'Drenaje' WHERE NOT EXISTS (SELECT 1 FROM cat_servicio_otro WHERE nombre_servicio = 'Gas natural');
+
+INSERT INTO cat_servicio_otro (nombre_servicio)
+SELECT 'Telefono' WHERE NOT EXISTS (SELECT 1 FROM cat_servicio_otro WHERE nombre_servicio = 'Teléfono fijo');
+
+INSERT INTO cat_servicio_otro (nombre_servicio)
+SELECT 'Otro' WHERE NOT EXISTS (SELECT 1 FROM cat_servicio_otro WHERE nombre_servicio = 'Otro');
