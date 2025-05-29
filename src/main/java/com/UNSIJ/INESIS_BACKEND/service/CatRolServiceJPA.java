@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.UNSIJ.INESIS_BACKEND.model.CatRolModel;
+import com.UNSIJ.INESIS_BACKEND.model.CatRol;
 import com.UNSIJ.INESIS_BACKEND.repository.CatRolRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatRolService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
@@ -19,25 +19,25 @@ public class CatRolServiceJPA implements ICatRolService {
     private CatRolRepository catRolRepository;
 
     @Override
-    public List<CatRolModel> findAll() {
+    public List<CatRol> findAll() {
         return catRolRepository.findAll();
     }
 
     @Override
-    public CatRolModel findById(Long id) {
+    public CatRol findById(Long id) {
         return catRolRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("Rol no encontrado con el ID: " + id));
     }
 
     @Override
     @Transactional
-    public CatRolModel save(CatRolModel catRolModel) throws Exception {
+    public CatRol save(CatRol catRolModel) throws Exception {
         return catRolRepository.save(catRolModel);
     }
 
     @Override
-    public CatRolModel create(Map<String, Object> params) throws Exception {
-        CatRolModel catRolModel = new CatRolModel();
+    public CatRol create(Map<String, Object> params) throws Exception {
+        CatRol catRolModel = new CatRol();
         try {
             this.build(params, catRolModel);
         } catch (IllegalArgumentException e) {
@@ -50,7 +50,7 @@ public class CatRolServiceJPA implements ICatRolService {
     }
 
     @Override
-    public CatRolModel update(CatRolModel catRolModel, Map<String, Object> params) throws Exception {
+    public CatRol update(CatRol catRolModel, Map<String, Object> params) throws Exception {
         try {
             this.build(params, catRolModel);
         } catch (IllegalArgumentException e) {
@@ -63,7 +63,7 @@ public class CatRolServiceJPA implements ICatRolService {
     }
 
     @Override
-    public CatRolModel build(Map<String, Object> params, CatRolModel catRolModel) {
+    public CatRol build(Map<String, Object> params, CatRol catRolModel) {
         try {
             String nombre = JsonUtils.obtString(params, "nombreRol");
             if (nombre == null || nombre.isEmpty()) throw new IllegalArgumentException("El campo nombre es obligatorio");
@@ -78,15 +78,15 @@ public class CatRolServiceJPA implements ICatRolService {
     }
 
     @Override
-    public CatRolModel updateInstance(CatRolModel catRolInstance) throws Exception {
-        CatRolModel catRolBD = this.findById(catRolInstance.getId());
+    public CatRol updateInstance(CatRol catRolInstance) throws Exception {
+        CatRol catRolBD = this.findById(catRolInstance.getId());
         catRolBD.setNombreRol(catRolInstance.getNombreRol());
         return this.save(catRolBD);
     }
 
     @Override
     public void deleteById(Long id) {
-        CatRolModel catRolModel = this.findById(id);
+        CatRol catRolModel = this.findById(id);
         if (catRolModel != null) {
             catRolRepository.deleteById(id);
         }

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.UNSIJ.INESIS_BACKEND.model.CatRolModel;
+import com.UNSIJ.INESIS_BACKEND.model.CatRol;
 import com.UNSIJ.INESIS_BACKEND.service.CatRolServiceJPA;
 
 @RestController
@@ -26,14 +26,14 @@ public class CatRolController {
     private CatRolServiceJPA rolServiceJPA;
 
     @GetMapping
-    public List<CatRolModel> list() {
+    public List<CatRol> list() {
         return rolServiceJPA.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id) {
         try {
-            CatRolModel catRolModel = rolServiceJPA.findById(id);
+            CatRol catRolModel = rolServiceJPA.findById(id);
             return ResponseEntity.ok(catRolModel);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -45,7 +45,7 @@ public class CatRolController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            CatRolModel catRolModel = rolServiceJPA.create(params);
+            CatRol catRolModel = rolServiceJPA.create(params);
             return ResponseEntity.status(HttpStatus.CREATED).body(catRolModel);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -57,7 +57,7 @@ public class CatRolController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            CatRolModel catRolUpdate = rolServiceJPA.update(rolServiceJPA.findById(id), params);
+            CatRol catRolUpdate = rolServiceJPA.update(rolServiceJPA.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(catRolUpdate);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
