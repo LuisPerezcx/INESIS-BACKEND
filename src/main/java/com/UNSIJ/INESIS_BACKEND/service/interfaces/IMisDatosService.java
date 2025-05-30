@@ -8,6 +8,7 @@ import com.UNSIJ.INESIS_BACKEND.model.MisDatos;
 public interface IMisDatosService {
     List<MisDatos> findAll();
     MisDatos findById(Long id);
+    MisDatos findByAlumno(Long id);
     MisDatos save(MisDatos misDatos) throws Exception;
     MisDatos create(Map<String, Object> params) throws Exception;
     MisDatos update(MisDatos misDatos, Map<String, Object> params) throws Exception;

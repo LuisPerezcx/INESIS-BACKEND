@@ -43,6 +43,19 @@ public class MisDatosController {
         }
     }
 
+    @GetMapping("/alumno/{idAlumno}")
+    public ResponseEntity<MisDatos> getMisDatosByAlumno(@PathVariable Long idAlumno) {
+        try {
+            MisDatos datos = misDatosServiceJPA.findByAlumno(idAlumno);
+            return ResponseEntity.ok(datos);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+
     //AQUI SIEMPRE RECIBIR UN MAPA, ES LA FORMA DE RECIBIR UN JSON
     //NO RECIBIR UNA INSTANCIA DE LA CLASE
     @PostMapping

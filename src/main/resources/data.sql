@@ -800,3 +800,35 @@ WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_trabajo WHERE nombre_tipo = 'Temporal')
 INSERT INTO cat_tipo_trabajo (nombre_tipo)
 SELECT 'Permanente'
 WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_trabajo WHERE nombre_tipo = 'Permanente');
+
+
+# ----------------------------------- REGISTROS DE CAT_PARENTESCO ----------------------------------------
+
+SELECT 1;
+
+INSERT INTO cat_parentesco (nombre_parentesco)
+SELECT 'Padre'
+WHERE NOT EXISTS (SELECT 1 FROM cat_parentesco WHERE nombre_parentesco = 'Padre');
+
+INSERT INTO cat_parentesco (nombre_parentesco)
+SELECT 'Madre'
+WHERE NOT EXISTS (SELECT 1 FROM cat_parentesco WHERE nombre_parentesco = 'Madre');
+
+INSERT INTO cat_parentesco (nombre_parentesco)
+SELECT 'Abuelo'
+WHERE NOT EXISTS (SELECT 1 FROM cat_parentesco WHERE nombre_parentesco = 'Abuelo');
+
+INSERT INTO cat_parentesco (nombre_parentesco)
+SELECT 'Abuela'
+WHERE NOT EXISTS (SELECT 1 FROM cat_parentesco WHERE nombre_parentesco = 'Abuela');
+
+
+
+
+
+
+
+
+
+
+

@@ -38,7 +38,7 @@ public class MiTutor {
 
     @ManyToOne
     @JoinColumn(name = "id_cat_parentesco")
-    private Parentesco parentesco;
+    private CatParentesco parentesco;
 
     @ManyToOne
     @JoinColumn(name = "id_cat_ocupacion")

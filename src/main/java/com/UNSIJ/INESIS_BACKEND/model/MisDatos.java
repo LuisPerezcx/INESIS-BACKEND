@@ -2,6 +2,7 @@ package com.UNSIJ.INESIS_BACKEND.model;
 
 import java.util.List;
 
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatSituacionViviendaModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -22,14 +23,6 @@ public class MisDatos {
     @NotNull
     @Column(name = "seccion_completa")
     private boolean completo = false;
-
-    @ManyToOne
-    @JoinColumn(name = "id_cat_sexo")
-    private CatSexoModel sexo;
-
-    @ManyToOne
-    @JoinColumn(name = "id_cat_estado_civil")
-    private CatEstadoCivil estadoCivil;
 
     @NotNull
     @Column(name = "recursos_suficientes")
@@ -52,10 +45,6 @@ public class MisDatos {
     private String idioma;
 
     @NotNull
-    @Column(name = "situacion_vivienda")
-    private String situacionVivienda;
-
-    @NotNull
     @Column(name = "nombre_casa_huesped")
     private String nombreCasaHuesped;
 
@@ -63,6 +52,17 @@ public class MisDatos {
     @Column(name = "lleva_vehiculo")
     private Boolean llevaVehiculo;
 
+    @ManyToOne
+    @JoinColumn(name = "id_cat_estado_civil")
+    private CatEstadoCivil estadoCivil;
+
+    @ManyToOne
+    @JoinColumn(name = "id_cat_sexo")
+    private CatSexoModel sexo;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "id_cat_situacion_vivienda")
+    private CatSituacionViviendaModel situacionVivienda;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_gastos_ingresos")
