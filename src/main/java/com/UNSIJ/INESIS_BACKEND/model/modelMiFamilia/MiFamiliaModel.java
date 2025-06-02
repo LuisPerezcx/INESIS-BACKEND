@@ -27,12 +27,6 @@ public class MiFamiliaModel {
     @Column(name = "telefono")
     private String telefono;
 
-    @Column(name = "escolaridadPadre")
-    private String escolaridadPadre;
-
-    @Column(name = "escolaridadMadre")
-    private String escolaridadMadre;
-
     @Column(name = "num_hermanos")
     private Integer numHermanos;
 
@@ -52,4 +46,12 @@ public class MiFamiliaModel {
     @ManyToOne
     @JoinColumn(name = "id_medios_estudio")
     private MediosEstudioModel mediosEstudio;
+
+    @ManyToOne
+    @JoinColumn(name = "id_cat_escolaridad_padre")
+    private CatEscolaridadModel escolaridadPadre;
+
+    @ManyToOne
+    @JoinColumn(name = "id_cat_escolaridad_madre")
+    private CatEscolaridadModel escolaridadMadre;
 }

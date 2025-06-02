@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 package com.UNSIJ.INESIS_BACKEND.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.HermanosDependientesModel;
-import com.UNSIJ.INESIS_BACKEND.service.HermanosDependientesServiceJPA;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.PersonasDependientesModel;
+import com.UNSIJ.INESIS_BACKEND.service.PersonasDependientesServiceJPA;
 
 import java.util.List;
 import java.util.Map;
@@ -28,14 +27,14 @@ import java.util.Map;
  * @author Alumnos
  */
 @RestController
-@RequestMapping("/hermanos_dependientes")
-public class HermanosDependientesController {
+@RequestMapping("/personas_dependientes")
+public class PersonasDependientesController {
 
     @Autowired
-    private HermanosDependientesServiceJPA service;
+    private PersonasDependientesServiceJPA service;
 
     @GetMapping
-    public List<HermanosDependientesModel> list() {
+    public List<PersonasDependientesModel> list() {
         return service.findAll();
     }
 
@@ -53,7 +52,7 @@ public class HermanosDependientesController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            HermanosDependientesModel createHermanos = service.create(params);
+            PersonasDependientesModel createHermanos = service.create(params);
             return ResponseEntity.status(HttpStatus.CREATED).body(createHermanos);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -65,7 +64,7 @@ public class HermanosDependientesController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            HermanosDependientesModel updated = service.update(service.findById(id), params);
+            PersonasDependientesModel updated = service.update(service.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(updated);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

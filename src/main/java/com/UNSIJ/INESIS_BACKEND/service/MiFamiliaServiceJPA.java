@@ -7,9 +7,11 @@ package com.UNSIJ.INESIS_BACKEND.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatEscolaridadModel;
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MediosEstudioModel;
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MiFamiliaModel;
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.ViviendaFamiliarModel;
+import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.CatEscolaridadRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.MediosEstudioRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.MiFamiliaRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.ViviendaFamiliarRepository;
@@ -34,6 +36,9 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService{
 
     @Autowired
     private ViviendaFamiliarRepository viviendaRepo;
+
+    @Autowired
+    private CatEscolaridadRepository escolaridadRepo;
 
     @Autowired
     private MediosEstudioRepository mediosRepo;
@@ -71,8 +76,8 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService{
         model.setNombreCompleto(JsonUtils.obtString(params, "nombre_completo"));
         model.setIdDomicilio(JsonUtils.obtInteger(params, "id_domicilio"));
         model.setTelefono(JsonUtils.obtString(params, "telefono"));
-        model.setEscolaridadPadre(JsonUtils.obtString(params, "escolaridadPadre"));
-        model.setEscolaridadMadre(JsonUtils.obtString(params, "escolaridadMadre"));
+
+
         model.setNumHermanos(JsonUtils.obtInteger(params, "num_hermanos"));
         model.setNumHermanosEstudiando(JsonUtils.obtInteger(params, "num_hermanos_estudiando"));
         model.setNumHermanosNoEstudiando(JsonUtils.obtInteger(params, "num_hermanos_no_estudiando"));
@@ -80,6 +85,8 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService{
 
         Long idVivienda = JsonUtils.obtLong(params, "id_cat_vivienda_familiar");
         Long idMedios = JsonUtils.obtLong(params, "id_medios_estudio");
+        Long idEscolaridadPadre = JsonUtils.obtLong(params, "id_escolaridad_padre");
+        Long idEscolaridadMadre = JsonUtils.obtLong(params, "id_escolaridad_madre");
 
         if (idVivienda != null) {
             ViviendaFamiliarModel vivienda = viviendaRepo.findById(idVivienda)
@@ -91,6 +98,18 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService{
             MediosEstudioModel medios = mediosRepo.findById(idMedios)
                 .orElseThrow(() -> new IllegalArgumentException("Medios de estudio no encontrado con ID: " + idMedios));
             model.setMediosEstudio(medios);
+        }
+
+        if (idEscolaridadPadre != null) {
+        CatEscolaridadModel escolaridadPadre = escolaridadRepo.findById(idEscolaridadPadre)
+            .orElseThrow(() -> new IllegalArgumentException("Escolaridad del padre no encontrada con ID: " + idEscolaridadPadre));
+            model.setEscolaridadPadre(escolaridadPadre);
+        }
+
+        if (idEscolaridadMadre != null) {
+            CatEscolaridadModel escolaridadMadre = escolaridadRepo.findById(idEscolaridadMadre)
+                .orElseThrow(() -> new IllegalArgumentException("Escolaridad de la madre no encontrada con ID: " + idEscolaridadMadre));
+            model.setEscolaridadMadre(escolaridadMadre);
         }
 
         return model;

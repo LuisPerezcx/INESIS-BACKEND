@@ -12,24 +12,22 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "hermanos_dependientes")
-public class HermanosDependientesModel {
+@Table(name = "personas_dependientes")
+public class PersonasDependientesModel {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_hermanos_dependientes")
+    @Column(name = "id_personas_dependientes")
     private Long id;
 
-    @Column(name = "nombre_hermano")
-    private String nombreHermano;
+    @Column(name = "nombre_persona")
+    private String nombrePersona;
 
     @Column(name = "edad")
     private Integer edad;
 
-    @Column(name = "nombre_escuela")
-    private String nombreEscuela;
-
-    @Column(name = "grado")
-    private String grado;
+    @Column(name = "parentesco")
+    private String parentesco;
 
     @Column(name = "nombre_archivo")
     private String nombreArchivo;

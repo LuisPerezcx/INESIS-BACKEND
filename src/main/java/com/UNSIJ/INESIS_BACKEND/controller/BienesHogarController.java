@@ -16,9 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatMediosEstudioModel;
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MediosEstudioModel;
-import com.UNSIJ.INESIS_BACKEND.service.MediosEstudiosServiceJPA;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.BienesHogarModel;
+import com.UNSIJ.INESIS_BACKEND.service.BienesHogarServiceJPA;
 import java.util.List;
 import java.util.Map;
 
@@ -27,21 +26,21 @@ import java.util.Map;
  * @author 24mda
  */
 @RestController
-@RequestMapping("/medios_estudios")
-public class MediosEstudiosController {
+@RequestMapping("/bienes_hogar")
+public class BienesHogarController {
 
     @Autowired
-    private MediosEstudiosServiceJPA serviceMediosEstudiosJPA;
+    private BienesHogarServiceJPA service;
 
     @GetMapping
-    public List<MediosEstudioModel> list() {
-        return serviceMediosEstudiosJPA.findAll();
+    public List<BienesHogarModel> list() {
+        return service.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id) {
         try {
-            return ResponseEntity.ok(serviceMediosEstudiosJPA.findById(id));
+            return ResponseEntity.ok(service.findById(id));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
@@ -52,8 +51,8 @@ public class MediosEstudiosController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            MediosEstudioModel mediosEstudioModel = serviceMediosEstudiosJPA.create(params);
-            return ResponseEntity.status(HttpStatus.CREATED).body(mediosEstudioModel);
+            BienesHogarModel model = service.create(params);
+            return ResponseEntity.status(HttpStatus.CREATED).body(model);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -64,7 +63,7 @@ public class MediosEstudiosController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            MediosEstudioModel updated = serviceMediosEstudiosJPA.update(serviceMediosEstudiosJPA.findById(id), params);
+            BienesHogarModel updated = service.update(service.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(updated);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -76,11 +75,11 @@ public class MediosEstudiosController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {
         try {
-            serviceMediosEstudiosJPA.deleteById(id);
-            serviceMediosEstudiosJPA.findById(id);
+            service.deleteById(id);
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
+
 }
