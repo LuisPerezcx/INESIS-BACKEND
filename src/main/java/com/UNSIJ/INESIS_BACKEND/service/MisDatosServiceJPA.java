@@ -176,8 +176,9 @@ public class MisDatosServiceJPA implements IMisDatosService {
                 medio.setCatMediosTransporte(catMediosTransporteService.findById(idCatMedio));
                 medio.setMisDatos(misDatos); // Relación bidireccional
                 mediosTraslado.add(medio);
-                misDatos.setMediosTraslado(mediosTraslado);
             }
+            misDatos.getMediosTraslado().clear();
+            misDatos.getMediosTraslado().addAll(mediosTraslado);
 
             String idioma = JsonUtils.obtString(params, "idioma");
             if (idioma == null)

@@ -1,5 +1,6 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatSituacionViviendaModel;
@@ -60,7 +61,7 @@ public class MisDatos {
     @JoinColumn(name = "id_cat_sexo")
     private CatSexoModel sexo;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne
     @JoinColumn(name = "id_cat_situacion_vivienda")
     private CatSituacionViviendaModel situacionVivienda;
 
@@ -75,7 +76,7 @@ public class MisDatos {
 
     @OneToMany(mappedBy = "misDatos", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<MedioTraslado> mediosTraslado;
+    private List<MedioTraslado> mediosTraslado = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_domicilio")
