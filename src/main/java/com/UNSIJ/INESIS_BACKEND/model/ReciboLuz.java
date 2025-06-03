@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "recibo_luz")
-public class ReciboLuzModel {
+public class ReciboLuz {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_recibo_luz")

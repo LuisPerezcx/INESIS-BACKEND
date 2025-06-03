@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "alumno")
-public class AlumnoModel {
+public class Alumno {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,12 +49,12 @@ public class AlumnoModel {
     @ManyToOne
     @JoinColumn(name = "id_cat_carrera", referencedColumnName = "id_cat_carrera")
     @NotNull
-    private CatCarreraModel carrera;
+    private CatCarrera carrera;
 
     @ManyToOne
     @JoinColumn(name = "id_semestre", referencedColumnName = "id_cat_semestre")
     @NotNull
-    private CatSemestreModel semestre;
+    private CatSemestre semestre;
 
     @ManyToOne
     @JoinColumn(name = "id_sexo", referencedColumnName = "id_cat_sexo")
@@ -68,6 +68,6 @@ public class AlumnoModel {
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
     @JsonBackReference
-    private UsuarioModel usuario;
+    private Usuario usuario;
 
 }

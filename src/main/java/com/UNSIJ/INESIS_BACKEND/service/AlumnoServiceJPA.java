@@ -1,7 +1,7 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import com.UNSIJ.INESIS_BACKEND.model.AlumnoModel;
-import com.UNSIJ.INESIS_BACKEND.model.UsuarioModel;
+import com.UNSIJ.INESIS_BACKEND.model.Alumno;
+import com.UNSIJ.INESIS_BACKEND.model.Usuario;
 import com.UNSIJ.INESIS_BACKEND.repository.AlumnoRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.CatCarreraRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.CatRolRepository;
@@ -42,26 +42,26 @@ public class AlumnoServiceJPA implements IAlumnoService {
     private UsuarioServiceJPA usuarioServiceJPA;
 
     @Override
-    public List<AlumnoModel> findAll() {
+    public List<Alumno> findAll() {
         return alumnoRepository.findAll();
     }
 
     @Override
-    public AlumnoModel findById(Long id) {
+    public Alumno findById(Long id) {
         return alumnoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Alumno no encontrado con el ID: " + id));
     }
 
     @Override
     @Transactional
-    public AlumnoModel save(AlumnoModel alumnoModel) throws Exception {
+    public Alumno save(Alumno alumnoModel) throws Exception {
         return alumnoRepository.save(alumnoModel);
     }
 
     @Override
     @Transactional
-    public AlumnoModel create(Map<String, Object> params) throws Exception {
-        AlumnoModel alumnoModel = new AlumnoModel();
+    public Alumno create(Map<String, Object> params) throws Exception {
+        Alumno alumnoModel = new Alumno();
         try {
             this.build(params, alumnoModel);
         } catch (IllegalArgumentException e) {
@@ -75,7 +75,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
 
 @Override
 @Transactional
-public AlumnoModel update(AlumnoModel alumnoModel, Map<String, Object> params) throws Exception {
+public Alumno update(Alumno alumnoModel, Map<String, Object> params) throws Exception {
     try {
         // Construir los nuevos valores para el alumno y su usuario
         this.build(params, alumnoModel);
@@ -92,7 +92,7 @@ public AlumnoModel update(AlumnoModel alumnoModel, Map<String, Object> params) t
 
 @Transactional
 @Override
-public AlumnoModel build(Map<String, Object> params, AlumnoModel alumnoModel) {
+public Alumno build(Map<String, Object> params, Alumno alumnoModel) {
     try {
         // Asignar campos del alumno
         alumnoModel.setNombre(JsonUtils.obtString(params, "nombre"));
@@ -151,7 +151,7 @@ public AlumnoModel build(Map<String, Object> params, AlumnoModel alumnoModel) {
             usuarioParams.put("alumno", alumnoMap);
 
             // Crear un nuevo usuario solo si no existe uno
-            UsuarioModel usuario = usuarioServiceJPA.create(usuarioParams);
+            Usuario usuario = usuarioServiceJPA.create(usuarioParams);
 
             // Relación bidireccional explícita
 
@@ -171,7 +171,7 @@ public AlumnoModel build(Map<String, Object> params, AlumnoModel alumnoModel) {
 
     @Override
     public void deleteById(Long id) {
-        AlumnoModel alumnoModel = this.findById(id);
+        Alumno alumnoModel = this.findById(id);
         if (alumnoModel != null) {
             alumnoRepository.deleteById(id);
         }

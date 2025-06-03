@@ -24,11 +24,11 @@ public class MisDatos {
 
     @ManyToOne
     @JoinColumn(name = "id_cat_carrera", nullable = true) // NO NULO
-    private CatCarreraModel carrera;
+    private CatCarrera carrera;
 
     @ManyToOne
     @JoinColumn(name = "id_cat_semestre", nullable = false)
-    private CatSemestreModel semestre;
+    private CatSemestre semestre;
 
     @ManyToOne
     @JoinColumn(name = "id_cat_sexo")

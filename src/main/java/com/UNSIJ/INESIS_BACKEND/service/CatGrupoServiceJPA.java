@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.UNSIJ.INESIS_BACKEND.model.CatGrupoModel;
-import com.UNSIJ.INESIS_BACKEND.model.CatCarreraModel;
-import com.UNSIJ.INESIS_BACKEND.model.CatSemestreModel;
+import com.UNSIJ.INESIS_BACKEND.model.CatCarrera;
+import com.UNSIJ.INESIS_BACKEND.model.CatSemestre;
 import com.UNSIJ.INESIS_BACKEND.repository.CatGrupoRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.CatCarreraRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.CatSemestreRepository;
@@ -83,9 +83,9 @@ public class CatGrupoServiceJPA implements ICatGrupoService {
             }
 
             // Obtener carrera y semestre
-            CatCarreraModel carrera = catCarreraRepository.findById(idCarrera)
+            CatCarrera carrera = catCarreraRepository.findById(idCarrera)
                     .orElseThrow(() -> new IllegalArgumentException("Carrera no encontrada con ID: " + idCarrera));
-            CatSemestreModel semestre = catSemestreRepository.findById(idSemestre)
+            CatSemestre semestre = catSemestreRepository.findById(idSemestre)
                     .orElseThrow(() -> new IllegalArgumentException("Semestre no encontrado con ID: " + idSemestre));
 
             // Establecer las relaciones
