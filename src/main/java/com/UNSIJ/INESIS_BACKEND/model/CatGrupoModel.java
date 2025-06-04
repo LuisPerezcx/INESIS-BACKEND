@@ -21,10 +21,16 @@ public class CatGrupoModel {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "id_cat_carrera", referencedColumnName = "id_cat_carrera")
-    private CatCarreraModel catCarreraModel;
+    private CatCarrera catCarreraModel;
 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "id_cat_semestre", referencedColumnName = "id_cat_semestre")
-    private CatSemestreModel catSemestreModel;
+    private CatSemestre catSemestreModel;
+
+    @ManyToOne
+    @JoinColumn(name = "id_alumno", referencedColumnName = "id_alumno")
+    @ToString.Exclude
+    private Alumno alumnoModel;
+
 }

@@ -21,6 +21,25 @@ public class MisDatos {
     private Long id;
 
     @NotNull
+    @Column(name = "nombre_completo")
+    private String nombreCompleto;
+
+    @ManyToOne
+    @JoinColumn(name = "id_cat_carrera", nullable = true) // NO NULO
+    private CatCarrera carrera;
+
+    @ManyToOne
+    @JoinColumn(name = "id_cat_semestre", nullable = false)
+    private CatSemestre semestre;
+
+    @ManyToOne
+    @JoinColumn(name = "id_cat_sexo")
+    private CatSexoModel sexo;
+
+    @ManyToOne
+    @JoinColumn(name = "id_cat_estado_civil")
+    private CatEstadoCivil estadoCivil;
+
     @Column(name = "seccion_completa")
     private boolean completo = false;
 
@@ -52,13 +71,13 @@ public class MisDatos {
     @Column(name = "lleva_vehiculo")
     private Boolean llevaVehiculo;
 
-    @ManyToOne
-    @JoinColumn(name = "id_cat_estado_civil")
-    private CatEstadoCivil estadoCivil;
+//    @ManyToOne
+//    @JoinColumn(name = "id_cat_estado_civil")
+//    private CatEstadoCivil estadoCivil;
 
-    @ManyToOne
-    @JoinColumn(name = "id_cat_sexo")
-    private CatSexoModel sexo;
+//    @ManyToOne
+//    @JoinColumn(name = "id_cat_sexo")
+//    private CatSexoModel sexo;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_cat_situacion_vivienda")
@@ -85,5 +104,5 @@ public class MisDatos {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_alumno", referencedColumnName = "id_alumno")
     @JsonIgnore
-    private AlumnoModel alumno;
+    private Alumno alumno;
 }

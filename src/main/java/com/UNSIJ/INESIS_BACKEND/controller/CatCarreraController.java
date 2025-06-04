@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.UNSIJ.INESIS_BACKEND.model.CatCarreraModel;
+import com.UNSIJ.INESIS_BACKEND.model.CatCarrera;
 import com.UNSIJ.INESIS_BACKEND.service.CatCarreraServiceJPA;
 
 @RestController
@@ -26,14 +26,14 @@ public class CatCarreraController {
 
     
     @GetMapping
-    public List<CatCarreraModel> list() {
+    public List<CatCarrera> list() {
         return carreraServiceJPA.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id){
         try {
-            CatCarreraModel catCatCarreraModel = carreraServiceJPA.findById(id);
+            CatCarrera catCatCarreraModel = carreraServiceJPA.findById(id);
             return ResponseEntity.ok(catCatCarreraModel);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -47,7 +47,7 @@ public class CatCarreraController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            CatCarreraModel catCatCarreraModel = carreraServiceJPA.create(params);
+            CatCarrera catCatCarreraModel = carreraServiceJPA.create(params);
             return ResponseEntity.status(HttpStatus.CREATED).body(catCatCarreraModel);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -59,7 +59,7 @@ public class CatCarreraController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            CatCarreraModel catCatCarreraUpdate = carreraServiceJPA.update(carreraServiceJPA.findById(id),params);
+            CatCarrera catCatCarreraUpdate = carreraServiceJPA.update(carreraServiceJPA.findById(id),params);
             return ResponseEntity.status(HttpStatus.CREATED).body(catCatCarreraUpdate);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

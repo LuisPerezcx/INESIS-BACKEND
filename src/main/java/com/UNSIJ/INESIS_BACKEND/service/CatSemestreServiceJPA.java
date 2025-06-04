@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.UNSIJ.INESIS_BACKEND.model.CatSemestreModel;
+import com.UNSIJ.INESIS_BACKEND.model.CatSemestre;
 import com.UNSIJ.INESIS_BACKEND.repository.CatSemestreRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatSemestreService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
@@ -20,25 +20,25 @@ public class CatSemestreServiceJPA implements ICatSemestreService{
     private CatSemestreRepository catSemestreRepository;
 
     @Override
-    public List<CatSemestreModel> findAll() {
+    public List<CatSemestre> findAll() {
         return catSemestreRepository.findAll();
     }
 
     @Override
-    public CatSemestreModel findById(Long id) {
+    public CatSemestre findById(Long id) {
         return catSemestreRepository.findById(id).orElseThrow( ()->
                 new IllegalArgumentException("Ejemplo no encontrado con el ID: " + id));
     }
 
     @Override
     @Transactional 
-    public CatSemestreModel save(CatSemestreModel catSemestreModel) throws Exception {
+    public CatSemestre save(CatSemestre catSemestreModel) throws Exception {
         return catSemestreRepository.save(catSemestreModel);
     }
 
     @Override
-    public CatSemestreModel create(Map<String, Object> params) throws Exception {
-        CatSemestreModel catSemestreModel = new CatSemestreModel();
+    public CatSemestre create(Map<String, Object> params) throws Exception {
+        CatSemestre catSemestreModel = new CatSemestre();
         try {
             //AQUI ASIGNAMOS VALORES QUE SOLO SE NECESITAN AL CREAR POR PRIMERA VEZ UN REGISTRO
             //POR EJEMPLO EL CAMPO ACTIVO
@@ -56,7 +56,7 @@ public class CatSemestreServiceJPA implements ICatSemestreService{
 
     //ESTE METODO SE OCUPA AL ACTUALIZAR DESDE EL FRONTEND YA QUE RECIBE UN MAPA(JSON)
     @Override
-    public CatSemestreModel update(CatSemestreModel catSemestreModel, Map<String, Object> params) throws Exception {
+    public CatSemestre update(CatSemestre catSemestreModel, Map<String, Object> params) throws Exception {
         try {
             this.build(params, catSemestreModel);
         } catch (IllegalArgumentException e) {
@@ -69,7 +69,7 @@ public class CatSemestreServiceJPA implements ICatSemestreService{
     }
 
     @Override
-    public CatSemestreModel build(Map<String, Object> params, CatSemestreModel catSemestreModel){
+    public CatSemestre build(Map<String, Object> params, CatSemestre catSemestreModel){
         try {
             //PRIMERO DEBEMOS VERIFICAR QUE LOS VALORES QUE SON NOT NULL EN LA BASE EXISTAN EN EL JSON
             //AQUI SE DEBEN VALIDAR LOS DATOS QUE SE ESTAN RECIBIENDO Y SE LANZAN LAS EXCEPCIONES CORRESPONDIENTES
@@ -94,8 +94,8 @@ public class CatSemestreServiceJPA implements ICatSemestreService{
 
     //ESTE METODO SE OCUPA CUANDO YA TENEMOS LA INSTANCIA QUE QUEREMOS ACTUALIZAR
     @Override
-    public CatSemestreModel updateInstance(CatSemestreModel catSemestreInstance) throws Exception {
-        CatSemestreModel catSemestreBD = this.findById(catSemestreInstance.getId());
+    public CatSemestre updateInstance(CatSemestre catSemestreInstance) throws Exception {
+        CatSemestre catSemestreBD = this.findById(catSemestreInstance.getId());
        /*  catCarreraBD.setActive(catCarreraInstance.isActive());
         catCarreraBD.setNumeroEjemplo(catCarreraInstance.getNumeroEjemplo());
         catCarreraBD.setNombreEjemplo(catCarreraInstance.getNombreEjemplo());*/
@@ -104,7 +104,7 @@ public class CatSemestreServiceJPA implements ICatSemestreService{
 
     @Override
     public void deleteById(Long id) {
-        CatSemestreModel catSemestreModel = this.findById(id);
+        CatSemestre catSemestreModel = this.findById(id);
         if (catSemestreModel!= null){
             catSemestreRepository.deleteById(id);
         }

@@ -10,15 +10,15 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "cat_rol")
-public class CatRolModel {
-    
-     @Id
+@Table(name = "cat_carrera")
+public class CatCarrera {
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_cat_rol")
+    @Column(name = "id_cat_carrera")
     private Long id;
 
-    @Column(name = "nombre_rol")
-    private String nombreRol;
+    @Column(name = "nombre_carrera")
+    private String nombreCarrera;
 
 }

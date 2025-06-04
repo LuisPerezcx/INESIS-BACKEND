@@ -85,7 +85,7 @@ public class MisDatosServiceJPA implements IMisDatosService {
         try {
             Long idAlumno = JsonUtils.obtLong(params, "alumnoId");
             if(idAlumno == null) throw new IllegalArgumentException("El campo idAlumno es obligatorio");
-            AlumnoModel alumno = alumnoService.findById(idAlumno);
+            Alumno alumno = alumnoService.findById(idAlumno);
             misDatos.setAlumno(alumno);
             misDatos.setCompleto(false);
             this.build(params, misDatos);
@@ -121,22 +121,21 @@ public class MisDatosServiceJPA implements IMisDatosService {
             String nombreCompleto = JsonUtils.obtString(params, "nombreCompleto");
             if (nombreCompleto == null)
                 throw new IllegalArgumentException("El campo nombre Completo es obligatorio");
-            //misDatos.setNombreCompleto(nombreCompleto);
+            misDatos.setNombreCompleto(nombreCompleto);
 
-            // Long idCarrera = JsonUtils.obtLong(params, "carrera");
-            // if (idCarrera == null)
-            // throw new IllegalArgumentException("El campo idCarrera es obligatorio");
-            // misDatos.setCarrera(catCarreraRepository.findById(idCarrera)
-            // .orElseThrow(() -> new IllegalArgumentException("No se encontró la carrera
-            // con ID: " + idCarrera)));
+             Long idCarrera = JsonUtils.obtLong(params, "carrera");
+             if (idCarrera == null)
+             throw new IllegalArgumentException("El campo idCarrera es obligatorio");
+             misDatos.setCarrera(catCarreraRepository.findById(idCarrera)
+             .orElseThrow(() -> new IllegalArgumentException("No se encontró la carrera con ID: " + idCarrera)));
 
             Long idSemestre = JsonUtils.obtLong(params, "semestre");
             if (idSemestre == null)
                 throw new IllegalArgumentException("El campo idSemestre es obligatorio");
             //todo: actualizar semestre alumno
-            /*misDatos.setSemestre(catSemestreRepository.findById(idSemestre)
+            misDatos.setSemestre(catSemestreRepository.findById(idSemestre)
                     .orElseThrow(
-                            () -> new IllegalArgumentException("No se encontró el semestre con ID: " + idSemestre)));*/
+                            () -> new IllegalArgumentException("No se encontró el semestre con ID: " + idSemestre)));
 
             Long idSexo = JsonUtils.obtLong(params, "sexo");
             if (idSexo == null)
