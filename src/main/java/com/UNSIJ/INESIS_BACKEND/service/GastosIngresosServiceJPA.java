@@ -85,9 +85,17 @@ public class GastosIngresosServiceJPA implements IGastosIngresosService {
                 throw new IllegalArgumentException("El campo gasto mensual es obligatorio");
             gastosIngresos.setGastoMensual(gastoMensual);
 
-            String dependeEconomicamente = JsonUtils.obtString(params, "dependeEconomicamente");
+            String dependeEconomicamenteString = JsonUtils.obtString(params, "dependeEconomicamente");
+            Boolean dependeEconomicamente = null;
+            if ("Si".equalsIgnoreCase(dependeEconomicamenteString)) {
+                dependeEconomicamente = true;
+            } else if ("No".equalsIgnoreCase(dependeEconomicamenteString)) {
+                dependeEconomicamente = false;
+            } else if (dependeEconomicamenteString != null) {
+                throw new IllegalArgumentException("El valor de 'dependeEconomicamente' debe ser 'Si' o 'No'.");
+            }
             if (dependeEconomicamente == null)
-                throw new IllegalArgumentException("El campo depende economicamente es obligatorio");
+                throw new IllegalArgumentException("El campo recursos suficientes es obligatorio");
             gastosIngresos.setDependeEconomicamente(dependeEconomicamente);
 
             String nombreQuienDependes = JsonUtils.obtString(params, "nombreQuienDependes");
@@ -114,11 +122,19 @@ public class GastosIngresosServiceJPA implements IGastosIngresosService {
             String otro = JsonUtils.obtString(params, "otro");
             gastosIngresos.setOtro(otro);
 
-            String solicitaBecaAlimenticia = JsonUtils.obtString(params, "solicitaBecaAlimenticia");
+            String solicitaBecaAlimenticiaString = JsonUtils.obtString(params, "solicitaBecaAlimenticia");
+            Boolean solicitaBecaAlimenticia = null;
+            if ("Si".equalsIgnoreCase(solicitaBecaAlimenticiaString)) {
+                solicitaBecaAlimenticia = true;
+            } else if ("No".equalsIgnoreCase(solicitaBecaAlimenticiaString)) {
+                solicitaBecaAlimenticia = false;
+            } else if (solicitaBecaAlimenticiaString != null) {
+                throw new IllegalArgumentException("El valor de 'dependeEconomicamente' debe ser 'Si' o 'No'.");
+            }
             if (solicitaBecaAlimenticia == null)
-                throw new IllegalArgumentException("El campo solicitar besa alimenticia es obligatorio");
+                throw new IllegalArgumentException("El campo recursos suficientes es obligatorio");
             gastosIngresos.setSolicitaBecaAlimenticia(solicitaBecaAlimenticia);
-            System.out.println("Parametros gastosIngresos: " + params);
+
 
             Map<String, Object> trabajoMap = (Map<String, Object>) params.get("trabajo");
             if (trabajoMap != null
