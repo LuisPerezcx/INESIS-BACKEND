@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "cat_rol")
-public class CatRolModel {
+public class CatRol {
     
      @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

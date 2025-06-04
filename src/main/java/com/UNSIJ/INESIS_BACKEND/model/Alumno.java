@@ -21,8 +21,12 @@ public class Alumno {
     private String nombre;
 
     @NotNull
-    @Column(name = "apellido")
-    private String apellido;
+    @Column(name = "apellido_paterno")
+    private String apellidoPaterno;
+
+    @NotNull
+    @Column(name = "apellido_materno")
+    private String apellidoMaterno;
 
     @NotNull
     @Column(name = "curp", unique = true)
@@ -62,7 +66,7 @@ public class Alumno {
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
     @JsonBackReference
-    private UsuarioModel usuario;
+    private Usuario usuario;
 
     @OneToOne(mappedBy = "alumno")
     private MisDatos misDatos;

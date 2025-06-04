@@ -519,41 +519,6 @@ INSERT INTO cat_medios_transporte (nombre_medio)
 SELECT 'Microbús'
 WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Microbús');
 
-# ------------------------------------------- REGISTRO DE CAT_OCUPACION
-
-SELECT 1;
-
-INSERT INTO cat_ocupacion (nombre_ocupacion)
-SELECT 'Comerciante'
-WHERE NOT EXISTS (SELECT 1 FROM cat_ocupacion WHERE nombre_ocupacion = 'Comerciante');
-
-INSERT INTO cat_ocupacion (nombre_ocupacion)
-SELECT 'Jubilado o pensionado'
-WHERE NOT EXISTS (SELECT 1 FROM cat_ocupacion WHERE nombre_ocupacion = 'Jubilado o pensionado');
-
-INSERT INTO cat_ocupacion (nombre_ocupacion)
-SELECT 'Empleado de gobierno'
-WHERE NOT EXISTS (SELECT 1 FROM cat_ocupacion WHERE nombre_ocupacion = 'Empleado de gobierno');
-
-INSERT INTO cat_ocupacion (nombre_ocupacion)
-SELECT 'Labores del campo o de la pesca'
-WHERE NOT EXISTS (SELECT 1 FROM cat_ocupacion WHERE nombre_ocupacion = 'Labores del campo o de la pesca');
-
-INSERT INTO cat_ocupacion (nombre_ocupacion)
-SELECT 'Empleado de empresa privada'
-WHERE NOT EXISTS (SELECT 1 FROM cat_ocupacion WHERE nombre_ocupacion = 'Empleado de empresa privada');
-
-INSERT INTO cat_ocupacion (nombre_ocupacion)
-SELECT 'Empleado empresa ejidal o comunal'
-WHERE NOT EXISTS (SELECT 1 FROM cat_ocupacion WHERE nombre_ocupacion = 'Empleado empresa ejidal o comunal');
-
-INSERT INTO cat_ocupacion (nombre_ocupacion)
-SELECT 'Tiene negocio propio'
-WHERE NOT EXISTS (SELECT 1 FROM cat_ocupacion WHERE nombre_ocupacion = 'Tiene negocio propio');
-
-INSERT INTO cat_ocupacion (nombre_ocupacion)
-SELECT 'Otro'
-WHERE NOT EXISTS (SELECT 1 FROM cat_ocupacion WHERE nombre_ocupacion = 'Otro');
 
 
 /*REGISTRO DE CAT BIENES HOGAR*/
@@ -744,16 +709,29 @@ WHERE NOT EXISTS (SELECT 1 FROM cat_medios_estudio WHERE nombre_medios = 'Otro')
 SELECT 1;
 
 INSERT INTO cat_situacion_vivienda (nombre_situacion)
-SELECT 'Rento cuarto'
-WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Rento cuarto');
+SELECT 'Propia'
+WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Propia');
 
 INSERT INTO cat_situacion_vivienda (nombre_situacion)
-SELECT 'Rento casa'
-WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Rento casa');
+SELECT 'Rentada'
+WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Rentada');
 
 INSERT INTO cat_situacion_vivienda (nombre_situacion)
-SELECT 'Vivo con familiares'
-WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Vivo con familiares');
+SELECT 'Prestada'
+WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Prestada');
+
+INSERT INTO cat_situacion_vivienda (nombre_situacion)
+SELECT 'Alquilada'
+WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Alquilada');
+
+INSERT INTO cat_situacion_vivienda (nombre_situacion)
+SELECT 'Vivienda institucional'
+WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Vivienda institucional');
+
+INSERT INTO cat_situacion_vivienda (nombre_situacion)
+SELECT 'Otro'
+WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Otro');
+
 
 #------------------- REGISTROS DE CAT_TIPO_VIVIENDA -------------------
 -- Inicio de inserciones
@@ -786,49 +764,3 @@ WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_vivienda WHERE nombre_tipo = 'Condomini
 INSERT INTO cat_tipo_vivienda (nombre_tipo)
 SELECT 'Otro'
 WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_vivienda WHERE nombre_tipo = 'Otro');
-
-
-
-# ----------------------------------- REGISTROS DE CAT_TIPO_TRABAJO ----------------------------------------
-
-SELECT 1;
-
-INSERT INTO cat_tipo_trabajo (nombre_tipo)
-SELECT 'Temporal'
-WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_trabajo WHERE nombre_tipo = 'Temporal');
-
-INSERT INTO cat_tipo_trabajo (nombre_tipo)
-SELECT 'Permanente'
-WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_trabajo WHERE nombre_tipo = 'Permanente');
-
-
-# ----------------------------------- REGISTROS DE CAT_PARENTESCO ----------------------------------------
-
-SELECT 1;
-
-INSERT INTO cat_parentesco (nombre_parentesco)
-SELECT 'Padre'
-WHERE NOT EXISTS (SELECT 1 FROM cat_parentesco WHERE nombre_parentesco = 'Padre');
-
-INSERT INTO cat_parentesco (nombre_parentesco)
-SELECT 'Madre'
-WHERE NOT EXISTS (SELECT 1 FROM cat_parentesco WHERE nombre_parentesco = 'Madre');
-
-INSERT INTO cat_parentesco (nombre_parentesco)
-SELECT 'Abuelo'
-WHERE NOT EXISTS (SELECT 1 FROM cat_parentesco WHERE nombre_parentesco = 'Abuelo');
-
-INSERT INTO cat_parentesco (nombre_parentesco)
-SELECT 'Abuela'
-WHERE NOT EXISTS (SELECT 1 FROM cat_parentesco WHERE nombre_parentesco = 'Abuela');
-
-
-
-
-
-
-
-
-
-
-
