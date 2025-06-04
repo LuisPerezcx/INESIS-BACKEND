@@ -68,8 +68,12 @@ public class MisDatos {
     private String nombreCasaHuesped;
 
     @NotNull
-    @Column(name = "lleva_vehiculo")
-    private Boolean llevaVehiculo;
+    @Column(name = "lleva_automovil")
+    private Boolean llevaAutomovil;
+
+    @NotNull
+    @Column(name = "lleva_motocicleta")
+    private Boolean llevamotocicleta;
 
 //    @ManyToOne
 //    @JoinColumn(name = "id_cat_estado_civil")
@@ -89,9 +93,14 @@ public class MisDatos {
     private GastosIngresos gastosIngresos;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_transporte")
+    @JoinColumn(name = "id_transporte_automovil")
     @JsonIgnore
-    private Transporte transporte;
+    private Transporte transporteAutomovil;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_transporte_motocicleta")
+    @JsonIgnore
+    private Transporte transporteMotocicleta;
 
     @OneToMany(mappedBy = "misDatos", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference

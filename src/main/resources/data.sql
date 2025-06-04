@@ -774,12 +774,9 @@ INSERT INTO cat_situacion_vivienda (nombre_situacion)
 SELECT 'Vivo con familiares'
 WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Vivo con familiares');
 
-
 INSERT INTO cat_situacion_vivienda (nombre_situacion)
 SELECT 'Otro'
 WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Otro');
-
-
 
 #------------------- REGISTROS DE CAT_TIPO_VIVIENDA -------------------
 -- Inicio de inserciones
