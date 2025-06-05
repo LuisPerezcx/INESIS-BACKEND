@@ -59,14 +59,8 @@ public class MisDatos {
     @Column(name = "nombre_casa_huesped")
     private String nombreCasaHuesped;
 
-    @NotNull
-    @Column(name = "lleva_vehiculo")
-    private Boolean llevaVehiculo;
-
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_gastos_ingresos")
-    @ToString.Exclude
     private GastosIngresos gastosIngresos;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -82,8 +76,4 @@ public class MisDatos {
     @JoinColumn(name = "id_domicilio")
     private Domicilio domicilio;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_alumno", referencedColumnName = "id_alumno")
-    @JsonIgnore
-    private AlumnoModel alumno;
 }

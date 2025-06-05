@@ -1,6 +1,6 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import com.UNSIJ.INESIS_BACKEND.model.AlumnoModel;
+import com.UNSIJ.INESIS_BACKEND.model.Alumno;
 import com.UNSIJ.INESIS_BACKEND.utils.PDF;
 import com.itextpdf.text.pdf.AcroFields;
 import com.itextpdf.text.pdf.PdfReader;
@@ -13,7 +13,7 @@ import java.util.Base64;
 public class PDFServiceJPA {
 
     public static void main(String[] args) {
-        AlumnoModel alumnoModel = new AlumnoModel();
+        Alumno alumnoModel = new Alumno();
         generarPdf(alumnoModel);
     }
 
@@ -49,7 +49,7 @@ public class PDFServiceJPA {
         return String.join(" ", marcaSeguro, modeloSeguro, anioSeguro).trim();
     }
 
-    public static void generarPdf(AlumnoModel alumno){
+    public static void generarPdf(Alumno alumno){
         try {
             // Ruta del PDF base (con campos de formulario)
             PdfReader reader = new PdfReader("estudioSocioEconomico.pdf");
@@ -66,7 +66,7 @@ public class PDFServiceJPA {
             form.setGenerateAppearances(true);
 
             // Rellenar campos
-            form.setField(PDF.ESE.nombreAlumno, nombreCompletoSeguro(alumno.getNombre(), alumno.getApellido()), true);
+            form.setField(PDF.ESE.nombreAlumno, nombreCompletoSeguro(alumno.getNombre(), alumno.getApellidoPaterno()), true);
             form.setField(PDF.ESE.carreraAlumno, valorSeguro(alumno.getCarrera().getNombreCarrera(), " "), true);
             form.setField(PDF.ESE.semestreAlumno,valorSeguro(alumno.getSemestre().getNombreSemestre(), ""), true);
             form.setField(PDF.ESE.dependeSi, "X", true);
@@ -148,7 +148,7 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.observaciones, " ", true);
 
 
-            form.setField(PDF.ESE.apellidoP, valorSeguro(alumno.getApellido()," "), true);
+            form.setField(PDF.ESE.apellidoP, valorSeguro(alumno.getApellidoPaterno()," "), true);
             form.setField(PDF.ESE.apellidoM, " ", true);
             form.setField(PDF.ESE.nombreAlum, valorSeguro(alumno.getNombre()," "), true);
             form.setField(PDF.ESE.sexo, valorSeguro(alumno.getSexo().getNombreSexo()," "), true);
@@ -262,7 +262,7 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.autoPropio, "X", true);
             form.setField(PDF.ESE.autoFamiliar, "X", true);
             form.setField(PDF.ESE.autoAmigos, "X", true);
-            form.setField(PDF.ESE.firmaAlumno,nombreCompletoSeguro(alumno.getNombre(), alumno.getApellido()),true);
+            form.setField(PDF.ESE.firmaAlumno,nombreCompletoSeguro(alumno.getNombre(), alumno.getApellidoPaterno()),true);
 
             //imprime los campos encontrados en el pdf
             for (String campo : form.getFields().keySet()) {

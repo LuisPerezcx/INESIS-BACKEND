@@ -51,7 +51,7 @@ public class GastosIngresosService {
             Map<String, Object> reciboData = (Map<String, Object>) params.get("reciboLuz");
             System.out.println("ReciboLuzData recibido: " + reciboData);
     
-            ReciboLuzModel recibo = new ReciboLuzModel();
+            ReciboLuz recibo = new ReciboLuz();
             recibo.setTitular((String) reciboData.get("titular"));
             recibo.setPeriodoInicio((String) reciboData.getOrDefault("periodoInicio", null));
             recibo.setPeriodoFin((String) reciboData.getOrDefault("periodoFin", null));
