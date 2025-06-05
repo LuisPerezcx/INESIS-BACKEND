@@ -18,6 +18,8 @@ public class CatSemestreModel {
     @Column(name = "id_cat_semestre")
     private Long id;
 
+    
+
     @Column(name = "nombre_semestre")
     private String nombreSemestre;
 }
