@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.UNSIJ.INESIS_BACKEND.model.UsuarioModel;
+import com.UNSIJ.INESIS_BACKEND.model.Usuario;
 import com.UNSIJ.INESIS_BACKEND.repository.UsuarioRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IUsuarioService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
@@ -22,25 +22,25 @@ public class UsuarioServiceJPA implements IUsuarioService {
     private CatRolServiceJPA rolServiceJPA;
 
     @Override
-    public List<UsuarioModel> findAll() {
+    public List<Usuario> findAll() {
         return usuarioRepository.findAll();
     }
 
     @Override
-    public UsuarioModel findById(Long id) {
+    public Usuario findById(Long id) {
         return usuarioRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado con el ID: " + id));
     }
 
     @Override
     @Transactional
-    public UsuarioModel save(UsuarioModel usuarioModel) throws Exception {
+    public Usuario save(Usuario usuarioModel) throws Exception {
         return usuarioRepository.save(usuarioModel);
     }
 
     @Override
-    public UsuarioModel create(Map<String, Object> params) throws Exception {
-        UsuarioModel usuarioModel = new UsuarioModel();
+    public Usuario create(Map<String, Object> params) throws Exception {
+        Usuario usuarioModel = new Usuario();
         try {
             this.build(params, usuarioModel);
         } catch (IllegalArgumentException e) {
@@ -53,7 +53,7 @@ public class UsuarioServiceJPA implements IUsuarioService {
     }
 
     @Override
-    public UsuarioModel update(UsuarioModel usuarioModel, Map<String, Object> params) throws Exception {
+    public Usuario update(Usuario usuarioModel, Map<String, Object> params) throws Exception {
         try {
             this.build(params, usuarioModel);
         } catch (IllegalArgumentException e) {
@@ -67,7 +67,7 @@ public class UsuarioServiceJPA implements IUsuarioService {
 
     @Override
     @Transactional
-    public UsuarioModel build(Map<String, Object> params, UsuarioModel usuarioModel) {
+    public Usuario build(Map<String, Object> params, Usuario usuarioModel) {
         try {
             String usuario = JsonUtils.obtString(params, "usuario");
             if (usuario == null)
@@ -79,7 +79,7 @@ public class UsuarioServiceJPA implements IUsuarioService {
                 throw new IllegalArgumentException("El campo contraseña es obligatorio");
             usuarioModel.setContrasenia(contrasenia);
 
-            String estatus = JsonUtils.obtString(params, "estatus");
+            Boolean estatus = JsonUtils.obtBoolean(params, "estatus");
             if (estatus == null)
                 throw new IllegalArgumentException("El campo estatus es obligatorio");
             usuarioModel.setEstatus(estatus);
@@ -102,8 +102,8 @@ public class UsuarioServiceJPA implements IUsuarioService {
     }
 
     @Override
-    public UsuarioModel updateInstance(UsuarioModel usuarioInstance) throws Exception {
-        UsuarioModel usuarioBD = this.findById(usuarioInstance.getId());
+    public Usuario updateInstance(Usuario usuarioInstance) throws Exception {
+        Usuario usuarioBD = this.findById(usuarioInstance.getId());
         usuarioBD.setUsuario(usuarioInstance.getUsuario());
         usuarioBD.setContrasenia(usuarioInstance.getContrasenia());
         usuarioBD.setEstatus(usuarioInstance.getEstatus());
@@ -112,21 +112,21 @@ public class UsuarioServiceJPA implements IUsuarioService {
 
     @Override
     public void deleteById(Long id) {
-        UsuarioModel usuarioModel = this.findById(id);
+        Usuario usuarioModel = this.findById(id);
         if (usuarioModel != null) {
             usuarioRepository.deleteById(id);
         }
     }
 
     @Override
-    public UsuarioModel findByAlumnoId(Long idAlumno) {
+    public Usuario findByAlumnoId(Long idAlumno) {
         return usuarioRepository.findByAlumnoId(idAlumno)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "No se encontró un usuario para el alumno con ID: " + idAlumno));
     }
 
-    public UsuarioModel validarLogin(String usuario, String contrasenia) {
-        UsuarioModel user = usuarioRepository.findByUsuario(usuario)
+    public Usuario validarLogin(String usuario, String contrasenia) {
+        Usuario user = usuarioRepository.findByUsuario(usuario)
             .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
     
         if (!user.getContrasenia().equals(contrasenia)) {

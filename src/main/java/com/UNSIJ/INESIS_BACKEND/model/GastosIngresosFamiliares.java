@@ -50,5 +50,5 @@ public class GastosIngresosFamiliares {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "id_recibo_luz", referencedColumnName = "id_recibo_luz")
-    ReciboLuzModel reciboLuzModel;
+    ReciboLuz reciboLuzModel;
 }

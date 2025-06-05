@@ -19,19 +19,21 @@ public class GastosIngresos {
     private Double gastoMensual;
 
     @Column(name = "depende_economicamente")
-    private String dependeEconomicamente;
+    private Boolean dependeEconomicamente;
 
     @Column(name = "nombre_quien_dependes")
     private String nombreQuienDependes;
 
     @Column(name = "solicita_beca_alimenticia")
-    private String solicitaBecaAlimenticia;
+    private Boolean solicitaBecaAlimenticia;
 
-    @Column(name = "trabajo_tipo")
-    private String trabajoTipo;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_cat_tipo_trabajo")
+    private CatTipoTrabajo catTipoTrabajo;
 
-    @Column(name = "ocupacion")
-    private String ocupacion;
+    @ManyToOne
+    @JoinColumn(name = "id_cat_ocupacion")
+    private OcupacionModel ocupacionModel;
 
     @Column(name = "otro")
     private String otro;
@@ -42,6 +44,7 @@ public class GastosIngresos {
 
     @OneToOne(mappedBy = "gastosIngresos")
     @ToString.Exclude
+    @JsonIgnore
     private MisDatos misDatos;
 
 }

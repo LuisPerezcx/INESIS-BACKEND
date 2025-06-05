@@ -16,7 +16,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "usuario")
-public class UsuarioModel {
+public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,13 +30,13 @@ public class UsuarioModel {
     private String contrasenia;
 
     @Column(name = "estatus")
-    private String estatus;
+    private Boolean estatus;
 
     @ManyToOne
     @JoinColumn(name = "id_cat_rol")
-    private CatRolModel rol;
+    private CatRol rol;
 
     @OneToOne(mappedBy = "usuario")
     @JsonManagedReference
-    private AlumnoModel alumno;
+    private Alumno alumno;
 }

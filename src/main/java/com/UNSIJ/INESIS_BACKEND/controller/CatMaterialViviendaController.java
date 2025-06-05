@@ -1,0 +1,86 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.UNSIJ.INESIS_BACKEND.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatMaterialViviendaModel;
+import com.UNSIJ.INESIS_BACKEND.service.CatMaterialViviendaServiceJPA;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ *
+ * @author 24mda
+ */
+@RestController
+@RequestMapping("/cat_material_vivienda")
+
+public class CatMaterialViviendaController {
+
+    @Autowired
+    private CatMaterialViviendaServiceJPA serviceCatMaterialServiceJPA;
+
+    @GetMapping
+    public List<CatMaterialViviendaModel> list() {
+        return serviceCatMaterialServiceJPA.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> show(@PathVariable Long id) {
+        try {
+            CatMaterialViviendaModel catMaterialVivienda = serviceCatMaterialServiceJPA.findById(id);
+            return ResponseEntity.ok(catMaterialVivienda);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
+        try {
+            CatMaterialViviendaModel createCatMaterial = serviceCatMaterialServiceJPA.create(params);
+            return ResponseEntity.status(HttpStatus.CREATED).body(createCatMaterial);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
+        try {
+            CatMaterialViviendaModel catMaterialViviendaUpdated = serviceCatMaterialServiceJPA.update(serviceCatMaterialServiceJPA.findById(id), params);
+            return ResponseEntity.status(HttpStatus.CREATED).body(catMaterialViviendaUpdated);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> delete(@PathVariable Long id) {
+        try {
+            serviceCatMaterialServiceJPA.deleteById(id);
+            serviceCatMaterialServiceJPA.findById(id);
+            return ResponseEntity.noContent().build();
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+}

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -19,16 +20,8 @@ public class MisDatos {
     private Long id;
 
     @NotNull
-    @Column(name = "nombre_completo")
-    private String nombreCompleto;
-
-    @ManyToOne
-    @JoinColumn(name = "id_cat_carrera", nullable = true) // NO NULO
-    private CatCarreraModel carrera;
-
-    @ManyToOne
-    @JoinColumn(name = "id_cat_semestre", nullable = false)
-    private CatSemestreModel semestre;
+    @Column(name = "seccion_completa")
+    private boolean completo = false;
 
     @ManyToOne
     @JoinColumn(name = "id_cat_sexo")
