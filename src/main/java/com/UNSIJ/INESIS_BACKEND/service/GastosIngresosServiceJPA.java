@@ -3,7 +3,9 @@ package com.UNSIJ.INESIS_BACKEND.service;
 import java.util.List;
 import java.util.Map;
 
+import com.UNSIJ.INESIS_BACKEND.model.CatTipoTrabajo;
 import com.UNSIJ.INESIS_BACKEND.model.OcupacionModel;
+import com.UNSIJ.INESIS_BACKEND.repository.CatTipoTrabajoRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.OcupacionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,9 @@ public class GastosIngresosServiceJPA implements IGastosIngresosService {
 
     @Autowired
     private OcupacionRepository ocupacionRepository;
+
+    @Autowired
+    private CatTipoTrabajoRepository catTipoTrabajoRepository;
 
     @Override
     public List<GastosIngresos> findAll() {
@@ -80,16 +85,30 @@ public class GastosIngresosServiceJPA implements IGastosIngresosService {
                 throw new IllegalArgumentException("El campo gasto mensual es obligatorio");
             gastosIngresos.setGastoMensual(gastoMensual);
 
-            String dependeEconomicamente = JsonUtils.obtString(params, "dependeEconomicamente");
+            String dependeEconomicamenteString = JsonUtils.obtString(params, "dependeEconomicamente");
+            Boolean dependeEconomicamente = null;
+            if ("Si".equalsIgnoreCase(dependeEconomicamenteString)) {
+                dependeEconomicamente = true;
+            } else if ("No".equalsIgnoreCase(dependeEconomicamenteString)) {
+                dependeEconomicamente = false;
+            } else if (dependeEconomicamenteString != null) {
+                throw new IllegalArgumentException("El valor de 'dependeEconomicamente' debe ser 'Si' o 'No'.");
+            }
             if (dependeEconomicamente == null)
-                throw new IllegalArgumentException("El campo depende economicamente es obligatorio");
+                throw new IllegalArgumentException("El campo recursos suficientes es obligatorio");
             gastosIngresos.setDependeEconomicamente(dependeEconomicamente);
 
             String nombreQuienDependes = JsonUtils.obtString(params, "nombreQuienDependes");
             gastosIngresos.setNombreQuienDependes(nombreQuienDependes);
 
-            String trabajoTipo = JsonUtils.obtString(params, "trabajoTipo");
-            gastosIngresos.setTrabajoTipo(trabajoTipo);
+            Long idTrabajoTipo = JsonUtils.obtLong(params, "trabajoTipo");
+            if (idTrabajoTipo == null) {
+                throw new IllegalArgumentException("El campo 'idTrabajoTipo' es obligatorio.");
+            }
+            CatTipoTrabajo catTipoTrabajo = catTipoTrabajoRepository.findById(idTrabajoTipo)
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Ocupacion no encontrado con el ID: " + idTrabajoTipo));
+            gastosIngresos.setCatTipoTrabajo(catTipoTrabajo);
 
             Long idOcupacion = JsonUtils.obtLong(params, "ocupacion");
             if (idOcupacion == null) {
@@ -103,11 +122,19 @@ public class GastosIngresosServiceJPA implements IGastosIngresosService {
             String otro = JsonUtils.obtString(params, "otro");
             gastosIngresos.setOtro(otro);
 
-            String solicitaBecaAlimenticia = JsonUtils.obtString(params, "solicitaBecaAlimenticia");
+            String solicitaBecaAlimenticiaString = JsonUtils.obtString(params, "solicitaBecaAlimenticia");
+            Boolean solicitaBecaAlimenticia = null;
+            if ("Si".equalsIgnoreCase(solicitaBecaAlimenticiaString)) {
+                solicitaBecaAlimenticia = true;
+            } else if ("No".equalsIgnoreCase(solicitaBecaAlimenticiaString)) {
+                solicitaBecaAlimenticia = false;
+            } else if (solicitaBecaAlimenticiaString != null) {
+                throw new IllegalArgumentException("El valor de 'dependeEconomicamente' debe ser 'Si' o 'No'.");
+            }
             if (solicitaBecaAlimenticia == null)
-                throw new IllegalArgumentException("El campo solicitar besa alimenticia es obligatorio");
+                throw new IllegalArgumentException("El campo recursos suficientes es obligatorio");
             gastosIngresos.setSolicitaBecaAlimenticia(solicitaBecaAlimenticia);
-            System.out.println("Parametros gastosIngresos: " + params);
+
 
             Map<String, Object> trabajoMap = (Map<String, Object>) params.get("trabajo");
             if (trabajoMap != null
@@ -134,7 +161,7 @@ public class GastosIngresosServiceJPA implements IGastosIngresosService {
         gastosIngresosBD.setNombreQuienDependes(gastosIngresosInstance.getNombreQuienDependes());
         gastosIngresosBD.setGastoMensual(gastosIngresosInstance.getGastoMensual());
         gastosIngresosBD.setSolicitaBecaAlimenticia(gastosIngresosInstance.getSolicitaBecaAlimenticia());
-        gastosIngresosBD.setTrabajoTipo(gastosIngresosInstance.getTrabajoTipo());
+        gastosIngresosBD.setCatTipoTrabajo(gastosIngresosInstance.getCatTipoTrabajo());
         gastosIngresosBD.setOcupacionModel(gastosIngresosInstance.getOcupacionModel());
         gastosIngresosBD.setOtro(gastosIngresosInstance.getOtro());
 

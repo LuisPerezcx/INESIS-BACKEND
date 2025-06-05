@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map;
 
 import com.UNSIJ.INESIS_BACKEND.model.*;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatSituacionViviendaModel;
+import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.CatSituacionViviendaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,6 +51,9 @@ public class MisDatosServiceJPA implements IMisDatosService {
     @Autowired
     private AlumnoServiceJPA alumnoService;
 
+    @Autowired
+    private CatSituacionViviendaRepository catSituacionViviendaRepository;
+
     @Override
     public List<MisDatos> findAll() {
         return misDatosRepository.findAll();
@@ -59,6 +64,13 @@ public class MisDatosServiceJPA implements IMisDatosService {
         return misDatosRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("MisDatos no encontrado con el ID: " + id));
     }
+
+    @Override
+    public MisDatos findByAlumno(Long id) {
+        return misDatosRepository.findByAlumno_Id(id)
+                .orElseThrow(() -> new IllegalArgumentException("MisDatos no encontrado para el alumno con ID: " + id));
+    }
+
 
     @Override
     @Transactional
@@ -73,7 +85,7 @@ public class MisDatosServiceJPA implements IMisDatosService {
         try {
             Long idAlumno = JsonUtils.obtLong(params, "alumnoId");
             if(idAlumno == null) throw new IllegalArgumentException("El campo idAlumno es obligatorio");
-            AlumnoModel alumno = alumnoService.findById(idAlumno);
+            Alumno alumno = alumnoService.findById(idAlumno);
             misDatos.setAlumno(alumno);
             this.build(params, misDatos);
             misDatos = this.save(misDatos);
@@ -109,22 +121,21 @@ public class MisDatosServiceJPA implements IMisDatosService {
             String nombreCompleto = JsonUtils.obtString(params, "nombreCompleto");
             if (nombreCompleto == null)
                 throw new IllegalArgumentException("El campo nombre Completo es obligatorio");
-            //misDatos.setNombreCompleto(nombreCompleto);
+            misDatos.setNombreCompleto(nombreCompleto);
 
-            // Long idCarrera = JsonUtils.obtLong(params, "carrera");
-            // if (idCarrera == null)
-            // throw new IllegalArgumentException("El campo idCarrera es obligatorio");
-            // misDatos.setCarrera(catCarreraRepository.findById(idCarrera)
-            // .orElseThrow(() -> new IllegalArgumentException("No se encontró la carrera
-            // con ID: " + idCarrera)));
+             Long idCarrera = JsonUtils.obtLong(params, "carrera");
+             if (idCarrera == null)
+             throw new IllegalArgumentException("El campo idCarrera es obligatorio");
+             misDatos.setCarrera(catCarreraRepository.findById(idCarrera)
+             .orElseThrow(() -> new IllegalArgumentException("No se encontró la carrera con ID: " + idCarrera)));
 
             Long idSemestre = JsonUtils.obtLong(params, "semestre");
             if (idSemestre == null)
                 throw new IllegalArgumentException("El campo idSemestre es obligatorio");
             //todo: actualizar semestre alumno
-            /*misDatos.setSemestre(catSemestreRepository.findById(idSemestre)
+            misDatos.setSemestre(catSemestreRepository.findById(idSemestre)
                     .orElseThrow(
-                            () -> new IllegalArgumentException("No se encontró el semestre con ID: " + idSemestre)));*/
+                            () -> new IllegalArgumentException("No se encontró el semestre con ID: " + idSemestre)));
 
             Long idSexo = JsonUtils.obtLong(params, "sexo");
             if (idSexo == null)
@@ -201,25 +212,49 @@ public class MisDatosServiceJPA implements IMisDatosService {
                 misDatos.setGastosIngresos(gastosIngresos);
             }
 
-            String llevaVehiculoString = JsonUtils.obtString(params, "llevaVehiculo");
-            Boolean llevaVehiculo = JsonUtils.obtBoolean(params, "llevaVehiculo");
-            if (llevaVehiculoString != null) {
-                if ("Si".equalsIgnoreCase(llevaVehiculoString)) {
-                    llevaVehiculo = true;
-                } else if ("No".equalsIgnoreCase(llevaVehiculoString)) {
-                    llevaVehiculo = false;
+            String llevaAutomovilString = JsonUtils.obtString(params, "llevaAutomovil");
+            Boolean llevaAutomovil = JsonUtils.obtBoolean(params, "llevaAutomovil");
+            if (llevaAutomovilString != null) {
+                if ("Si".equalsIgnoreCase(llevaAutomovilString)) {
+                    llevaAutomovil = true;
+                } else if ("No".equalsIgnoreCase(llevaAutomovilString)) {
+                    llevaAutomovil = false;
                 } else {
-                    throw new IllegalArgumentException("El valor de 'lleva vehiculo' debe ser 'Si' o 'No'.");
+                    throw new IllegalArgumentException("El valor de 'llevaAutomovil' debe ser 'Si' o 'No'.");
                 }
             }
-            if (llevaVehiculo == null)
-                throw new IllegalArgumentException("El campo lleva vehivulo es obligatorio");
-            misDatos.setLlevaVehiculo(llevaVehiculo);
+            if (llevaAutomovil == null)
+                throw new IllegalArgumentException("El campo 'llevaAutomovil' es obligatorio");
+            misDatos.setLlevaAutomovil(llevaAutomovil);
 
-            Map<String, Object> transporteParams = (Map<String, Object>) params.get("transporte");
-            if (transporteParams != null && transporteParams.values().stream().anyMatch(v -> v != null && !v.toString().trim().isEmpty())) {
-                Transporte transporte = transporteServiceJPA.create(transporteParams);
-                misDatos.setTransporte(transporte);
+            Map<String, Object> transporteAutomovilParams = (Map<String, Object>) params.get("transporteAutomovil");
+            if (llevaAutomovil && transporteAutomovilParams != null &&
+                    transporteAutomovilParams.values().stream().anyMatch(v -> v != null && !v.toString().trim().isEmpty())) {
+                Transporte transporteCarro = transporteServiceJPA.create(transporteAutomovilParams);
+                misDatos.setTransporteAutomovil(transporteCarro);
+            }
+
+            String llevamotocicletaString = JsonUtils.obtString(params, "llevaMotocicleta");
+            Boolean llevaMotocicleta = JsonUtils.obtBoolean(params, "llevaMotocicleta");
+            if (llevaAutomovilString != null) {
+                if ("Si".equalsIgnoreCase(llevamotocicletaString)) {
+                    llevaMotocicleta = true;
+                } else if ("No".equalsIgnoreCase(llevamotocicletaString)) {
+                    llevaMotocicleta = false;
+                } else {
+                    throw new IllegalArgumentException("El valor de 'llevaMotocicleta' debe ser 'Si' o 'No'.");
+                }
+            }
+            if (llevaMotocicleta == null)
+                throw new IllegalArgumentException("El campo 'llevaMotocicleta' es obligatorio");
+            misDatos.setLlevamotocicleta(llevaMotocicleta);
+
+            Map<String, Object> transporteMotocicletaParams = (Map<String, Object>) params.get("transporteMotocicleta");
+            if (llevaMotocicleta && transporteMotocicletaParams != null &&
+                    transporteMotocicletaParams.values().stream().anyMatch(v -> v != null && !v.toString().trim().isEmpty())) {
+
+                Transporte transporteMotocicleta = transporteServiceJPA.create(transporteMotocicletaParams);
+                misDatos.setTransporteMotocicleta(transporteMotocicleta);
             }
 
             List<Map<String, Object>> mediosTrasladoParams = (List<Map<String, Object>>) params.get("mediosTraslado");
@@ -241,10 +276,13 @@ public class MisDatosServiceJPA implements IMisDatosService {
                 throw new IllegalArgumentException("El campo idioma es obligatorio");
             misDatos.setIdioma(idioma);
 
-            String situacionVivienda = JsonUtils.obtString(params, "situacionVivienda");
-            if (situacionVivienda == null)
-                throw new IllegalArgumentException("El campo situacion vivienda es obligatorio");
-            misDatos.setSituacionVivienda(situacionVivienda);
+            Long idSituacionVivienda = JsonUtils.obtLong(params, "situacionVivienda");
+            System.out.println("Situacion vivienda: " + idSituacionVivienda);
+            if (idSituacionVivienda == null)
+                throw new IllegalArgumentException("El campo 'situacionVivienda' es obligatorio");
+            CatSituacionViviendaModel cat = catSituacionViviendaRepository.findById(idSituacionVivienda)
+                    .orElseThrow(() -> new IllegalArgumentException("Situación de vivienda no encontrada"));
+            misDatos.setSituacionVivienda(cat);
 
             String nombreCasaHuesped = JsonUtils.obtString(params, "nombreCasaHuesped");
             if (nombreCasaHuesped == null)
