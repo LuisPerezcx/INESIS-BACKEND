@@ -30,10 +30,11 @@ public class PDFServiceJPA {
       return (calleSeguro +" "+ numeroSeguro + " "+ coloniaSeguro + " "+ localidadSeguro + " "+ casaHuspedSeguro).trim();
     }
 
-    public static String nombreCompletoSeguro(String nombre, String apellido) {
+    public static String nombreCompletoSeguro(String nombre, String apellidoP, String apellidoM) {
         String nombreSeguro = (nombre != null && !nombre.trim().isEmpty()) ? nombre.trim() : " ";
-        String apellidoSeguro = (apellido != null && !apellido.trim().isEmpty()) ? apellido.trim() : " ";
-        return (nombreSeguro + " " + apellidoSeguro).trim();
+        String apellidopSeguro = (apellidoP != null && !apellidoP.trim().isEmpty()) ? apellidoP.trim() : " ";
+        String apellidoMSeguro = (apellidoM != null && !apellidoM.trim().isEmpty()) ? apellidoM.trim() : " ";
+        return (nombreSeguro + " " + apellidopSeguro + " " + apellidoMSeguro).trim();
     }
 
     public static String domicilioTelefono(String domicilio, String telefono){
@@ -66,14 +67,20 @@ public class PDFServiceJPA {
             form.setGenerateAppearances(true);
 
             // Rellenar campos
-            form.setField(PDF.ESE.nombreAlumno, nombreCompletoSeguro(alumno.getNombre(), alumno.getApellidoPaterno()), true);
+            form.setField(PDF.ESE.nombreAlumno, nombreCompletoSeguro(alumno.getNombre(), alumno.getApellidoPaterno(), alumno.getApellidoMaterno()), true);
             form.setField(PDF.ESE.carreraAlumno, valorSeguro(alumno.getCarrera().getNombreCarrera(), " "), true);
             form.setField(PDF.ESE.semestreAlumno,valorSeguro(alumno.getSemestre().getNombreSemestre(), ""), true);
-            form.setField(PDF.ESE.dependeSi, "X", true);
-            form.setField(PDF.ESE.dependeNo, "X", true);
+
+            Boolean depende = alumno.getMisDatos().getGastosIngresos().getDependeEconomicamente();
+            form.setField(PDF.ESE.dependeSi, depende != null && depende ? "X" : "", true);
+            form.setField(PDF.ESE.dependeNo, depende != null && depende ? "X" : "", true);
+
             form.setField(PDF.ESE.domicilioActualAlumno,domicilio(alumno.getMisDatos().getDomicilio().getCalle(), alumno.getMisDatos().getDomicilio().getNumero(),alumno.getMisDatos().getDomicilio().getColonia(), alumno.getMisDatos().getDomicilio().getColonia(),alumno.getMisDatos().getNombreCasaHuesped()), true);
-            form.setField(PDF.ESE.becaAlimenticiaSi, "X", true);
-            form.setField(PDF.ESE.becaAlimenticiaNo, "X", true);
+
+            Boolean solicita = alumno.getMisDatos().getGastosIngresos().getSolicitaBecaAlimenticia();
+            form.setField(PDF.ESE.becaAlimenticiaSi, solicita != null && solicita ? "X" : "", true);
+            form.setField(PDF.ESE.becaAlimenticiaNo, solicita != null && solicita ? "X" : "", true);
+
             form.setField(PDF.ESE.gastoMensual, valorSeguro(String.valueOf(alumno.getMisDatos().getGastosIngresos().getGastoMensual())," "), true);
             form.setField(PDF.ESE.rentaCuarto, "X", true);
             form.setField(PDF.ESE.rentaCasa, "X", true);
@@ -262,7 +269,7 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.autoPropio, "X", true);
             form.setField(PDF.ESE.autoFamiliar, "X", true);
             form.setField(PDF.ESE.autoAmigos, "X", true);
-            form.setField(PDF.ESE.firmaAlumno,nombreCompletoSeguro(alumno.getNombre(), alumno.getApellidoPaterno()),true);
+            form.setField(PDF.ESE.firmaAlumno,nombreCompletoSeguro(alumno.getNombre(), alumno.getApellidoPaterno(),alumno.getApellidoMaterno()),true);
 
             //imprime los campos encontrados en el pdf
             for (String campo : form.getFields().keySet()) {
