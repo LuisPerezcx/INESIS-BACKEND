@@ -129,10 +129,7 @@ public class MisDatosServiceJPA implements IMisDatosService {
                 alumno.setSemestre(semestre);
                 alumnoService.save(alumno);
             }
-            String nombreCompleto = JsonUtils.obtString(params, "nombreCompleto");
-            if (nombreCompleto == null)
-                throw new IllegalArgumentException("El campo nombre Completo es obligatorio");
-            //misDatos.setNombreCompleto(nombreCompleto);
+
 
             Long idSexo = JsonUtils.obtLong(params, "sexo");
             if (idSexo == null)
@@ -151,7 +148,8 @@ public class MisDatosServiceJPA implements IMisDatosService {
             misDatos.setFamiliarComunero(JsonUtils.parseBooleanFlexible(params.get("familiarComunero"), "familiarComunero"));
             misDatos.setUtilizaCelular(JsonUtils.parseBooleanFlexible(params.get("utilizaCelular"), "utilizaCelular"));
             misDatos.setTieneComputadora(JsonUtils.parseBooleanFlexible(params.get("tieneComputadora"), "tieneComputadora"));
-            misDatos.setLlevaVehiculo(JsonUtils.parseBooleanFlexible(params.get("llevaVehiculo"), "llevaVehiculo"));
+            misDatos.setLlevaAutomovil(JsonUtils.parseBooleanFlexible(params.get("llevaAutomovil"), "llevaAutomovil"));
+            misDatos.setLlevamotocicleta(JsonUtils.parseBooleanFlexible(params.get("llevaMotocicleta"),"llevaMotocicleta"));
 
             Map<String, Object> gastosIngresosParams = (Map<String, Object>) params.get("gastosIngresos");
             if (gastosIngresosParams != null) {
@@ -159,11 +157,21 @@ public class MisDatosServiceJPA implements IMisDatosService {
                 misDatos.setGastosIngresos(gastosIngresos);
             }
 
-            Map<String, Object> transporteParams = (Map<String, Object>) params.get("transporte");
-            if (transporteParams != null && transporteParams.values().stream().anyMatch(v -> v != null && !v.toString().trim().isEmpty())) {
-                Transporte transporte = transporteServiceJPA.create(transporteParams);
-                misDatos.setTransporte(transporte);
+            Map<String, Object> transporteAutomovilParams = (Map<String, Object>) params.get("transporteAutomovil");
+            if (misDatos.getLlevaAutomovil() && transporteAutomovilParams != null &&
+                    transporteAutomovilParams.values().stream().anyMatch(v -> v != null && !v.toString().trim().isEmpty())) {
+                Transporte transporteCarro = transporteServiceJPA.create(transporteAutomovilParams);
+                misDatos.setTransporteAutomovil(transporteCarro);
             }
+
+            Map<String, Object> transporteMotocicletaParams = (Map<String, Object>) params.get("transporteMotocicleta");
+            if (misDatos.getLlevamotocicleta() && transporteMotocicletaParams != null &&
+                    transporteMotocicletaParams.values().stream().anyMatch(v -> v != null && !v.toString().trim().isEmpty())) {
+
+                Transporte transporteMotocicleta = transporteServiceJPA.create(transporteMotocicletaParams);
+                misDatos.setTransporteMotocicleta(transporteMotocicleta);
+            }
+
 
             List<Map<String, Object>> mediosTrasladoParams = (List<Map<String, Object>>) params.get("mediosTraslado");
             List<MedioTraslado> mediosTraslado = new ArrayList<>();

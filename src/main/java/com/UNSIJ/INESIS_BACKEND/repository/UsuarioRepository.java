@@ -3,11 +3,11 @@ package com.UNSIJ.INESIS_BACKEND.repository;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.UNSIJ.INESIS_BACKEND.model.UsuarioModel;
+import com.UNSIJ.INESIS_BACKEND.model.Usuario;
 
-public interface UsuarioRepository extends JpaRepository<UsuarioModel, Long> {
+public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
-    Optional<UsuarioModel> findByAlumnoId(Long idAlumno);
+    Optional<Usuario> findByAlumnoId(Long idAlumno);
 
-    Optional<UsuarioModel> findByUsuario(String usuario);
+    Optional<Usuario> findByUsuario(String usuario);
 }

@@ -1,6 +1,6 @@
 package com.UNSIJ.INESIS_BACKEND.controller;
 
-import com.UNSIJ.INESIS_BACKEND.model.FechasRegistradasModel;
+import com.UNSIJ.INESIS_BACKEND.model.FechasRegistradas;
 import com.UNSIJ.INESIS_BACKEND.service.FechasRegistradasServiceJPA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,14 +18,14 @@ public class FechasRegistradasController {
     private FechasRegistradasServiceJPA fechasRegistradasServiceJPA;
 
     @GetMapping
-    public List<FechasRegistradasModel> list() {
+    public List<FechasRegistradas> list() {
         return fechasRegistradasServiceJPA.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id) {
         try {
-            FechasRegistradasModel fechasRegistradas = fechasRegistradasServiceJPA.findById(id);
+            FechasRegistradas fechasRegistradas = fechasRegistradasServiceJPA.findById(id);
             return ResponseEntity.ok(fechasRegistradas);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -37,7 +37,7 @@ public class FechasRegistradasController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            FechasRegistradasModel fechasRegistradas = fechasRegistradasServiceJPA.create(params);
+            FechasRegistradas fechasRegistradas = fechasRegistradasServiceJPA.create(params);
             return ResponseEntity.status(HttpStatus.CREATED).body(fechasRegistradas);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -49,7 +49,7 @@ public class FechasRegistradasController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            FechasRegistradasModel fechasRegistradasUpdated = fechasRegistradasServiceJPA
+            FechasRegistradas fechasRegistradasUpdated = fechasRegistradasServiceJPA
                     .update(fechasRegistradasServiceJPA.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(fechasRegistradasUpdated);
         } catch (IllegalArgumentException e) {
@@ -75,7 +75,7 @@ public class FechasRegistradasController {
     @GetMapping("/carrera/{idCarrera}")
 public ResponseEntity<?> getByCarrera(@PathVariable Long idCarrera) {
     try {
-        FechasRegistradasModel fecha = fechasRegistradasServiceJPA.findByCarreraId(idCarrera);
+        FechasRegistradas fecha = fechasRegistradasServiceJPA.findByCarreraId(idCarrera);
         return ResponseEntity.ok(fecha);
     } catch (IllegalArgumentException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

@@ -3,12 +3,12 @@ package com.UNSIJ.INESIS_BACKEND.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import java.util.Date;  
+import java.util.Date;
 
 @Data
 @Entity
 @Table(name = "fechas_registradas")
-public class FechasRegistradasModel {
+public class FechasRegistradas {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,13 +23,19 @@ public class FechasRegistradasModel {
     @NotNull
     @Temporal(TemporalType.DATE)
     @Column(name = "fecha_inicio")
-    private Date fechaInicio; 
+    private Date fechaInicio;
 
     @NotNull
     @Temporal(TemporalType.DATE)
     @Column(name = "fecha_fin")
     private Date fechaFin;
+
     @NotNull
-    @Column(name = "status")
-    private String status; 
+    private boolean active;
+
+    @NotNull
+    @Column(name = "restante")
+    private Integer restante;
+
+
 }

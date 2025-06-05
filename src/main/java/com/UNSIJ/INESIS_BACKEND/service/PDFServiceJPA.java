@@ -43,7 +43,7 @@ public class PDFServiceJPA {
             form.setGenerateAppearances(true);
 
             // Rellenar campos
-            form.setField(PDF.ESE.nombreAlumno, nombreCompletoSeguro(alumno.getNombre(), alumno.getApellido()), true);
+            form.setField(PDF.ESE.nombreAlumno, nombreCompletoSeguro(alumno.getNombre(), alumno.getApellidoPaterno()), true);
             form.setField(PDF.ESE.carreraAlumno, valorSeguro(alumno.getCarrera().getNombreCarrera(), " "), true);
             form.setField(PDF.ESE.semestreAlumno,valorSeguro(alumno.getSemestre().getNombreSemestre(), ""), true);
             form.setField(PDF.ESE.dependeSi, "X", true);
@@ -117,7 +117,7 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.observaciones, " ", true);
 
 
-            form.setField(PDF.ESE.apellidoP, valorSeguro(alumno.getApellido()," "), true);
+            form.setField(PDF.ESE.apellidoP, valorSeguro(alumno.getApellidoPaterno()," "), true);
             form.setField(PDF.ESE.apellidoM, " ", true);
             form.setField(PDF.ESE.nombreAlum, valorSeguro(alumno.getNombre()," "), true);
             form.setField(PDF.ESE.sexo, valorSeguro(alumno.getSexo().getNombreSexo()," "), true);
@@ -223,7 +223,7 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.autoPropio, "X", true);
             form.setField(PDF.ESE.autoFamiliar, "X", true);
             form.setField(PDF.ESE.autoAmigos, "X", true);
-            form.setField(PDF.ESE.firmaAlumno,nombreCompletoSeguro(alumno.getNombre(), alumno.getApellido()),true);
+            form.setField(PDF.ESE.firmaAlumno,nombreCompletoSeguro(alumno.getNombre(), alumno.getApellidoPaterno()),true);
 
             //imprime los campos encontrados en el pdf
             for (String campo : form.getFields().keySet()) {

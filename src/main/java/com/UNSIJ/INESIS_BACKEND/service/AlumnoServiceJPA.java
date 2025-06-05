@@ -1,7 +1,7 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
 import com.UNSIJ.INESIS_BACKEND.model.Alumno;
-import com.UNSIJ.INESIS_BACKEND.model.UsuarioModel;
+import com.UNSIJ.INESIS_BACKEND.model.Usuario;
 import com.UNSIJ.INESIS_BACKEND.repository.AlumnoRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IAlumnoService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
@@ -92,7 +92,8 @@ public Alumno build(Map<String, Object> params, Alumno alumno) {
     try {
         // Asignar campos del alumno
         alumno.setNombre(JsonUtils.obtString(params, "nombre"));
-        alumno.setApellido(JsonUtils.obtString(params, "apellido"));
+        alumno.setApellidoPaterno(JsonUtils.obtString(params, "apellidoPaterno"));
+        alumno.setApellidoMaterno(JsonUtils.obtString(params, "apellidoMaterno"));
         alumno.setCurp(JsonUtils.obtString(params, "curp"));
         alumno.setCorreo(JsonUtils.obtString(params, "correo"));
         alumno.setTelefono(JsonUtils.obtString(params, "telefono"));
@@ -146,7 +147,7 @@ public Alumno build(Map<String, Object> params, Alumno alumno) {
             usuarioParams.put("alumno", alumnoMap);
 
             // Crear un nuevo usuario solo si no existe uno
-            UsuarioModel usuario = usuarioServiceJPA.create(usuarioParams);
+            Usuario usuario = usuarioServiceJPA.create(usuarioParams);
 
             // Relación bidireccional explícita
             usuario.setAlumno(alumno);

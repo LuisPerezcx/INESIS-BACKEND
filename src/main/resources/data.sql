@@ -16,9 +16,8 @@ WHERE NOT EXISTS (SELECT 1 FROM cat_rol WHERE nombre_rol = 'Revisor');
 
 
 #------------------- REGISTROS DE USUARIO -------------------
-SELECT 1;
 INSERT INTO usuario (id_cat_rol, usuario, contrasenia, estatus)
-SELECT 2, 'admin', 'admin123', 1
+SELECT 2, 'admin', 'admin123', 'ACTIVO'
 WHERE NOT EXISTS (
     SELECT 1 FROM usuario WHERE usuario = 'admin'
 );
@@ -744,6 +743,26 @@ WHERE NOT EXISTS (SELECT 1 FROM cat_medios_estudio WHERE nombre_medios = 'Otro')
 SELECT 1;
 
 INSERT INTO cat_situacion_vivienda (nombre_situacion)
+SELECT 'Propia'
+WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Propia');
+
+INSERT INTO cat_situacion_vivienda (nombre_situacion)
+SELECT 'Rentada'
+WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Rentada');
+
+INSERT INTO cat_situacion_vivienda (nombre_situacion)
+SELECT 'Prestada'
+WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Prestada');
+
+INSERT INTO cat_situacion_vivienda (nombre_situacion)
+SELECT 'Alquilada'
+WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Alquilada');
+
+INSERT INTO cat_situacion_vivienda (nombre_situacion)
+SELECT 'Vivienda institucional'
+WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Vivienda institucional');
+
+INSERT INTO cat_situacion_vivienda (nombre_situacion)
 SELECT 'Rento cuarto'
 WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Rento cuarto');
 
@@ -754,6 +773,10 @@ WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 
 INSERT INTO cat_situacion_vivienda (nombre_situacion)
 SELECT 'Vivo con familiares'
 WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Vivo con familiares');
+
+INSERT INTO cat_situacion_vivienda (nombre_situacion)
+SELECT 'Otro'
+WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Otro');
 
 #------------------- REGISTROS DE CAT_TIPO_VIVIENDA -------------------
 -- Inicio de inserciones
