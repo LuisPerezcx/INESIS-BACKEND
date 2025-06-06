@@ -89,7 +89,7 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.llevaCarroNo, "X", true);
             form.setField(PDF.ESE.llevaMotocicletaSi, "X", true);
             form.setField(PDF.ESE.llevaMotocicletaNo, "X", true);
-            form.setField(PDF.ESE.marcaMotocicleta, marcaTransporte(alumno.getMisDatos().getTransporte().getMarca(),alumno.getMisDatos().getTransporte().getModelo(),alumno.getMisDatos().getTransporte().getAnio()), true);
+            //form.setField(PDF.ESE.marcaMotocicleta, marcaTransporte(alumno.getMisDatos().getTransporte().getMarca(),alumno.getMisDatos().getTransporte().getModelo(),alumno.getMisDatos().getTransporte().getAnio()), true);
 
             Boolean celular = alumno.getMisDatos().getUtilizaCelular();
             form.setField(PDF.ESE.utilizaTelefonoSi, celular != null && celular ? "X" : "", true);

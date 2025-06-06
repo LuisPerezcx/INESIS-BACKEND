@@ -83,7 +83,7 @@ public class MisDatosServiceJPA implements IMisDatosService {
         MisDatos misDatos = new MisDatos();
         try {
             Long idAlumno = JsonUtils.obtLong(params, "alumnoId");
-            if(idAlumno == null) throw new IllegalArgumentException("El campo idAlumno es obligatorio");
+            if (idAlumno == null) throw new IllegalArgumentException("El campo idAlumno es obligatorio");
             Alumno alumno = alumnoService.findById(idAlumno);
             misDatos.setAlumno(alumno);
             this.build(params, misDatos);
@@ -118,7 +118,7 @@ public class MisDatosServiceJPA implements IMisDatosService {
     public MisDatos build(Map<String, Object> params, MisDatos misDatos) throws IllegalArgumentException {
         try {
             Long idAlumno = JsonUtils.obtLong(params, "alumnoId");
-            if(idAlumno != null){
+            if (idAlumno != null) {
                 Alumno alumno = alumnoService.findById(idAlumno);
                 Long idSemestre = JsonUtils.obtLong(params, "semestre");
                 CatSemestre semestre = semestreService.findById(idSemestre);
@@ -145,27 +145,38 @@ public class MisDatosServiceJPA implements IMisDatosService {
             misDatos.setUtilizaCelular(JsonUtils.parseBooleanFlexible(params.get("utilizaCelular"), "utilizaCelular"));
             misDatos.setTieneComputadora(JsonUtils.parseBooleanFlexible(params.get("tieneComputadora"), "tieneComputadora"));
             misDatos.setLlevaAutomovil(JsonUtils.parseBooleanFlexible(params.get("llevaAutomovil"), "llevaAutomovil"));
-            misDatos.setLlevamotocicleta(JsonUtils.parseBooleanFlexible(params.get("llevaMotocicleta"),"llevaMotocicleta"));
+            misDatos.setLlevamotocicleta(JsonUtils.parseBooleanFlexible(params.get("llevaMotocicleta"), "llevaMotocicleta"));
 
             Map<String, Object> gastosIngresosParams = (Map<String, Object>) params.get("gastosIngresos");
             if (gastosIngresosParams != null) {
-                GastosIngresos gastosIngresos = gastosIngresosServiceJPA.create(gastosIngresosParams);
-                misDatos.setGastosIngresos(gastosIngresos);
+                if (misDatos.getGastosIngresos() != null) {
+                    misDatos.setGastosIngresos(gastosIngresosServiceJPA.update(misDatos.getGastosIngresos(), gastosIngresosParams));
+                } else {
+                    GastosIngresos gastosIngresos = gastosIngresosServiceJPA.create(gastosIngresosParams);
+                    misDatos.setGastosIngresos(gastosIngresos);
+                }
             }
 
             Map<String, Object> transporteAutomovilParams = (Map<String, Object>) params.get("transporteAutomovil");
             if (misDatos.getLlevaAutomovil() && transporteAutomovilParams != null &&
                     transporteAutomovilParams.values().stream().anyMatch(v -> v != null && !v.toString().trim().isEmpty())) {
-                Transporte transporteCarro = transporteServiceJPA.create(transporteAutomovilParams);
-                misDatos.setTransporteAutomovil(transporteCarro);
+                if (misDatos.getTransporteAutomovil() != null) {
+                    misDatos.setTransporteAutomovil(transporteServiceJPA.update(misDatos.getTransporteAutomovil(), transporteAutomovilParams));
+                } else {
+                    Transporte transporteCarro = transporteServiceJPA.create(transporteAutomovilParams);
+                    misDatos.setTransporteAutomovil(transporteCarro);
+                }
             }
 
             Map<String, Object> transporteMotocicletaParams = (Map<String, Object>) params.get("transporteMotocicleta");
             if (misDatos.getLlevamotocicleta() && transporteMotocicletaParams != null &&
                     transporteMotocicletaParams.values().stream().anyMatch(v -> v != null && !v.toString().trim().isEmpty())) {
-
-                Transporte transporteMotocicleta = transporteServiceJPA.create(transporteMotocicletaParams);
-                misDatos.setTransporteMotocicleta(transporteMotocicleta);
+                if (misDatos.getTransporteMotocicleta() != null) {
+                    misDatos.setTransporteMotocicleta(transporteServiceJPA.update(misDatos.getTransporteMotocicleta(), transporteMotocicletaParams));
+                } else {
+                    Transporte transporteMotocicleta = transporteServiceJPA.create(transporteMotocicletaParams);
+                    misDatos.setTransporteMotocicleta(transporteMotocicleta);
+                }
             }
 
 
@@ -205,8 +216,12 @@ public class MisDatosServiceJPA implements IMisDatosService {
             misDatos = this.save(misDatos);
             Map<String, Object> domicilioParams = (Map<String, Object>) params.get("domicilio");
             if (domicilioParams != null) {
-                Domicilio domicilio = domicilioServiceJPA.create(domicilioParams);
-                misDatos.setDomicilio(domicilio);
+                if(misDatos.getDomicilio() != null) {
+                    misDatos.setDomicilio(domicilioServiceJPA.update(misDatos.getDomicilio(), domicilioParams));
+                } else {
+                    Domicilio domicilio = domicilioServiceJPA.create(domicilioParams);
+                    misDatos.setDomicilio(domicilio);
+                }
             }
 
         } catch (IllegalArgumentException e) {

@@ -85,17 +85,8 @@ public class GastosIngresosServiceJPA implements IGastosIngresosService {
                 throw new IllegalArgumentException("El campo gasto mensual es obligatorio");
             gastosIngresos.setGastoMensual(gastoMensual);
 
-            String dependeEconomicamenteString = JsonUtils.obtString(params, "dependeEconomicamente");
-            Boolean dependeEconomicamente = null;
-            if ("Si".equalsIgnoreCase(dependeEconomicamenteString)) {
-                dependeEconomicamente = true;
-            } else if ("No".equalsIgnoreCase(dependeEconomicamenteString)) {
-                dependeEconomicamente = false;
-            } else if (dependeEconomicamenteString != null) {
-                throw new IllegalArgumentException("El valor de 'dependeEconomicamente' debe ser 'Si' o 'No'.");
-            }
-            if (dependeEconomicamente == null)
-                throw new IllegalArgumentException("El campo depende economicamente es obligatorio");
+
+            Boolean dependeEconomicamente = JsonUtils.parseBooleanFlexible(params.get("dependeEconomicamente"), "dependeEconomicamente");
             gastosIngresos.setDependeEconomicamente(dependeEconomicamente);
 
             if (dependeEconomicamente) {
@@ -118,17 +109,8 @@ public class GastosIngresosServiceJPA implements IGastosIngresosService {
                 gastosIngresos.setOtro(otro);
             }
 
-            String solicitaBecaAlimenticiaString = JsonUtils.obtString(params, "solicitaBecaAlimenticia");
-            Boolean solicitaBecaAlimenticia = null;
-            if ("Si".equalsIgnoreCase(solicitaBecaAlimenticiaString)) {
-                solicitaBecaAlimenticia = true;
-            } else if ("No".equalsIgnoreCase(solicitaBecaAlimenticiaString)) {
-                solicitaBecaAlimenticia = false;
-            } else if (solicitaBecaAlimenticiaString != null) {
-                throw new IllegalArgumentException("El valor de 'dependeEconomicamente' debe ser 'Si' o 'No'.");
-            }
-            if (solicitaBecaAlimenticia == null)
-                throw new IllegalArgumentException("El campo solicita beca alimenticia es obligatorio");
+
+            Boolean solicitaBecaAlimenticia = JsonUtils.parseBooleanFlexible(params.get("solicitaBecaAlimenticia"), "solicitaBecaAlimenticia");
             gastosIngresos.setSolicitaBecaAlimenticia(solicitaBecaAlimenticia);
 
 

@@ -21,18 +21,6 @@ public class MisDatos {
     @Column(name = "id_mis_datos")
     private Long id;
 
-    @NotNull
-    @Column(name = "nombre_completo")
-    private String nombreCompleto;
-
-    @ManyToOne
-    @JoinColumn(name = "id_cat_carrera", nullable = true) // NO NULO
-    private CatCarrera carrera;
-
-    @ManyToOne
-    @JoinColumn(name = "id_cat_semestre", nullable = false)
-    private CatSemestre semestre;
-
     @ManyToOne
     @JoinColumn(name = "id_cat_sexo")
     private CatSexoModel sexo;
