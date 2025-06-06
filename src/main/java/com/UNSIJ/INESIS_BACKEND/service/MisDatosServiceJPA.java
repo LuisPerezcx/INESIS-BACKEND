@@ -6,16 +6,12 @@ import java.util.Map;
 
 import com.UNSIJ.INESIS_BACKEND.model.*;
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatSituacionViviendaModel;
+import com.UNSIJ.INESIS_BACKEND.repository.*;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.CatSituacionViviendaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.UNSIJ.INESIS_BACKEND.repository.CatCarreraRepository;
-import com.UNSIJ.INESIS_BACKEND.repository.CatEstadoCivilRepository;
-import com.UNSIJ.INESIS_BACKEND.repository.CatSemestreRepository;
-import com.UNSIJ.INESIS_BACKEND.repository.CatSexoRepository;
-import com.UNSIJ.INESIS_BACKEND.repository.MisDatosRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IMisDatosService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 

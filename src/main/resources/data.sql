@@ -16,9 +16,10 @@ WHERE NOT EXISTS (SELECT 1 FROM cat_rol WHERE nombre_rol = 'Revisor');
 
 
 #------------------- REGISTROS DE USUARIO -------------------
+SELECT 1;
 INSERT INTO usuario (id_cat_rol, usuario, contrasenia, estatus)
-SELECT 2, 'admin', 'admin123', 'ACTIVO'
-WHERE NOT EXISTS (
+SELECT 2, 'admin', 'admin123', 1
+    WHERE NOT EXISTS (
     SELECT 1 FROM usuario WHERE usuario = 'admin'
 );
 

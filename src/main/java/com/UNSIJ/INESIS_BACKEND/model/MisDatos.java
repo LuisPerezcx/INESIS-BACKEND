@@ -76,12 +76,10 @@ public class MisDatos {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_transporte_automovil")
-    @JsonIgnore
     private Transporte transporteAutomovil;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_transporte_motocicleta")
-    @JsonIgnore
     private Transporte transporteMotocicleta;
 
     @OneToMany(mappedBy = "misDatos", cascade = CascadeType.ALL, orphanRemoval = true)
