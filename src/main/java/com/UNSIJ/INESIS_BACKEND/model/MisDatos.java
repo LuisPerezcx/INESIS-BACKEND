@@ -22,6 +22,25 @@ public class MisDatos {
     private Long id;
 
     @NotNull
+    @Column(name = "nombre_completo")
+    private String nombreCompleto;
+
+    @ManyToOne
+    @JoinColumn(name = "id_cat_carrera", nullable = true) // NO NULO
+    private CatCarrera carrera;
+
+    @ManyToOne
+    @JoinColumn(name = "id_cat_semestre", nullable = false)
+    private CatSemestre semestre;
+
+    @ManyToOne
+    @JoinColumn(name = "id_cat_sexo")
+    private CatSexoModel sexo;
+
+    @ManyToOne
+    @JoinColumn(name = "id_cat_estado_civil")
+    private CatEstadoCivil estadoCivil;
+
     @Column(name = "seccion_completa")
     private boolean completo = false;
 
@@ -50,16 +69,12 @@ public class MisDatos {
     private String nombreCasaHuesped;
 
     @NotNull
-    @Column(name = "lleva_vehiculo")
-    private Boolean llevaVehiculo;
+    @Column(name = "lleva_automovil")
+    private Boolean llevaAutomovil;
 
-    @ManyToOne
-    @JoinColumn(name = "id_cat_estado_civil")
-    private CatEstadoCivil estadoCivil;
-
-    @ManyToOne
-    @JoinColumn(name = "id_cat_sexo")
-    private CatSexoModel sexo;
+    @NotNull
+    @Column(name = "lleva_motocicleta")
+    private Boolean llevamotocicleta;
 
     @ManyToOne
     @JoinColumn(name = "id_cat_situacion_vivienda")
@@ -71,9 +86,12 @@ public class MisDatos {
     private GastosIngresos gastosIngresos;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_transporte")
-    @JsonIgnore
-    private Transporte transporte;
+    @JoinColumn(name = "id_transporte_automovil")
+    private Transporte transporteAutomovil;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_transporte_motocicleta")
+    private Transporte transporteMotocicleta;
 
     @OneToMany(mappedBy = "misDatos", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference

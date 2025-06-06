@@ -107,16 +107,16 @@ public class FechasRegistradasServiceJPA implements IFechasRegistradasService {
         }
         fechasRegistradas.setCarrera(carrera);
 
-            // Obtener fechas
-            java.sql.Date fechaInicio = JsonUtils.obtDate(params, "fechaInicio");
-            java.sql.Date fechaFin = JsonUtils.obtDate(params, "fechaFin");
+        // Obtener fechas
+        java.sql.Date fechaInicio = JsonUtils.obtDate(params, "fechaInicio");
+        java.sql.Date fechaFin = JsonUtils.obtDate(params, "fechaFin");
 
-            if (fechaInicio == null || fechaFin == null) {
-                throw new IllegalArgumentException("Las fechas son obligatorias");
-            }
+        if (fechaInicio == null || fechaFin == null) {
+            throw new IllegalArgumentException("Las fechas son obligatorias");
+        }
 
-            fechasRegistradas.setFechaInicio(fechaInicio);
-            fechasRegistradas.setFechaFin(fechaFin);
+        fechasRegistradas.setFechaInicio(fechaInicio);
+        fechasRegistradas.setFechaFin(fechaFin);
 
             // Obtener valor de 'active' o asignar true por defecto
             Boolean active = null;
