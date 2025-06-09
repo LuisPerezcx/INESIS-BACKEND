@@ -3,10 +3,6 @@ package com.UNSIJ.INESIS_BACKEND.service;
 import com.UNSIJ.INESIS_BACKEND.model.Alumno;
 import com.UNSIJ.INESIS_BACKEND.model.Usuario;
 import com.UNSIJ.INESIS_BACKEND.repository.AlumnoRepository;
-import com.UNSIJ.INESIS_BACKEND.repository.CatCarreraRepository;
-import com.UNSIJ.INESIS_BACKEND.repository.CatRolRepository;
-import com.UNSIJ.INESIS_BACKEND.repository.CatSemestreRepository;
-import com.UNSIJ.INESIS_BACKEND.repository.CatSexoRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IAlumnoService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +27,6 @@ public class AlumnoServiceJPA implements IAlumnoService {
 
     @Autowired
     private CatSexoServiceJPA sexoServiceJPA;
-
-    @Autowired
-    private CatRolServiceJPA rolServiceJPA;
 
     @Autowired
     private CatGrupoServiceJPA grupoServiceJPA;

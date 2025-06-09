@@ -12,6 +12,9 @@ import com.UNSIJ.INESIS_BACKEND.repository.UsuarioRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IUsuarioService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 @Service
 public class UsuarioServiceJPA implements IUsuarioService {
 
@@ -25,6 +28,8 @@ public class UsuarioServiceJPA implements IUsuarioService {
     public List<Usuario> findAll() {
         return usuarioRepository.findAll();
     }
+
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
     public Usuario findById(Long id) {
@@ -77,7 +82,8 @@ public class UsuarioServiceJPA implements IUsuarioService {
             String contrasenia = JsonUtils.obtString(params, "contrasenia");
             if (contrasenia == null)
                 throw new IllegalArgumentException("El campo contraseña es obligatorio");
-            usuarioModel.setContrasenia(contrasenia);
+            // Cifrar aquí
+            usuarioModel.setContrasenia(passwordEncoder.encode(contrasenia));
 
             Boolean estatus = JsonUtils.obtBoolean(params, "estatus");
             if (estatus == null)
@@ -127,12 +133,21 @@ public class UsuarioServiceJPA implements IUsuarioService {
 
     public Usuario validarLogin(String usuario, String contrasenia) {
         Usuario user = usuarioRepository.findByUsuario(usuario)
-            .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
-    
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+
         if (!user.getContrasenia().equals(contrasenia)) {
             throw new IllegalArgumentException("Contraseña incorrecta");
         }
-    
+
         return user;
+    }
+
+    public boolean verificarContrasena(String usuario, String contrasena) {
+        Usuario user = usuarioRepository.findByUsuario(usuario)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+        if (user.getContrasenia() == null) {
+            throw new IllegalArgumentException("El usuario no tiene contraseña registrada");
+        }
+        return passwordEncoder.matches(contrasena, user.getContrasenia());
     }
 }
