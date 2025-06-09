@@ -2,10 +2,12 @@ package com.UNSIJ.INESIS_BACKEND.service;
 
 import com.UNSIJ.INESIS_BACKEND.model.*;
 import com.UNSIJ.INESIS_BACKEND.repository.CatParentescoRepository;
+import com.UNSIJ.INESIS_BACKEND.repository.CatTipoTrabajoRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.MiTutorRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IMiTutorService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +24,9 @@ public class MiTutorServiceJPA implements IMiTutorService {
 
     @Autowired
     private CatParentescoRepository catParentescoRepository;
+
+    @Autowired
+    private CatTipoTrabajoRepository catTipoTrabajoRepository;
 
     @Override
     public List<MiTutor> findAll() {
@@ -123,9 +128,12 @@ public class MiTutorServiceJPA implements IMiTutorService {
                 throw new IllegalArgumentException("El campo comparte vivienda es obligatorio");
             miTutor.setTrabajadorSuneo(trabajadorSuneo);
 
-            String tipoTrabajo = JsonUtils.obtString(params,"tipoTrabajo");
-            if(tipoTrabajo == null) throw new IllegalArgumentException("El campo tipo trabajo es obligatorio");
-            miTutor.setTipoTrabajo(tipoTrabajo);
+            Long idTrabajoTipo = JsonUtils.obtLong(params, "trabajoTipo");
+            if (idTrabajoTipo == null) throw new IllegalArgumentException("El campo 'idTrabajoTipo' es obligatorio.");
+            CatTipoTrabajo catTipoTrabajo = catTipoTrabajoRepository.findById(idTrabajoTipo)
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Tipo trabajo no encontrado con el ID: " + idTrabajoTipo));
+            miTutor.setCatTipoTrabajo(catTipoTrabajo);
 
             String ocupacionOtro = JsonUtils.obtString(params,"ocupacionOtro");
             miTutor.setOcupacionOtro(ocupacionOtro);

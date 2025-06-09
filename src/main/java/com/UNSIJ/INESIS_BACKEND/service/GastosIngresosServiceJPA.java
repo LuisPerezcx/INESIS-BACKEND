@@ -92,12 +92,14 @@ public class GastosIngresosServiceJPA implements IGastosIngresosService {
             if (dependeEconomicamente) {
                 String nombreQuienDependes = JsonUtils.obtString(params, "nombreQuienDependes");
                 gastosIngresos.setNombreQuienDependes(nombreQuienDependes);
+
                 Long idTrabajoTipo = JsonUtils.obtLong(params, "trabajoTipo");
                 if (idTrabajoTipo == null) throw new IllegalArgumentException("El campo 'idTrabajoTipo' es obligatorio.");
                 CatTipoTrabajo catTipoTrabajo = catTipoTrabajoRepository.findById(idTrabajoTipo)
                         .orElseThrow(() -> new IllegalArgumentException(
                                 "Ocupacion no encontrado con el ID: " + idTrabajoTipo));
                 gastosIngresos.setCatTipoTrabajo(catTipoTrabajo);
+
                 Long idOcupacion = JsonUtils.obtLong(params, "ocupacion");
                 if (idOcupacion == null) throw new IllegalArgumentException("El campo 'idOcupacion' es obligatorio.");
                 Ocupacion ocupacion = ocupacionRepository.findById(idOcupacion)
