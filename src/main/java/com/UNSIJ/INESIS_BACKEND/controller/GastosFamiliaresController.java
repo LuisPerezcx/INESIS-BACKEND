@@ -1,11 +1,14 @@
 package com.UNSIJ.INESIS_BACKEND.controller;
 
+import com.UNSIJ.INESIS_BACKEND.dto.DatosFamiliaresDTO;
+import com.UNSIJ.INESIS_BACKEND.model.Ejemplo;
 import com.UNSIJ.INESIS_BACKEND.model.GastosIngresosFamiliares;
 import com.UNSIJ.INESIS_BACKEND.service.GastosIngresosService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,38 +24,17 @@ public class GastosFamiliaresController {
     private GastosIngresosService gastosService;
 
     // Recibe todo en JSON, no multipart/form-data
+
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GastosIngresosFamiliares> guardarMisDatos(@RequestBody Map<String, Object> payload) {
-            
-
+    public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            System.out.println("Lo que recibe el back: " + payload);
-            
-            ObjectMapper mapper = new ObjectMapper();
-
-            // Parsear las personas como lista de mapas o como objetos
-            List<Map<String, Object>> personas = mapper.convertValue(payload.get("personas"), new TypeReference<>() {});
-            Double ingresoTotal = Double.valueOf(payload.get("ingresoTota   l").toString());
-            Integer personasDependen = Integer.valueOf(payload.get("personasDependen").toString());
-            Map<String, Object> reciboLuz = mapper.convertValue(payload.get("reciboLuz"), new TypeReference<>() {});
-            Map<String, Object> gastos = mapper.convertValue(payload.get("gastos"), new TypeReference<>() {});
-
-            // Pasar datos al servicio en un Map o crear tu DTO/entidad aquí
-            // Por ejemplo, crea un Map para enviar a servicio:
-            Map<String, Object> params = Map.of(
-                "personas", personas,
-                "ingresoTotal", ingresoTotal,
-                "personasDependen", personasDependen,
-                "reciboLuz", reciboLuz,
-                "gastos", gastos
-            );
-
             GastosIngresosFamiliares creado = gastosService.create(params);
-
-            return ResponseEntity.ok(creado);
+            return ResponseEntity.status(HttpStatus.CREATED).body(creado);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
     }
+
 }

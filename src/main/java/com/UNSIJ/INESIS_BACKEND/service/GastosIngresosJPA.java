@@ -104,6 +104,7 @@ public class GastosIngresosJPA implements IGastosIngresosService {
                 Trabajo trabajo = trabajoServiceJPA.create(trabajoMap);
                 gastosIngresos.setTrabajo(trabajo);
             }
+
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
