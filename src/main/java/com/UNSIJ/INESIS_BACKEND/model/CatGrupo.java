@@ -8,7 +8,7 @@ import lombok.ToString;
 @Data
 @Entity
 @Table(name = "cat_grupo")
-public class CatGrupoModel {
+public class CatGrupo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,16 +21,10 @@ public class CatGrupoModel {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "id_cat_carrera", referencedColumnName = "id_cat_carrera")
-    private CatCarrera catCarreraModel;
+    private CatCarrera catCarrera;
 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "id_cat_semestre", referencedColumnName = "id_cat_semestre")
-    private CatSemestre catSemestreModel;
-
-    @ManyToOne
-    @JoinColumn(name = "id_alumno", referencedColumnName = "id_alumno")
-    @ToString.Exclude
-    private Alumno alumnoModel;
-
+    private CatSemestre catSemestre;
 }

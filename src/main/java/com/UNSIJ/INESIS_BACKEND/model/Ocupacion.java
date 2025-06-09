@@ -9,18 +9,16 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-
 @Data
 @Entity
-@Table(name = "cat_parentesco")
-
-public class ParentescoModel {
+@Table(name = "cat_ocupacion")
+public class Ocupacion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_cat_parentesco")
+    @Column(name = "id_cat_ocupacion")
     private Long id;
 
     @NotNull
-    @Column(name = "nombre_parentesco")
-    private String nombreParentesco;
+    @Column(name = "nombre_ocupacion")
+    private String nombreOcupacion;
 }

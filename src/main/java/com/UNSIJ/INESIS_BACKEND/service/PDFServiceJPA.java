@@ -13,8 +13,8 @@ import java.util.Base64;
 public class PDFServiceJPA {
 
     public static void main(String[] args) {
-        Alumno alumnoModel = new Alumno();
-        generarPdf(alumnoModel);
+        Alumno alumno = new Alumno();
+        generarPdf(alumno);
     }
 
     public static String valorSeguro(String valor, String valorPorDefecto) {
@@ -96,7 +96,7 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.llevaCarroNo, "X", true);
             form.setField(PDF.ESE.llevaMotocicletaSi, "X", true);
             form.setField(PDF.ESE.llevaMotocicletaNo, "X", true);
-            form.setField(PDF.ESE.marcaMotocicleta, marcaTransporte(alumno.getMisDatos().getTransporte().getMarca(),alumno.getMisDatos().getTransporte().getModelo(),alumno.getMisDatos().getTransporte().getAnio()), true);
+            //form.setField(PDF.ESE.marcaMotocicleta, marcaTransporte(alumno.getMisDatos().getTransporte().getMarca(),alumno.getMisDatos().getTransporte().getModelo(),alumno.getMisDatos().getTransporte().getAnio()), true);
 
             Boolean celular = alumno.getMisDatos().getUtilizaCelular();
             form.setField(PDF.ESE.utilizaTelefonoSi, celular != null && celular ? "X" : "", true);
@@ -224,7 +224,7 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.permanente, "X", true);
 
             //Tipo de ocupacion
-            Long ocupacionSeleccionada = alumno.getMisDatos().getGastosIngresos().getOcupacionModel().getId();
+            Long ocupacionSeleccionada = alumno.getMisDatos().getGastosIngresos().getOcupacion().getId();
             form.setField(PDF.ESE.comerciante, ocupacionSeleccionada == 1 ? "X" : "", true);
             form.setField(PDF.ESE.empleadoGobierno, ocupacionSeleccionada == 2 ? "X" : "", true);
             form.setField(PDF.ESE.empleadoPrivado, ocupacionSeleccionada == 3 ? "X" : "", true);

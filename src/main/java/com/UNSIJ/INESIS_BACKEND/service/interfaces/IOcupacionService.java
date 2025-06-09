@@ -1,18 +1,17 @@
 package com.UNSIJ.INESIS_BACKEND.service.interfaces;
 
-import com.UNSIJ.INESIS_BACKEND.model.Ejemplo;
-import com.UNSIJ.INESIS_BACKEND.model.OcupacionModel;
+import com.UNSIJ.INESIS_BACKEND.model.Ocupacion;
 
 import java.util.List;
 import java.util.Map;
 
 public interface IOcupacionService {
-    List<OcupacionModel> findAll();
-    OcupacionModel findById(Long id);
-    OcupacionModel save(OcupacionModel ocupacionModel) throws Exception;
-    OcupacionModel create(Map<String, Object> params) throws Exception;
-    OcupacionModel update(OcupacionModel ocupacionModel, Map<String, Object> params) throws Exception;
-    OcupacionModel build(Map<String, Object> params, OcupacionModel ocupacionModel) throws IllegalArgumentException;
-    OcupacionModel updateInstance(OcupacionModel ocupacionModel) throws Exception;
+    List<Ocupacion> findAll();
+    Ocupacion findById(Long id);
+    Ocupacion save(Ocupacion ocupacion) throws Exception;
+    Ocupacion create(Map<String, Object> params) throws Exception;
+    Ocupacion update(Ocupacion ocupacion, Map<String, Object> params) throws Exception;
+    Ocupacion build(Map<String, Object> params, Ocupacion ocupacion) throws IllegalArgumentException;
+    Ocupacion updateInstance(Ocupacion ocupacion) throws Exception;
     void deleteById(Long id);
 }

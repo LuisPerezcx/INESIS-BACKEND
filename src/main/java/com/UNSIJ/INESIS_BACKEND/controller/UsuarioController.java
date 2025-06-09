@@ -109,4 +109,32 @@ public class UsuarioController {
         }
     }
 
+    @PostMapping("/verificar-contrasena")
+    public ResponseEntity<?> verificarContrasena(@RequestBody Map<String, String> credentials) {
+        try {
+            String usuario = credentials.get("usuario");
+            String contrasena = credentials.get("contrasena");
+
+            if (usuario == null || contrasena == null) {
+                Map<String, String> error = new HashMap<>();
+                error.put("mensaje", "Usuario y contraseña son obligatorios");
+                return ResponseEntity.badRequest().body(error);
+            }
+
+            boolean esValida = usuarioServiceJPA.verificarContrasena(usuario, contrasena);
+            Map<String, Object> result = new HashMap<>();
+            result.put("valida", esValida);
+            return ResponseEntity.ok(result);
+
+        } catch (IllegalArgumentException e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("mensaje", e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+
+        } catch (Exception e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("mensaje", "Error interno del servidor");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
+    }
 }

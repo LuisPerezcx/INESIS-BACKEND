@@ -3,8 +3,6 @@ package com.UNSIJ.INESIS_BACKEND.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -63,7 +61,7 @@ public class Alumno {
 
     @ManyToOne
     @JoinColumn(name = "id_cat_grupo")
-    private CatGrupoModel grupo;
+    private CatGrupo grupo;
 
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")

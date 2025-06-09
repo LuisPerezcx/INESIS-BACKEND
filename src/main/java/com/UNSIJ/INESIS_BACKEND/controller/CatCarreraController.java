@@ -33,8 +33,8 @@ public class CatCarreraController {
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id){
         try {
-            CatCarrera catCatCarreraModel = carreraServiceJPA.findById(id);
-            return ResponseEntity.ok(catCatCarreraModel);
+            CatCarrera catCatCarrera = carreraServiceJPA.findById(id);
+            return ResponseEntity.ok(catCatCarrera);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
@@ -47,8 +47,8 @@ public class CatCarreraController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            CatCarrera catCatCarreraModel = carreraServiceJPA.create(params);
-            return ResponseEntity.status(HttpStatus.CREATED).body(catCatCarreraModel);
+            CatCarrera catCatCarrera = carreraServiceJPA.create(params);
+            return ResponseEntity.status(HttpStatus.CREATED).body(catCatCarrera);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {

@@ -93,6 +93,9 @@ public class DomicilioController {
 
     @GetMapping("/codigo_postal")
     public ResponseEntity<String> obtenerColoniasPorCP(@RequestParam String cp) {
+        if(cp.length() != 5) {
+            return null;
+        }
         String urlApiExterna = "https://api.tau.com.mx/dipomex/v1/codigo_postal?cp=" + cp;
 
         RestTemplate restTemplate = new RestTemplate();
