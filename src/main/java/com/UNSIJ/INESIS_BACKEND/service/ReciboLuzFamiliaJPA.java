@@ -8,8 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.UNSIJ.INESIS_BACKEND.model.GastoFamiliarModel;
-import com.UNSIJ.INESIS_BACKEND.model.ReciboLuzModel;
+import com.UNSIJ.INESIS_BACKEND.model.ReciboLuz;
 import com.UNSIJ.INESIS_BACKEND.repository.ReciboLuzRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IReciboLuz;
 import com.UNSIJ.INESIS_BACKEND.utils.ArchivoUtil;
@@ -25,25 +24,25 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
     private String rutaBase;
 
     @Override
-    public List<ReciboLuzModel> findAll() {
+    public List<ReciboLuz> findAll() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'findAll'");
     }
 
     @Override
-    public ReciboLuzModel findById(Long id) {
+    public ReciboLuz findById(Long id) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'findById'");
     }
 
     @Override
-    public ReciboLuzModel save(ReciboLuzModel ReciboLuzModel) throws Exception {
+    public ReciboLuz save(ReciboLuz ReciboLuzModel) throws Exception {
         return reciboLuzRepository.save(ReciboLuzModel);
     }
 
     @Override
-    public ReciboLuzModel create(Map<String, Object> params) throws Exception {
-        ReciboLuzModel ejemplo = new ReciboLuzModel();
+    public ReciboLuz create(Map<String, Object> params) throws Exception {
+        ReciboLuz ejemplo = new ReciboLuz();
         try {
             this.build(params, ejemplo);
         } catch (IllegalArgumentException e) {
@@ -56,13 +55,13 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
     }
 
     @Override
-    public ReciboLuzModel update(ReciboLuzModel ReciboLuzModel, Map<String, Object> params) throws Exception {
+    public ReciboLuz update(ReciboLuz ReciboLuzModel, Map<String, Object> params) throws Exception {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'update'");
     }
 
     @Override
-    public ReciboLuzModel build(Map<String, Object> params, ReciboLuzModel ReciboLuzModel){
+    public ReciboLuz build(Map<String, Object> params, ReciboLuz ReciboLuzModel){
            try {
             String titular = JsonUtils.obtString(params,"titular");
             String periodoInicio = JsonUtils.obtString(params,"periodoInicio");

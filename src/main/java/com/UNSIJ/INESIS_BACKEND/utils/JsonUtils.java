@@ -133,7 +133,7 @@ public class JsonUtils {
         }
     }
 
-    public static boolean obtBoolean(Map<String, Object> map, String key) {
+    public static Boolean obtBoolean(Map<String, Object> map, String key) {
         Object value = obtObject(map, key);
 
         if (value instanceof Boolean)
@@ -148,6 +148,23 @@ public class JsonUtils {
             return ((Number) value).intValue() != 0; // 0 es false, cualquier otro número es true
         }
 
-        return false; // Si el valor es null o no es convertible a boolean, retorna false
+        return null; // Si el valor es null o no es convertible a boolean, retorna false
+    }
+
+    public static Boolean parseBooleanFlexible(Object value, String fieldName) {
+        if (value instanceof Boolean) {
+            return (Boolean) value;
+        }
+        if (value instanceof String) {
+            String str = ((String) value).trim();
+            if ("Si".equalsIgnoreCase(str)) return true;
+            if ("No".equalsIgnoreCase(str)) return false;
+            if ("true".equalsIgnoreCase(str)) return true;
+            if ("false".equalsIgnoreCase(str)) return false;
+        }
+        if (value == null) {
+            throw new IllegalArgumentException("El campo " + fieldName + " es obligatorio");
+        }
+        throw new IllegalArgumentException("El valor de '" + fieldName + "' debe ser 'Si', 'No', true o false.");
     }
 }

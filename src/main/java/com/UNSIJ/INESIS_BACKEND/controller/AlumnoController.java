@@ -1,6 +1,6 @@
 package com.UNSIJ.INESIS_BACKEND.controller;
 
-import com.UNSIJ.INESIS_BACKEND.model.AlumnoModel;
+import com.UNSIJ.INESIS_BACKEND.model.Alumno;
 import com.UNSIJ.INESIS_BACKEND.service.AlumnoServiceJPA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,14 +19,14 @@ public class AlumnoController {
     private AlumnoServiceJPA alumnoServiceJPA;
 
     @GetMapping
-    public List<AlumnoModel> list() {
+    public List<Alumno> list() {
         return alumnoServiceJPA.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id) {
         try {
-            AlumnoModel alumno = alumnoServiceJPA.findById(id);
+            Alumno alumno = alumnoServiceJPA.findById(id);
             return ResponseEntity.ok(alumno);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -38,7 +38,7 @@ public class AlumnoController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            AlumnoModel alumno = alumnoServiceJPA.create(params);
+            Alumno alumno = alumnoServiceJPA.create(params);
             return ResponseEntity.status(HttpStatus.CREATED).body(alumno);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -51,7 +51,7 @@ public class AlumnoController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            AlumnoModel alumnoUpdated = alumnoServiceJPA.update(alumnoServiceJPA.findById(id), params);
+            Alumno alumnoUpdated = alumnoServiceJPA.update(alumnoServiceJPA.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(alumnoUpdated);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

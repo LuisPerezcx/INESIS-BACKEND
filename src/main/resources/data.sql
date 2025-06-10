@@ -16,8 +16,9 @@ WHERE NOT EXISTS (SELECT 1 FROM cat_rol WHERE nombre_rol = 'Revisor');
 
 
 #------------------- REGISTROS DE USUARIO -------------------
+SELECT 1;
 INSERT INTO usuario (id_cat_rol, usuario, contrasenia, estatus)
-SELECT 2, 'admin', 'admin123', 'ACTIVO'
+SELECT 2, 'admin', 'admin123', 1
 WHERE NOT EXISTS (
     SELECT 1 FROM usuario WHERE usuario = 'admin'
 );
@@ -517,6 +518,341 @@ WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Taxi
 INSERT INTO cat_medios_transporte (nombre_medio)
 SELECT 'Microbús'
 WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Microbús');
+
+# ------------------------------------------- REGISTRO DE CAT_OCUPACION
+
+SELECT 1;
+
+INSERT INTO cat_ocupacion (nombre_ocupacion)
+SELECT 'Comerciante'
+WHERE NOT EXISTS (SELECT 1 FROM cat_ocupacion WHERE nombre_ocupacion = 'Comerciante');
+
+INSERT INTO cat_ocupacion (nombre_ocupacion)
+SELECT 'Jubilado o pensionado'
+WHERE NOT EXISTS (SELECT 1 FROM cat_ocupacion WHERE nombre_ocupacion = 'Jubilado o pensionado');
+
+INSERT INTO cat_ocupacion (nombre_ocupacion)
+SELECT 'Empleado de gobierno'
+WHERE NOT EXISTS (SELECT 1 FROM cat_ocupacion WHERE nombre_ocupacion = 'Empleado de gobierno');
+
+INSERT INTO cat_ocupacion (nombre_ocupacion)
+SELECT 'Labores del campo o de la pesca'
+WHERE NOT EXISTS (SELECT 1 FROM cat_ocupacion WHERE nombre_ocupacion = 'Labores del campo o de la pesca');
+
+INSERT INTO cat_ocupacion (nombre_ocupacion)
+SELECT 'Empleado de empresa privada'
+WHERE NOT EXISTS (SELECT 1 FROM cat_ocupacion WHERE nombre_ocupacion = 'Empleado de empresa privada');
+
+INSERT INTO cat_ocupacion (nombre_ocupacion)
+SELECT 'Empleado empresa ejidal o comunal'
+WHERE NOT EXISTS (SELECT 1 FROM cat_ocupacion WHERE nombre_ocupacion = 'Empleado empresa ejidal o comunal');
+
+INSERT INTO cat_ocupacion (nombre_ocupacion)
+SELECT 'Tiene negocio propio'
+WHERE NOT EXISTS (SELECT 1 FROM cat_ocupacion WHERE nombre_ocupacion = 'Tiene negocio propio');
+
+INSERT INTO cat_ocupacion (nombre_ocupacion)
+SELECT 'Otro'
+WHERE NOT EXISTS (SELECT 1 FROM cat_ocupacion WHERE nombre_ocupacion = 'Otro');
+
+
+/*REGISTRO DE CAT BIENES HOGAR*/
+#------------------- REGISTROS DE CATBIENESHOGAR -------------------
+SELECT 1;
+
+INSERT INTO cat_bienes_hogar (nombre_bien)
+SELECT 'Refrigerador'
+WHERE NOT EXISTS (SELECT 1 FROM cat_bienes_hogar WHERE nombre_bien = 'Refrigerador');
+
+INSERT INTO cat_bienes_hogar (nombre_bien)
+SELECT 'Estufa de gas'
+WHERE NOT EXISTS (SELECT 1 FROM cat_bienes_hogar WHERE nombre_bien = 'Estufa de gas');
+
+INSERT INTO cat_bienes_hogar (nombre_bien)
+SELECT 'Agua Caliente'
+WHERE NOT EXISTS (SELECT 1 FROM cat_bienes_hogar WHERE nombre_bien = 'Agua Caliente');
+
+INSERT INTO cat_bienes_hogar (nombre_bien)
+SELECT 'Aire Acondicionado'
+WHERE NOT EXISTS (SELECT 1 FROM cat_bienes_hogar WHERE nombre_bien = 'Aire Acondicionado');
+
+INSERT INTO cat_bienes_hogar (nombre_bien)
+SELECT 'Automovil particular'
+WHERE NOT EXISTS (SELECT 1 FROM cat_bienes_hogar WHERE nombre_bien = 'Automovil particular');
+
+INSERT INTO cat_bienes_hogar (nombre_bien)
+SELECT 'Hornno de microondas'
+WHERE NOT EXISTS (SELECT 1 FROM cat_bienes_hogar WHERE nombre_bien = 'Hornno de microondas');
+
+INSERT INTO cat_bienes_hogar (nombre_bien)
+SELECT 'Televisión'
+WHERE NOT EXISTS (SELECT 1 FROM cat_bienes_hogar WHERE nombre_bien = 'Televisión');
+
+INSERT INTO cat_bienes_hogar (nombre_bien)
+SELECT 'Lavadora'
+WHERE NOT EXISTS (SELECT 1 FROM cat_bienes_hogar WHERE nombre_bien = 'Lavadora');
+
+INSERT INTO cat_bienes_hogar (nombre_bien)
+SELECT 'Espacio privado de estudio'
+WHERE NOT EXISTS (SELECT 1 FROM cat_bienes_hogar WHERE nombre_bien = 'Espacio privado de estudio');
+
+
+#------------------- REGISTROS DE CATESCOLARIDAD -------------------
+-- Inicio registros
+SELECT 1;
+
+INSERT INTO cat_escolaridad (nombre_escolaridad)
+SELECT 'Sin escolaridad'
+WHERE NOT EXISTS (SELECT 1 FROM cat_escolaridad WHERE nombre_escolaridad = 'Sin escolaridad');
+
+INSERT INTO cat_escolaridad (nombre_escolaridad)
+SELECT 'Primaria incompleta'
+WHERE NOT EXISTS (SELECT 1 FROM cat_escolaridad WHERE nombre_escolaridad = 'Primaria incompleta');
+
+INSERT INTO cat_escolaridad (nombre_escolaridad)
+SELECT 'Primaria completa'
+WHERE NOT EXISTS (SELECT 1 FROM cat_escolaridad WHERE nombre_escolaridad = 'Primaria completa');
+
+INSERT INTO cat_escolaridad (nombre_escolaridad)
+SELECT 'Secundaria incompleta'
+WHERE NOT EXISTS (SELECT 1 FROM cat_escolaridad WHERE nombre_escolaridad = 'Secundaria incompleta');
+
+INSERT INTO cat_escolaridad (nombre_escolaridad)
+SELECT 'Secundaria completa'
+WHERE NOT EXISTS (SELECT 1 FROM cat_escolaridad WHERE nombre_escolaridad = 'Secundaria completa');
+
+INSERT INTO cat_escolaridad (nombre_escolaridad)
+SELECT 'Bachillerato'
+WHERE NOT EXISTS (SELECT 1 FROM cat_escolaridad WHERE nombre_escolaridad = 'Bachillerato');
+
+INSERT INTO cat_escolaridad (nombre_escolaridad)
+SELECT 'Técnico'
+WHERE NOT EXISTS (SELECT 1 FROM cat_escolaridad WHERE nombre_escolaridad = 'Técnico');
+
+INSERT INTO cat_escolaridad (nombre_escolaridad)
+SELECT 'Licenciatura'
+WHERE NOT EXISTS (SELECT 1 FROM cat_escolaridad WHERE nombre_escolaridad = 'Licenciatura');
+
+INSERT INTO cat_escolaridad (nombre_escolaridad)
+SELECT 'Posgrado'
+WHERE NOT EXISTS (SELECT 1 FROM cat_escolaridad WHERE nombre_escolaridad = 'Posgrado');
+
+
+#------------------- REGISTROS DE CATINTERNET -------------------
+-- Inicio registros
+SELECT 1;
+
+INSERT INTO cat_internet (nombre_internet)
+SELECT 'Sin acceso'
+WHERE NOT EXISTS (SELECT 1 FROM cat_internet WHERE nombre_internet = 'Sin acceso');
+
+INSERT INTO cat_internet (nombre_internet)
+SELECT 'Datos móviles'
+WHERE NOT EXISTS (SELECT 1 FROM cat_internet WHERE nombre_internet = 'Datos móviles');
+
+INSERT INTO cat_internet (nombre_internet)
+SELECT 'WiFi comunitario'
+WHERE NOT EXISTS (SELECT 1 FROM cat_internet WHERE nombre_internet = 'WiFi comunitario');
+
+INSERT INTO cat_internet (nombre_internet)
+SELECT 'Red pública'
+WHERE NOT EXISTS (SELECT 1 FROM cat_internet WHERE nombre_internet = 'Red pública');
+
+INSERT INTO cat_internet (nombre_internet)
+SELECT 'Internet en casa'
+WHERE NOT EXISTS (SELECT 1 FROM cat_internet WHERE nombre_internet = 'Internet en casa');
+
+INSERT INTO cat_internet (nombre_internet)
+SELECT 'Otra'
+WHERE NOT EXISTS (SELECT 1 FROM cat_internet WHERE nombre_internet = 'Otra');
+
+
+#------------------- REGISTROS DE CAT_MATERIAL_VIVIENDA -------------------
+-- Inicio registros
+SELECT 1;
+
+INSERT INTO cat_material_vivienda (nombre_material)
+SELECT 'Ladrillo'
+WHERE NOT EXISTS (SELECT 1 FROM cat_material_vivienda WHERE nombre_material = 'Ladrillo');
+
+INSERT INTO cat_material_vivienda (nombre_material)
+SELECT 'Madera'
+WHERE NOT EXISTS (SELECT 1 FROM cat_material_vivienda WHERE nombre_material = 'Madera');
+
+INSERT INTO cat_material_vivienda (nombre_material)
+SELECT 'Adobe'
+WHERE NOT EXISTS (SELECT 1 FROM cat_material_vivienda WHERE nombre_material = 'Adobe');
+
+INSERT INTO cat_material_vivienda (nombre_material)
+SELECT 'Cartón'
+WHERE NOT EXISTS (SELECT 1 FROM cat_material_vivienda WHERE nombre_material = 'Cartón');
+
+INSERT INTO cat_material_vivienda (nombre_material)
+SELECT 'Lámina'
+WHERE NOT EXISTS (SELECT 1 FROM cat_material_vivienda WHERE nombre_material = 'Lámina');
+
+INSERT INTO cat_material_vivienda (nombre_material)
+SELECT 'Concreto'
+WHERE NOT EXISTS (SELECT 1 FROM cat_material_vivienda WHERE nombre_material = 'Concreto');
+
+INSERT INTO cat_material_vivienda (nombre_material)
+SELECT 'Otro'
+WHERE NOT EXISTS (SELECT 1 FROM cat_material_vivienda WHERE nombre_material = 'Otro');
+
+#------------------- REGISTROS DE CAT_MEDIOS_ESTUDIO -------------------
+-- Inicio registros
+SELECT 1;
+
+INSERT INTO cat_medios_estudio (nombre_medios)
+SELECT 'Impresora'
+WHERE NOT EXISTS (SELECT 1 FROM cat_medios_estudio WHERE nombre_medios = 'Impresora');
+
+INSERT INTO cat_medios_estudio (nombre_medios)
+SELECT 'Librero'
+WHERE NOT EXISTS (SELECT 1 FROM cat_medios_estudio WHERE nombre_medios = 'Librero');
+
+INSERT INTO cat_medios_estudio (nombre_medios)
+SELECT 'Escritorio / Mesa de trabajo'
+WHERE NOT EXISTS (SELECT 1 FROM cat_medios_estudio WHERE nombre_medios = 'Escritorio / Mesa de trabajo');
+
+INSERT INTO cat_medios_estudio (nombre_medios)
+SELECT 'Calculadora'
+WHERE NOT EXISTS (SELECT 1 FROM cat_medios_estudio WHERE nombre_medios = 'Calculadora');
+
+INSERT INTO cat_medios_estudio (nombre_medios)
+SELECT 'Libros especializados'
+WHERE NOT EXISTS (SELECT 1 FROM cat_medios_estudio WHERE nombre_medios = 'Libros especializados');
+
+INSERT INTO cat_medios_estudio (nombre_medios)
+SELECT 'Teléfono móvil'
+WHERE NOT EXISTS (SELECT 1 FROM cat_medios_estudio WHERE nombre_medios = 'Teléfono móvil');
+
+INSERT INTO cat_medios_estudio (nombre_medios)
+SELECT 'Computadora'
+WHERE NOT EXISTS (SELECT 1 FROM cat_medios_estudio WHERE nombre_medios = 'Computadora');
+
+INSERT INTO cat_medios_estudio (nombre_medios)
+SELECT 'Diccionario'
+WHERE NOT EXISTS (SELECT 1 FROM cat_medios_estudio WHERE nombre_medios = 'Diccionario');
+
+INSERT INTO cat_medios_estudio (nombre_medios)
+SELECT 'Otro'
+WHERE NOT EXISTS (SELECT 1 FROM cat_medios_estudio WHERE nombre_medios = 'Otro');
+
+#------------------- REGISTROS DE CAT_SITUACION_VIVIENDA -------------------
+-- Inicio registros
+SELECT 1;
+
+INSERT INTO cat_situacion_vivienda (nombre_situacion)
+SELECT 'Propia'
+WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Propia');
+
+INSERT INTO cat_situacion_vivienda (nombre_situacion)
+SELECT 'Rentada'
+WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Rentada');
+
+INSERT INTO cat_situacion_vivienda (nombre_situacion)
+SELECT 'Prestada'
+WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Prestada');
+
+INSERT INTO cat_situacion_vivienda (nombre_situacion)
+SELECT 'Alquilada'
+WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Alquilada');
+
+INSERT INTO cat_situacion_vivienda (nombre_situacion)
+SELECT 'Vivienda institucional'
+WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Vivienda institucional');
+
+INSERT INTO cat_situacion_vivienda (nombre_situacion)
+SELECT 'Rento cuarto'
+WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Rento cuarto');
+
+INSERT INTO cat_situacion_vivienda (nombre_situacion)
+SELECT 'Rento casa'
+WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Rento casa');
+
+INSERT INTO cat_situacion_vivienda (nombre_situacion)
+SELECT 'Vivo con familiares'
+WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Vivo con familiares');
+
+INSERT INTO cat_situacion_vivienda (nombre_situacion)
+SELECT 'Otro'
+WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Otro');
+
+#------------------- REGISTROS DE CAT_TIPO_VIVIENDA -------------------
+-- Inicio de inserciones
+SELECT 1;
+
+INSERT INTO cat_tipo_vivienda (nombre_tipo)
+SELECT 'Casa sola'
+WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_vivienda WHERE nombre_tipo = 'Casa');
+
+INSERT INTO cat_tipo_vivienda (nombre_tipo)
+SELECT 'Departamento'
+WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_vivienda WHERE nombre_tipo = 'Departamento');
+
+INSERT INTO cat_tipo_vivienda (nombre_tipo)
+SELECT 'Cuarto en vecindad'
+WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_vivienda WHERE nombre_tipo = 'Cuarto en vecindad');
+
+INSERT INTO cat_tipo_vivienda (nombre_tipo)
+SELECT 'Vivienda improvisada'
+WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_vivienda WHERE nombre_tipo = 'Vivienda improvisada');
+
+INSERT INTO cat_tipo_vivienda (nombre_tipo)
+SELECT 'Casa de interés social'
+WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_vivienda WHERE nombre_tipo = 'Casa de interés social');
+
+INSERT INTO cat_tipo_vivienda (nombre_tipo)
+SELECT 'Condominio'
+WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_vivienda WHERE nombre_tipo = 'Condominio');
+
+INSERT INTO cat_tipo_vivienda (nombre_tipo)
+SELECT 'Otro'
+WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_vivienda WHERE nombre_tipo = 'Otro');
+
+
+
+# ----------------------------------- REGISTROS DE CAT_TIPO_TRABAJO ----------------------------------------
+
+SELECT 1;
+
+INSERT INTO cat_tipo_trabajo (nombre_tipo)
+SELECT 'Temporal'
+WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_trabajo WHERE nombre_tipo = 'Temporal');
+
+INSERT INTO cat_tipo_trabajo (nombre_tipo)
+SELECT 'Permanente'
+WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_trabajo WHERE nombre_tipo = 'Permanente');
+
+
+# ----------------------------------- REGISTROS DE CAT_PARENTESCO ----------------------------------------
+
+SELECT 1;
+
+INSERT INTO cat_parentesco (nombre_parentesco)
+SELECT 'Padre'
+WHERE NOT EXISTS (SELECT 1 FROM cat_parentesco WHERE nombre_parentesco = 'Padre');
+
+INSERT INTO cat_parentesco (nombre_parentesco)
+SELECT 'Madre'
+WHERE NOT EXISTS (SELECT 1 FROM cat_parentesco WHERE nombre_parentesco = 'Madre');
+
+INSERT INTO cat_parentesco (nombre_parentesco)
+SELECT 'Abuelo'
+WHERE NOT EXISTS (SELECT 1 FROM cat_parentesco WHERE nombre_parentesco = 'Abuelo');
+
+INSERT INTO cat_parentesco (nombre_parentesco)
+SELECT 'Abuela'
+WHERE NOT EXISTS (SELECT 1 FROM cat_parentesco WHERE nombre_parentesco = 'Abuela');
+
+
+
+
+
+
+
+
 
 
 

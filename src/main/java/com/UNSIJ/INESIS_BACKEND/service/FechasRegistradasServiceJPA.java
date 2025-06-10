@@ -1,7 +1,7 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import com.UNSIJ.INESIS_BACKEND.model.CatCarreraModel;
-import com.UNSIJ.INESIS_BACKEND.model.FechasRegistradasModel;
+import com.UNSIJ.INESIS_BACKEND.model.CatCarrera;
+import com.UNSIJ.INESIS_BACKEND.model.FechasRegistradas;
 import com.UNSIJ.INESIS_BACKEND.repository.FechasRegistradasRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IFechasRegistradasService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
+import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
@@ -24,25 +24,45 @@ public class FechasRegistradasServiceJPA implements IFechasRegistradasService {
     private CatCarreraServiceJPA carreraServiceJPA;
 
     @Override
-    public List<FechasRegistradasModel> findAll() {
-        return fechasRegistradasRepository.findAll();
+    public List<FechasRegistradas> findAll() {
+        List<FechasRegistradas> lista = fechasRegistradasRepository.findAll();
+        Date hoy = new Date();
+
+        for (FechasRegistradas fecha : lista) {
+            if (fecha.isActive()) {
+                // Calcula si la fecha fin ya pasó o es igual a hoy
+                if (!fecha.getFechaFin().after(hoy)) {
+                    // Si ya pasó o es hoy, desactiva
+                    fecha.setActive(false);
+                    fecha.setRestante(0);
+                    // Guarda el cambio
+                    fechasRegistradasRepository.save(fecha);
+                } else {
+                    // Calcula días restantes
+                    long diff = fecha.getFechaFin().getTime() - hoy.getTime();
+                    int diasRestantes = (int) (diff / (1000 * 60 * 60 * 24));
+                    fecha.setRestante(diasRestantes);
+                }
+            }
+        }
+        return lista;
     }
 
     @Override
-    public FechasRegistradasModel findById(Long id) {
+    public FechasRegistradas findById(Long id) {
         return fechasRegistradasRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Fecha registrada no encontrada con el ID: " + id));
     }
 
     @Override
     @Transactional // SIEMPRE TRANSACTIONAL AQUI
-    public FechasRegistradasModel save(FechasRegistradasModel fechasRegistradas) throws Exception {
+    public FechasRegistradas save(FechasRegistradas fechasRegistradas) throws Exception {
         return fechasRegistradasRepository.save(fechasRegistradas);
     }
 
     @Override
-    public FechasRegistradasModel create(Map<String, Object> params) throws Exception {
-        FechasRegistradasModel fechasRegistradas = new FechasRegistradasModel();
+    public FechasRegistradas create(Map<String, Object> params) throws Exception {
+        FechasRegistradas fechasRegistradas = new FechasRegistradas();
         try {
             // Aquí puedes asignar valores que sólo se necesitan al crear un registro por
             // primera vez
@@ -59,7 +79,7 @@ public class FechasRegistradasServiceJPA implements IFechasRegistradasService {
     }
 
     @Override
-    public FechasRegistradasModel update(FechasRegistradasModel fechasRegistradas, Map<String, Object> params)
+    public FechasRegistradas update(FechasRegistradas fechasRegistradas, Map<String, Object> params)
             throws Exception {
         try {
             this.build(params, fechasRegistradas);
@@ -72,16 +92,16 @@ public class FechasRegistradasServiceJPA implements IFechasRegistradasService {
         return this.save(fechasRegistradas);
     }
 
-   @Override
-public FechasRegistradasModel build(Map<String, Object> params, FechasRegistradasModel fechasRegistradas)
-        throws IllegalArgumentException {
-    try {
-        Long idCarrera = JsonUtils.obtLong(params, "idCarrera");
-        if (idCarrera == null) {
-            throw new IllegalArgumentException("El campo 'carrera' es obligatorio");
-        }
+    @Override
+    public FechasRegistradas build(Map<String, Object> params, FechasRegistradas fechasRegistradas)
+            throws IllegalArgumentException {
+        try {
+            Long idCarrera = JsonUtils.obtLong(params, "idCarrera");
+            if (idCarrera == null) {
+                throw new IllegalArgumentException("El campo 'carrera' es obligatorio");
+            }
 
-        CatCarreraModel carrera = carreraServiceJPA.findById(idCarrera);
+        CatCarrera carrera = carreraServiceJPA.findById(idCarrera);
         if (carrera == null) {
             throw new IllegalArgumentException("Carrera no encontrada con el ID: " + idCarrera);
         }
@@ -98,24 +118,36 @@ public FechasRegistradasModel build(Map<String, Object> params, FechasRegistrada
         fechasRegistradas.setFechaInicio(fechaInicio);
         fechasRegistradas.setFechaFin(fechaFin);
 
-        // Asignar valor al campo obligatorio 'status' (ejemplo con valor por defecto)
-        String status = JsonUtils.obtString(params, "status");
-        if (status == null) {
-            status = "ACTIVO"; // Valor por defecto si no se envía
-        }
-        fechasRegistradas.setStatus(status);
+            // Obtener valor de 'active' o asignar true por defecto
+            Boolean active = null;
+            if (params.containsKey("active")) {
+                active = JsonUtils.obtBoolean(params, "active");
+            }
+            if (active == null) {
+                active = true; // Valor por defecto
+            }
+            fechasRegistradas.setActive(active);
 
-    } catch (IllegalArgumentException e) {
-        throw e;
-    } catch (Exception e) {
-        e.printStackTrace();
-        throw new IllegalArgumentException("Error al construir la fecha registrada: " + e.getMessage());
+            // Calcular días restantes entre fecha actual y fechaFin
+            long millisActual = new java.util.Date().getTime();
+            long millisFin = fechaFin.getTime();
+            long diferenciaMillis = millisFin - millisActual;
+
+            int diasRestantes = (int) Math.max(diferenciaMillis / (1000 * 60 * 60 * 24), 0); // mínimo 0
+            fechasRegistradas.setRestante(diasRestantes);
+
+        } catch (IllegalArgumentException e) {
+            throw e;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Error al construir la fecha registrada: " + e.getMessage());
+        }
+        return fechasRegistradas;
     }
-    return fechasRegistradas;
-}
+
     @Override
-    public FechasRegistradasModel updateInstance(FechasRegistradasModel fechasRegistradasInstance) throws Exception {
-        FechasRegistradasModel fechasRegistradasBD = this.findById(fechasRegistradasInstance.getId());
+    public FechasRegistradas updateInstance(FechasRegistradas fechasRegistradasInstance) throws Exception {
+        FechasRegistradas fechasRegistradasBD = this.findById(fechasRegistradasInstance.getId());
         fechasRegistradasBD.setCarrera(fechasRegistradasInstance.getCarrera());
         fechasRegistradasBD.setFechaInicio(fechasRegistradasInstance.getFechaInicio());
         fechasRegistradasBD.setFechaFin(fechasRegistradasInstance.getFechaFin());
@@ -124,7 +156,7 @@ public FechasRegistradasModel build(Map<String, Object> params, FechasRegistrada
 
     @Override
     public void deleteById(Long id) {
-        FechasRegistradasModel fechasRegistradas = this.findById(id);
+        FechasRegistradas fechasRegistradas = this.findById(id);
         if (fechasRegistradas != null) {
             fechasRegistradasRepository.deleteById(id);
         }
@@ -138,10 +170,10 @@ public FechasRegistradasModel build(Map<String, Object> params, FechasRegistrada
         }
     }
 
-public FechasRegistradasModel findByCarreraId(Long idCarrera) {
-    return fechasRegistradasRepository.findByCarrera_Id(idCarrera)
-            .orElseThrow(() -> new IllegalArgumentException("No se encontró fecha registrada para la carrera con id: " + idCarrera));
-}
-
+    public FechasRegistradas findByCarreraId(Long idCarrera) {
+        return fechasRegistradasRepository.findByCarrera_Id(idCarrera)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "No se encontró fecha registrada para la carrera con id: " + idCarrera));
+    }
 
 }

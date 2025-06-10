@@ -3,22 +3,24 @@ package com.UNSIJ.INESIS_BACKEND.service;
 import java.util.List;
 import java.util.Map;
 
+import com.UNSIJ.INESIS_BACKEND.model.CatParentesco;
+import com.UNSIJ.INESIS_BACKEND.repository.CatParentescoRepository;
+import com.UNSIJ.INESIS_BACKEND.repository.IngresoFamiliarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.UNSIJ.INESIS_BACKEND.model.IngresoFamiliarModel;
-import com.UNSIJ.INESIS_BACKEND.model.ParentescoModel;
-import com.UNSIJ.INESIS_BACKEND.model.ReciboLuzModel;
-import com.UNSIJ.INESIS_BACKEND.repository.ParentescoRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IIngresoFamiliar;
-import com.UNSIJ.INESIS_BACKEND.utils.ArchivoUtil;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 
 @Service
 public class IngresoFamiliarJPA implements IIngresoFamiliar{
 
     @Autowired
-    ParentescoRepository parentescoRepository;
+    IngresoFamiliarRepository ingresoFamiliarRepository;
+
+    @Autowired
+    CatParentescoRepository parentescoRepository;
 
     @Override
     public List<IngresoFamiliarModel> findAll() {
@@ -34,8 +36,7 @@ public class IngresoFamiliarJPA implements IIngresoFamiliar{
 
     @Override
     public IngresoFamiliarModel save(IngresoFamiliarModel IngresoFamiliarModel) throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'save'");
+        return ingresoFamiliarRepository.save(IngresoFamiliarModel);
     }
 
     @Override
@@ -80,9 +81,9 @@ public class IngresoFamiliarJPA implements IIngresoFamiliar{
         IngresoFamiliarModel.setLugarTrabajo(lugarTrabajo);
         IngresoFamiliarModel.setPuestoTrabajo(puestoTrabajo);
 
-        ParentescoModel parentescoModel = parentescoRepository.findById(idParentescoStr)
+        CatParentesco parentescoModel = parentescoRepository.findById(idParentescoStr)
         .orElseThrow(() -> new IllegalArgumentException("Parentesco no encontrado"));
-        IngresoFamiliarModel.setParentescoModel(parentescoModel);
+        IngresoFamiliarModel.setParentesco(parentescoModel);
 
 
     } catch (IllegalArgumentException e) {

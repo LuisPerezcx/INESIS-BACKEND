@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.UNSIJ.INESIS_BACKEND.model.CatSemestreModel;
+import com.UNSIJ.INESIS_BACKEND.model.CatSemestre;
 import com.UNSIJ.INESIS_BACKEND.service.CatSemestreServiceJPA;
 
 @RestController
@@ -25,15 +25,15 @@ public class CatSemestreController {
     private CatSemestreServiceJPA semestreServiceJPA; 
 
     @GetMapping
-    public List<CatSemestreModel> list() {
+    public List<CatSemestre> list() {
         return semestreServiceJPA.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id){
         try {
-            CatSemestreModel catSemestreModel = semestreServiceJPA.findById(id);
-            return ResponseEntity.ok(catSemestreModel);
+            CatSemestre catSemestre = semestreServiceJPA.findById(id);
+            return ResponseEntity.ok(catSemestre);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
@@ -44,8 +44,8 @@ public class CatSemestreController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            CatSemestreModel catSemestreModel = semestreServiceJPA.create(params);
-            return ResponseEntity.status(HttpStatus.CREATED).body(catSemestreModel);
+            CatSemestre catSemestre = semestreServiceJPA.create(params);
+            return ResponseEntity.status(HttpStatus.CREATED).body(catSemestre);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -56,7 +56,7 @@ public class CatSemestreController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            CatSemestreModel catSemestreUpdate = semestreServiceJPA.update(semestreServiceJPA.findById(id), params);
+            CatSemestre catSemestreUpdate = semestreServiceJPA.update(semestreServiceJPA.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(catSemestreUpdate);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.UNSIJ.INESIS_BACKEND.model.CatGrupoModel;
+import com.UNSIJ.INESIS_BACKEND.model.CatGrupo;
 import com.UNSIJ.INESIS_BACKEND.service.CatGrupoServiceJPA;
 
 @RestController
@@ -19,14 +19,14 @@ public class CatGrupoController {
     private CatGrupoServiceJPA grupoServiceJPA;
 
     @GetMapping
-    public List<CatGrupoModel> list() {
+    public List<CatGrupo> list() {
         return grupoServiceJPA.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id) {
         try {
-            CatGrupoModel grupo = grupoServiceJPA.findById(id);
+            CatGrupo grupo = grupoServiceJPA.findById(id);
             return ResponseEntity.ok(grupo);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -38,7 +38,7 @@ public class CatGrupoController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            CatGrupoModel grupo = grupoServiceJPA.create(params);
+            CatGrupo grupo = grupoServiceJPA.create(params);
             return ResponseEntity.status(HttpStatus.CREATED).body(grupo);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -50,7 +50,7 @@ public class CatGrupoController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            CatGrupoModel grupoUpdate = grupoServiceJPA.update(grupoServiceJPA.findById(id), params);
+            CatGrupo grupoUpdate = grupoServiceJPA.update(grupoServiceJPA.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(grupoUpdate);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -76,7 +76,7 @@ public class CatGrupoController {
     @GetMapping("/carrera/{idCarrera}/semestre/{idSemestre}")
     public ResponseEntity<?> obtenerGrupo(@PathVariable Long idCarrera, @PathVariable Long idSemestre) {
         try {
-            CatGrupoModel nombreGrupo = grupoServiceJPA.obtenerNombreGrupo(idCarrera, idSemestre);
+            CatGrupo nombreGrupo = grupoServiceJPA.obtenerNombreGrupo(idCarrera, idSemestre);
             return ResponseEntity.ok(nombreGrupo);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al generar el grupo");

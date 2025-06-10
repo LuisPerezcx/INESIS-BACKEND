@@ -1,11 +1,11 @@
 package com.UNSIJ.INESIS_BACKEND.repository;
 
-import com.UNSIJ.INESIS_BACKEND.model.FechasRegistradasModel;
+import com.UNSIJ.INESIS_BACKEND.model.FechasRegistradas;
 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface FechasRegistradasRepository extends JpaRepository<FechasRegistradasModel, Long> {
-    Optional<FechasRegistradasModel> findByCarrera_Id(Long carrera);
+public interface FechasRegistradasRepository extends JpaRepository<FechasRegistradas, Long> {
+    Optional<FechasRegistradas> findByCarrera_Id(Long carrera);
 }

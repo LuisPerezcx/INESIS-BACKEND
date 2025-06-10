@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.UNSIJ.INESIS_BACKEND.model.CatCarreraModel;
+import com.UNSIJ.INESIS_BACKEND.model.CatCarrera;
 import com.UNSIJ.INESIS_BACKEND.repository.CatCarreraRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatCarreraService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
@@ -19,56 +19,56 @@ public class CatCarreraServiceJPA implements ICatCarreraService{
     private CatCarreraRepository catCarreraRepository;
 
     @Override
-    public List<CatCarreraModel> findAll() {
+    public List<CatCarrera> findAll() {
         return catCarreraRepository.findAll();
     }
 
     @Override
-    public CatCarreraModel findById(Long id) {
+    public CatCarrera findById(Long id) {
         return catCarreraRepository.findById(id).orElseThrow( ()->
                 new IllegalArgumentException("Ejemplo no encontrado con el ID: " + id));
     }
 
     @Override
     @Transactional 
-    public CatCarreraModel save(CatCarreraModel catCarreraModel) throws Exception {
-        return catCarreraRepository.save(catCarreraModel);
+    public CatCarrera save(CatCarrera catCarrera) throws Exception {
+        return catCarreraRepository.save(catCarrera);
     }
 
     @Override
-    public CatCarreraModel create(Map<String, Object> params) throws Exception {
-        CatCarreraModel catCarreraModel = new CatCarreraModel();
+    public CatCarrera create(Map<String, Object> params) throws Exception {
+        CatCarrera catCarrera = new CatCarrera();
         try {
             //AQUI ASIGNAMOS VALORES QUE SOLO SE NECESITAN AL CREAR POR PRIMERA VEZ UN REGISTRO
             //POR EJEMPLO EL CAMPO ACTIVO
         
             //AHORA LLAMAMOS AL METODO QUE SE OCUPA DE CONSTRUIR EL OBJETO
-            this.build(params, catCarreraModel);
+            this.build(params, catCarrera);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
             throw new IllegalArgumentException("Error al construir el ejemplo");
         }
-        return this.save(catCarreraModel);
+        return this.save(catCarrera);
     }
 
     //ESTE METODO SE OCUPA AL ACTUALIZAR DESDE EL FRONTEND YA QUE RECIBE UN MAPA(JSON)
     @Override
-    public CatCarreraModel update(CatCarreraModel catCarreraModel, Map<String, Object> params) throws Exception {
+    public CatCarrera update(CatCarrera catCarrera, Map<String, Object> params) throws Exception {
         try {
-            this.build(params, catCarreraModel);
+            this.build(params, catCarrera);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
             throw new IllegalArgumentException("Error al construir el ejemplo");
         }
-        return this.save(catCarreraModel);
+        return this.save(catCarrera);
     }
 
     @Override
-    public CatCarreraModel build(Map<String, Object> params, CatCarreraModel catCarreraModel){
+    public CatCarrera build(Map<String, Object> params, CatCarrera catCarrera){
         try {
             //PRIMERO DEBEMOS VERIFICAR QUE LOS VALORES QUE SON NOT NULL EN LA BASE EXISTAN EN EL JSON
             //AQUI SE DEBEN VALIDAR LOS DATOS QUE SE ESTAN RECIBIENDO Y SE LANZAN LAS EXCEPCIONES CORRESPONDIENTES
@@ -88,13 +88,13 @@ public class CatCarreraServiceJPA implements ICatCarreraService{
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
             throw new IllegalArgumentException("Error al construir el ejemplo");
         }
-        return catCarreraModel;
+        return catCarrera;
     }
 
     //ESTE METODO SE OCUPA CUANDO YA TENEMOS LA INSTANCIA QUE QUEREMOS ACTUALIZAR
     @Override
-    public CatCarreraModel updateInstance(CatCarreraModel catCarreraInstance) throws Exception {
-        CatCarreraModel catCarreraBD = this.findById(catCarreraInstance.getId());
+    public CatCarrera updateInstance(CatCarrera catCarreraInstance) throws Exception {
+        CatCarrera catCarreraBD = this.findById(catCarreraInstance.getId());
        /*  catCarreraBD.setActive(catCarreraInstance.isActive());
         catCarreraBD.setNumeroEjemplo(catCarreraInstance.getNumeroEjemplo());
         catCarreraBD.setNombreEjemplo(catCarreraInstance.getNombreEjemplo());*/
@@ -103,8 +103,8 @@ public class CatCarreraServiceJPA implements ICatCarreraService{
 
     @Override
     public void deleteById(Long id) {
-        CatCarreraModel catCarreraModel = this.findById(id);
-        if (catCarreraModel!= null){
+        CatCarrera catCarrera = this.findById(id);
+        if (catCarrera != null){
             catCarreraRepository.deleteById(id);
         }
     }
