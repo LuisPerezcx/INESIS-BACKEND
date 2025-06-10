@@ -1,21 +1,26 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
 import com.UNSIJ.INESIS_BACKEND.model.Alumno;
+import com.UNSIJ.INESIS_BACKEND.repository.AlumnoRepository;
 import com.UNSIJ.INESIS_BACKEND.utils.PDF;
 import com.itextpdf.text.pdf.AcroFields;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileOutputStream;
 import java.util.Base64;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
 
 public class PDFServiceJPA {
 
-    public static void main(String[] args) {
-        Alumno alumno = new Alumno();
-        generarPdf(alumno);
-    }
+    @Autowired
+    private AlumnoRepository alumnoRepository;
 
     public static String valorSeguro(String valor, String valorPorDefecto) {
         return (valor != null && !valor.trim().isEmpty()) ? valor : valorPorDefecto;
@@ -50,7 +55,11 @@ public class PDFServiceJPA {
         return String.join(" ", marcaSeguro, modeloSeguro, anioSeguro).trim();
     }
 
-    public static void generarPdf(Alumno alumno){
+
+
+    public String generarPdf(Long idAlumno){
+        Alumno alumno = alumnoRepository.findById(idAlumno).orElseThrow(() -> new RuntimeException(" Alumno con el id no encontrado"));
+
         try {
             // Ruta del PDF base (con campos de formulario)
             PdfReader reader = new PdfReader("estudioSocioEconomico.pdf");
@@ -92,11 +101,29 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.nietoComuneroSi, familiarComunero != null && familiarComunero ? "X" : "", true);
             form.setField(PDF.ESE.nietoComuneroNo, familiarComunero != null && familiarComunero ? "X" : "", true);
 
-            form.setField(PDF.ESE.llevaCarroSi, "X", true);
-            form.setField(PDF.ESE.llevaCarroNo, "X", true);
-            form.setField(PDF.ESE.llevaMotocicletaSi, "X", true);
-            form.setField(PDF.ESE.llevaMotocicletaNo, "X", true);
-            //form.setField(PDF.ESE.marcaMotocicleta, marcaTransporte(alumno.getMisDatos().getTransporte().getMarca(),alumno.getMisDatos().getTransporte().getModelo(),alumno.getMisDatos().getTransporte().getAnio()), true);
+            Boolean llevaCarro = alumno.getMisDatos().getLlevaAutomovil();
+            if (llevaCarro != null && llevaCarro){
+                form.setField(PDF.ESE.llevaCarroSi, "X", true);
+                form.setField(PDF.ESE.llevaCarroNo, " ", true);
+            }else {
+                // No lleva carro
+                form.setField(PDF.ESE.llevaCarroSi, "", true);
+                form.setField(PDF.ESE.llevaCarroNo, "X", true);
+            }
+
+
+            Boolean llevaMotocicleta = alumno.getMisDatos().getLlevamotocicleta();
+            if (llevaMotocicleta != null && llevaMotocicleta){
+                form.setField(PDF.ESE.llevaMotocicletaSi, "X", true);
+                form.setField(PDF.ESE.llevaMotocicletaNo, " ", true);
+                form.setField(PDF.ESE.marcaMotocicleta,marcaTransporte(alumno.getMisDatos().getTransporteMotocicleta().getMarca(), alumno.getMisDatos().getTransporteMotocicleta().getModelo(),alumno.getMisDatos().getTransporteMotocicleta().getAnio()), true);
+            }else {
+                form.setField(PDF.ESE.llevaMotocicletaSi, " ", true);
+                form.setField(PDF.ESE.llevaMotocicletaNo, "X", true);
+                form.setField(PDF.ESE.marcaMotocicleta, "     ", true);
+            }
+
+
 
             Boolean celular = alumno.getMisDatos().getUtilizaCelular();
             form.setField(PDF.ESE.utilizaTelefonoSi, celular != null && celular ? "X" : "", true);
@@ -262,13 +289,34 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.recursosSi, recursos != null && recursos ? "X" : "", true);
             form.setField(PDF.ESE.recursosNo, recursos != null && recursos ? "X" : "" , true);
 
-            form.setField(PDF.ESE.mototaxi, "X", true);
-            form.setField(PDF.ESE.bicicleta, "X", true);
-            form.setField(PDF.ESE.motocicleta, "X", true);
-            form.setField(PDF.ESE.caminando, "X", true);
-            form.setField(PDF.ESE.autoPropio, "X", true);
-            form.setField(PDF.ESE.autoFamiliar, "X", true);
-            form.setField(PDF.ESE.autoAmigos, "X", true);
+            List<Long> idsMediosSeleccionados = alumno.getMisDatos().getMediosTraslado().stream()
+                    .map(medio -> medio.getCatMediosTransporte().getId())
+                    .collect(Collectors.toList());
+
+
+            if (idsMediosSeleccionados.contains(1L)) {
+                form.setField(PDF.ESE.autoAmigos, "X", true);
+            }
+            if (idsMediosSeleccionados.contains(2L)) {
+                form.setField(PDF.ESE.bicicleta, "X", true);
+            }
+            if (idsMediosSeleccionados.contains(3L)) {
+                form.setField(PDF.ESE.mototaxi, "X", true);
+            }
+            if (idsMediosSeleccionados.contains(4L)) {
+                form.setField(PDF.ESE.caminando, "X", true);
+            }
+            if (idsMediosSeleccionados.contains(5L)) {
+                form.setField(PDF.ESE.autoFamiliar, "X", true);
+            }
+            if (idsMediosSeleccionados.contains(6L)) {
+                form.setField(PDF.ESE.autoPropio, "X", true);
+            }
+            if (idsMediosSeleccionados.contains(7L)) {
+                form.setField(PDF.ESE.motocicleta, "X", true);
+            }
+
+
             form.setField(PDF.ESE.firmaAlumno,nombreCompletoSeguro(alumno.getNombre(), alumno.getApellidoPaterno(),alumno.getApellidoMaterno()),true);
 
             //imprime los campos encontrados en el pdf
@@ -290,8 +338,10 @@ public class PDFServiceJPA {
             System.out.println(base64Pdf);
 
             System.out.println("PDF generado con éxito.");
+            return base64Pdf;
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("Error al generar el pdf "+ e.getMessage(), e);
         }
+
     }
 }
