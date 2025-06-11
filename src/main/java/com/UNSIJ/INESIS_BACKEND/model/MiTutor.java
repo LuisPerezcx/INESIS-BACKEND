@@ -21,7 +21,7 @@ public class MiTutor {
     @Column(name = "correo")
     private String correo;
 
-    @Column(name = "trabajador_sunero")
+    @Column(name = "trabajador_suneo")
     private Boolean trabajadorSuneo;
 
     @Column(name = "comparte_vivienda")

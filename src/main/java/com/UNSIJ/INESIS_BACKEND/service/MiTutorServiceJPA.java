@@ -4,6 +4,7 @@ import com.UNSIJ.INESIS_BACKEND.model.*;
 import com.UNSIJ.INESIS_BACKEND.repository.CatParentescoRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.CatTipoTrabajoRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.MiTutorRepository;
+import com.UNSIJ.INESIS_BACKEND.repository.OcupacionRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IMiTutorService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class MiTutorServiceJPA implements IMiTutorService {
 
     @Autowired
     private CatTipoTrabajoRepository catTipoTrabajoRepository;
+
+    @Autowired
+    private OcupacionRepository ocupacionRepository;
 
     @Override
     public List<MiTutor> findAll() {
@@ -113,20 +117,7 @@ public class MiTutorServiceJPA implements IMiTutorService {
                 throw new IllegalArgumentException("El campo trabajador suneo es obligatorio");
             miTutor.setTrabajadorSuneo(trabajadorSuneo);
 
-            String comparteViviendaString = JsonUtils.obtString(params,"comparteVivienda");
-            Boolean comparteVivienda = JsonUtils.obtBoolean(params,"comparteVivienda");
-            if(comparteViviendaString != null){
-                if("Si".equalsIgnoreCase(comparteViviendaString)){
-                    comparteVivienda = true;
-                } else if("No".equalsIgnoreCase(comparteViviendaString)) {
-                    comparteVivienda = false;
-                } else {
-                    throw new IllegalArgumentException("El valor de comparte vivienda debe ser Si o No");
-                }
-            }
-            if(comparteVivienda == null)
-                throw new IllegalArgumentException("El campo comparte vivienda es obligatorio");
-            miTutor.setTrabajadorSuneo(trabajadorSuneo);
+            miTutor.setComparteVivienda(JsonUtils.parseBooleanFlexible(params.get("comparteVivienda"), "comparteVivienda"));
 
             Long idTrabajoTipo = JsonUtils.obtLong(params, "trabajoTipo");
             if (idTrabajoTipo == null) throw new IllegalArgumentException("El campo 'idTrabajoTipo' es obligatorio.");
@@ -135,14 +126,28 @@ public class MiTutorServiceJPA implements IMiTutorService {
                             "Tipo trabajo no encontrado con el ID: " + idTrabajoTipo));
             miTutor.setCatTipoTrabajo(catTipoTrabajo);
 
+            Long idOcupacion = JsonUtils.obtLong(params, "ocupacion");
+            if (idOcupacion == null) throw new IllegalArgumentException("El campo 'idOcupacion' es obligatorio.");
+            Ocupacion ocupacion = ocupacionRepository.findById(idOcupacion)
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Ocupacion no encontrado con el ID: " + idOcupacion));
+            miTutor.setOcupacion(ocupacion);
+
             String ocupacionOtro = JsonUtils.obtString(params,"ocupacionOtro");
             miTutor.setOcupacionOtro(ocupacionOtro);
 
             miTutor = this.save(miTutor);
-            Map<String, Object> domicilioParams = (Map<String, Object>) params.get("domicilio");
+
+            Map<String, Object> domicilioParams = (Map<String, Object>) params.get("datosDomicilio");
             if (domicilioParams != null) {
-                Domicilio domicilio = domicilioServiceJPA.create(domicilioParams);
-                miTutor.setDomicilio(domicilio);
+                if (domicilioParams.get("idDomicilio") != null) {
+                    Long idDomicilio = Long.valueOf(domicilioParams.get("idDomicilio").toString());
+                    Domicilio domicilioExistente = domicilioServiceJPA.findById(idDomicilio);
+                    miTutor.setDomicilio(domicilioExistente);
+                } else {
+                    Domicilio domicilio = domicilioServiceJPA.create(domicilioParams);
+                    miTutor.setDomicilio(domicilio);
+                }
             }
 
         } catch (IllegalArgumentException e) {
