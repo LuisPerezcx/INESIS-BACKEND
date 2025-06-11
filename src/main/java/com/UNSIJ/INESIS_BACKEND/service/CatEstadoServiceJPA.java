@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.UNSIJ.INESIS_BACKEND.model.CatEstado;
-import com.UNSIJ.INESIS_BACKEND.model.AlumnoModel;
+import com.UNSIJ.INESIS_BACKEND.model.Alumno;
 import com.UNSIJ.INESIS_BACKEND.repository.CatEstadoRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.AlumnoRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatEstadoService;
@@ -77,7 +77,7 @@ public class CatEstadoServiceJPA implements ICatEstadoService {
             if (nombreEstado == null || nombreEstado.trim().isEmpty())
                 throw new IllegalArgumentException("El campo 'nombreEstado' es obligatorio");
 
-            AlumnoModel alumno = alumnoRepository.findById(idAlumno).orElseThrow(() ->
+            Alumno alumno = alumnoRepository.findById(idAlumno).orElseThrow(() ->
                     new IllegalArgumentException("No se encontró el alumno con ID: " + idAlumno));
 
             catEstado.setAlumno(alumno);

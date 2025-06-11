@@ -1,8 +1,6 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import com.UNSIJ.INESIS_BACKEND.model.Ejemplo;
-import com.UNSIJ.INESIS_BACKEND.model.OcupacionModel;
-import com.UNSIJ.INESIS_BACKEND.repository.EjemploRepository;
+import com.UNSIJ.INESIS_BACKEND.model.Ocupacion;
 import com.UNSIJ.INESIS_BACKEND.repository.OcupacionRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IOcupacionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,38 +15,38 @@ public class OcupacionServiceJPA implements IOcupacionService {
     private OcupacionRepository ocupacionRepository;
 
     @Override
-    public List<OcupacionModel> findAll() {
+    public List<Ocupacion> findAll() {
         return ocupacionRepository.findAll();
     }
 
     @Override
-    public OcupacionModel findById(Long id) {
+    public Ocupacion findById(Long id) {
         return ocupacionRepository.findById(id).orElseThrow( ()->
                 new IllegalArgumentException("Ocupacion no encontrado con el ID: " + id));
     }
 
     @Override
-    public OcupacionModel save(OcupacionModel ocupacionModel) throws Exception {
+    public Ocupacion save(Ocupacion ocupacion) throws Exception {
         return null;
     }
 
     @Override
-    public OcupacionModel create(Map<String, Object> params) throws Exception {
+    public Ocupacion create(Map<String, Object> params) throws Exception {
         return null;
     }
 
     @Override
-    public OcupacionModel update(OcupacionModel ocupacionModel, Map<String, Object> params) throws Exception {
+    public Ocupacion update(Ocupacion ocupacion, Map<String, Object> params) throws Exception {
         return null;
     }
 
     @Override
-    public OcupacionModel build(Map<String, Object> params, OcupacionModel ocupacionModel) throws IllegalArgumentException {
+    public Ocupacion build(Map<String, Object> params, Ocupacion ocupacion) throws IllegalArgumentException {
         return null;
     }
 
     @Override
-    public OcupacionModel updateInstance(OcupacionModel ocupacionModel) throws Exception {
+    public Ocupacion updateInstance(Ocupacion ocupacion) throws Exception {
         return null;
     }
 

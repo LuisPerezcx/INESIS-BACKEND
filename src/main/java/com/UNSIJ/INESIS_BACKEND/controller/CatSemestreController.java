@@ -32,8 +32,8 @@ public class CatSemestreController {
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id){
         try {
-            CatSemestre catSemestreModel = semestreServiceJPA.findById(id);
-            return ResponseEntity.ok(catSemestreModel);
+            CatSemestre catSemestre = semestreServiceJPA.findById(id);
+            return ResponseEntity.ok(catSemestre);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
@@ -44,8 +44,8 @@ public class CatSemestreController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            CatSemestre catSemestreModel = semestreServiceJPA.create(params);
-            return ResponseEntity.status(HttpStatus.CREATED).body(catSemestreModel);
+            CatSemestre catSemestre = semestreServiceJPA.create(params);
+            return ResponseEntity.status(HttpStatus.CREATED).body(catSemestre);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {

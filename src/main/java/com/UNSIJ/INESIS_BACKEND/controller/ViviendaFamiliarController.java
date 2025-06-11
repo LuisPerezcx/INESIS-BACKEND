@@ -28,7 +28,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/viviendas_familiares")
 public class ViviendaFamiliarController {
-@Autowired
+    @Autowired
     private IViviendaFamiliarService viviendaFamiliarService;
 
     @GetMapping
