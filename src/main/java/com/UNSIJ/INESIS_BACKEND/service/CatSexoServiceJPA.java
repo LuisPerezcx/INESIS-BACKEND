@@ -1,6 +1,6 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import com.UNSIJ.INESIS_BACKEND.model.CatSexoModel;
+import com.UNSIJ.INESIS_BACKEND.model.CatSexo;
 import com.UNSIJ.INESIS_BACKEND.repository.CatSexoRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatSexoService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
@@ -18,76 +18,76 @@ public class CatSexoServiceJPA implements ICatSexoService {
     private CatSexoRepository catSexoRepository;
 
     @Override
-    public List<CatSexoModel> findAll() {
+    public List<CatSexo> findAll() {
         return catSexoRepository.findAll();
     }
 
     @Override
-    public CatSexoModel findById(Long id) {
+    public CatSexo findById(Long id) {
         return catSexoRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("Sexo no encontrado con el ID: " + id));
     }
 
     @Override
     @Transactional
-    public CatSexoModel save(CatSexoModel catSexoModel) throws Exception {
-        return catSexoRepository.save(catSexoModel);
+    public CatSexo save(CatSexo catSexo) throws Exception {
+        return catSexoRepository.save(catSexo);
     }
 
     @Override
-    public CatSexoModel create(Map<String, Object> params) throws Exception {
-        CatSexoModel catSexoModel = new CatSexoModel();
+    public CatSexo create(Map<String, Object> params) throws Exception {
+        CatSexo catSexo = new CatSexo();
         try {
-            this.build(params, catSexoModel);
+            this.build(params, catSexo);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             throw new IllegalArgumentException("Error al construir el sexo");
         }
-        return this.save(catSexoModel);
+        return this.save(catSexo);
     }
 
     @Override
-    public CatSexoModel update(CatSexoModel catSexoModel, Map<String, Object> params) throws Exception {
+    public CatSexo update(CatSexo catSexo, Map<String, Object> params) throws Exception {
         try {
-            this.build(params, catSexoModel);
+            this.build(params, catSexo);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             throw new IllegalArgumentException("Error al construir el sexo");
         }
-        return this.save(catSexoModel);
+        return this.save(catSexo);
     }
 
     @Override
-    public CatSexoModel build(Map<String, Object> params, CatSexoModel catSexoModel) {
+    public CatSexo build(Map<String, Object> params, CatSexo catSexo) {
         try {
             String nombre = JsonUtils.obtString(params, "nombreSexo");
             if (nombre == null || nombre.isEmpty())
                 throw new IllegalArgumentException("El campo nombre es obligatorio");
-            catSexoModel.setNombreSexo(nombre);
+            catSexo.setNombreSexo(nombre);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
             throw new IllegalArgumentException("Error al construir el sexo");
         }
-        return catSexoModel;
+        return catSexo;
     }
 
     @Override
-    public CatSexoModel updateInstance(CatSexoModel catSexoInstance) throws Exception {
-        CatSexoModel catSexoBD = this.findById(catSexoInstance.getId());
+    public CatSexo updateInstance(CatSexo catSexoInstance) throws Exception {
+        CatSexo catSexoBD = this.findById(catSexoInstance.getId());
         catSexoBD.setNombreSexo(catSexoInstance.getNombreSexo());
         return this.save(catSexoBD);
     }
 
     @Override
     public void deleteById(Long id) {
-        CatSexoModel catSexoModel = this.findById(id);
-        if (catSexoModel != null) {
+        CatSexo catSexo = this.findById(id);
+        if (catSexo != null) {
             catSexoRepository.deleteById(id);
         }
     }

@@ -1,24 +1,24 @@
 package com.UNSIJ.INESIS_BACKEND.service.interfaces;
 
-import com.UNSIJ.INESIS_BACKEND.model.CatSexoModel;
+import com.UNSIJ.INESIS_BACKEND.model.CatSexo;
 
 import java.util.List;
 import java.util.Map;
 
 public interface ICatSexoService {
-    List<CatSexoModel> findAll();
+    List<CatSexo> findAll();
 
-    CatSexoModel findById(Long id);
+    CatSexo findById(Long id);
 
-    CatSexoModel save(CatSexoModel catSexoModel) throws Exception;
+    CatSexo save(CatSexo catSexo) throws Exception;
 
-    CatSexoModel create(Map<String, Object> params) throws Exception;
+    CatSexo create(Map<String, Object> params) throws Exception;
 
-    CatSexoModel update(CatSexoModel catSexoModel, Map<String, Object> params) throws Exception;
+    CatSexo update(CatSexo catSexo, Map<String, Object> params) throws Exception;
 
-    CatSexoModel build(Map<String, Object> params, CatSexoModel catSexoModel) throws IllegalArgumentException;
+    CatSexo build(Map<String, Object> params, CatSexo catSexo) throws IllegalArgumentException;
 
-    CatSexoModel updateInstance(CatSexoModel catSexoModel) throws Exception;
+    CatSexo updateInstance(CatSexo catSexo) throws Exception;
 
     void deleteById(Long id);
 }

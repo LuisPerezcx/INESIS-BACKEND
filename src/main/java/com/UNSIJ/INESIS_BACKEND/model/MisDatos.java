@@ -23,7 +23,7 @@ public class MisDatos {
 
     @ManyToOne
     @JoinColumn(name = "id_cat_sexo")
-    private CatSexoModel sexo;
+    private CatSexo sexo;
 
     @ManyToOne
     @JoinColumn(name = "id_cat_estado_civil")
