@@ -1,12 +1,6 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -46,13 +40,13 @@ public class ReciboLuz {
     @NotNull
     @Column(name = "pago_bimestral")
     private String pagoBimestral;
-    
+
     @NotNull
     @Column(name = "pago_promedio_mes")
     private String pagoPromedioMes;
 
     @Lob
-@Column(name = "contenido_base64")
-private String contenidoBase64;
+    @Column(name = "contenido_base64")
+    private String contenidoBase64;
 
 }

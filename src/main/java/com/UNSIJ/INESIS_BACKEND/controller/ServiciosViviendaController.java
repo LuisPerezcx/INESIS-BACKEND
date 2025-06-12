@@ -4,25 +4,13 @@
  */
 package com.UNSIJ.INESIS_BACKEND.controller;
 
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.ServiciosVivienda;
+import com.UNSIJ.INESIS_BACKEND.service.ServiciosViviendaServiceJPA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.ServiciosViviendaModel;
-import com.UNSIJ.INESIS_BACKEND.service.ServiciosViviendaServiceJPA;
-
-/**
- *
- * @author 24mda
- */
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +22,7 @@ public class ServiciosViviendaController {
     private ServiciosViviendaServiceJPA service;
 
     @GetMapping
-    public List<ServiciosViviendaModel> list() {
+    public List<ServiciosVivienda> list() {
         return service.findAll();
     }
 
@@ -52,7 +40,7 @@ public class ServiciosViviendaController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            ServiciosViviendaModel model = service.create(params);
+            ServiciosVivienda model = service.create(params);
             return ResponseEntity.status(HttpStatus.CREATED).body(model);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -64,7 +52,7 @@ public class ServiciosViviendaController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            ServiciosViviendaModel updated = service.update(service.findById(id), params);
+            ServiciosVivienda updated = service.update(service.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(updated);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

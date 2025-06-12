@@ -1,20 +1,19 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import java.util.List;
-import java.util.Map;
-
+import com.UNSIJ.INESIS_BACKEND.model.CatCarrera;
+import com.UNSIJ.INESIS_BACKEND.model.CatGrupo;
+import com.UNSIJ.INESIS_BACKEND.model.CatSemestre;
+import com.UNSIJ.INESIS_BACKEND.repository.CatCarreraRepository;
+import com.UNSIJ.INESIS_BACKEND.repository.CatGrupoRepository;
+import com.UNSIJ.INESIS_BACKEND.repository.CatSemestreRepository;
+import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatGrupoService;
+import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.UNSIJ.INESIS_BACKEND.model.CatGrupo;
-import com.UNSIJ.INESIS_BACKEND.model.CatCarrera;
-import com.UNSIJ.INESIS_BACKEND.model.CatSemestre;
-import com.UNSIJ.INESIS_BACKEND.repository.CatGrupoRepository;
-import com.UNSIJ.INESIS_BACKEND.repository.CatCarreraRepository;
-import com.UNSIJ.INESIS_BACKEND.repository.CatSemestreRepository;
-import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatGrupoService;
-import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class CatGrupoServiceJPA implements ICatGrupoService {
@@ -119,14 +118,14 @@ public class CatGrupoServiceJPA implements ICatGrupoService {
         }
     }
 
-   @Override
-public CatGrupo obtenerNombreGrupo(Long idCarrera, Long idSemestre) {
-    CatGrupo grupo = catGrupoRepository.findByCatCarrera_IdAndCatSemestre_Id(idCarrera, idSemestre);
+    @Override
+    public CatGrupo obtenerNombreGrupo(Long idCarrera, Long idSemestre) {
+        CatGrupo grupo = catGrupoRepository.findByCatCarrera_IdAndCatSemestre_Id(idCarrera, idSemestre);
 
-    if (grupo != null) {
-        return grupo; 
-    } else {
-        throw new IllegalArgumentException("No existe un grupo con esa carrera y semestre.");
+        if (grupo != null) {
+            return grupo;
+        } else {
+            throw new IllegalArgumentException("No existe un grupo con esa carrera y semestre.");
+        }
     }
-}
 }

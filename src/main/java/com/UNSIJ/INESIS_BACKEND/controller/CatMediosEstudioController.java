@@ -17,30 +17,31 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatMediosEstudioModel;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatMediosEstudio;
 import com.UNSIJ.INESIS_BACKEND.service.CatMediosEstudioServiceJPA;
+
 import java.util.List;
 import java.util.Map;
+
 /**
- *
  * @author 24mda
  */
 @RestController
 @RequestMapping("/cat_medios_estudio")
 public class CatMediosEstudioController {
-@Autowired
+    @Autowired
     private CatMediosEstudioServiceJPA serviceCatMediosEstudioJPA;
 
     @GetMapping
-    public List<CatMediosEstudioModel> list() {
+    public List<CatMediosEstudio> list() {
         return serviceCatMediosEstudioJPA.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id) {
         try {
-            CatMediosEstudioModel catMediosEstudioModel = serviceCatMediosEstudioJPA.findById(id);
-            return ResponseEntity.ok(catMediosEstudioModel);
+            CatMediosEstudio catMediosEstudio = serviceCatMediosEstudioJPA.findById(id);
+            return ResponseEntity.ok(catMediosEstudio);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
@@ -49,11 +50,11 @@ public class CatMediosEstudioController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            CatMediosEstudioModel createCatMediosEstudio = serviceCatMediosEstudioJPA.create(params);
+            CatMediosEstudio createCatMediosEstudio = serviceCatMediosEstudioJPA.create(params);
             return ResponseEntity.status(HttpStatus.CREATED).body(createCatMediosEstudio);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
     }
@@ -61,11 +62,11 @@ public class CatMediosEstudioController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            CatMediosEstudioModel updated = serviceCatMediosEstudioJPA.update(serviceCatMediosEstudioJPA.findById(id), params);
+            CatMediosEstudio updated = serviceCatMediosEstudioJPA.update(serviceCatMediosEstudioJPA.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(updated);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }catch
+        } catch
         (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }

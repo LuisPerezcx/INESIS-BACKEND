@@ -5,8 +5,6 @@
 
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatServiciosOtro;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.CatServiciosOtroRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatServiciosOtroService;
@@ -20,7 +18,7 @@ import java.util.List;
  *
  * @author Alumnos
  */
-public class CatServiciosOtroServiceJPA implements ICatServiciosOtroService{
+public class CatServiciosOtroServiceJPA implements ICatServiciosOtroService {
     @Autowired
     private CatServiciosOtroRepository repository;
 

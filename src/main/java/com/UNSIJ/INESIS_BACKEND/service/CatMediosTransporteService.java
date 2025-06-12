@@ -1,17 +1,15 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import java.util.List;
-import java.util.Map;
-
+import com.UNSIJ.INESIS_BACKEND.model.CatMediosTransporte;
+import com.UNSIJ.INESIS_BACKEND.repository.CatMediosTransporteRepository;
+import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatMediosTransporteService;
+import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.UNSIJ.INESIS_BACKEND.model.CatMediosTransporte;
-import com.UNSIJ.INESIS_BACKEND.model.Ejemplo;
-import com.UNSIJ.INESIS_BACKEND.repository.CatMediosTransporteRepository;
-import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatMediosTransporteService;
-import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class CatMediosTransporteService implements ICatMediosTransporteService {
@@ -25,7 +23,7 @@ public class CatMediosTransporteService implements ICatMediosTransporteService {
 
     @Override
     public CatMediosTransporte findById(Long id) {
-        return catMediosTransporteRepository.findById(id).orElseThrow( ()->
+        return catMediosTransporteRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("CatMedioTransporte no encontrado con el ID: " + id));
     }
 
@@ -65,7 +63,7 @@ public class CatMediosTransporteService implements ICatMediosTransporteService {
     }
 
     @Override
-    public CatMediosTransporte build(Map<String, Object> params, CatMediosTransporte catMediosTransporte){
+    public CatMediosTransporte build(Map<String, Object> params, CatMediosTransporte catMediosTransporte) {
         try {
             catMediosTransporte.setNombreMedio(JsonUtils.obtString(params, "nombre_medio"));
         } catch (IllegalArgumentException e) {
@@ -88,7 +86,7 @@ public class CatMediosTransporteService implements ICatMediosTransporteService {
     @Override
     public void deleteById(Long id) {
         CatMediosTransporte catMediosTransporte = this.findById(id);
-        if (catMediosTransporte!= null){
+        if (catMediosTransporte != null) {
             catMediosTransporteRepository.deleteById(id);
         }
     }

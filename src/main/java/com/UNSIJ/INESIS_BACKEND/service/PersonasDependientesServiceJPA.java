@@ -4,14 +4,13 @@
  */
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.PersonasDependientesModel;
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MiFamiliaModel;
-import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.PersonasDependientesRepository;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MiFamilia;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.PersonasDependientes;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.MiFamiliaRepository;
+import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.PersonasDependientesRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IPersonasDependientesService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author Alumnos
  */
 @Service
@@ -32,35 +30,35 @@ public class PersonasDependientesServiceJPA implements IPersonasDependientesServ
     private MiFamiliaRepository miFamiliaRepository;
 
     @Override
-    public List<PersonasDependientesModel> findAll() {
+    public List<PersonasDependientes> findAll() {
         return repository.findAll();
     }
 
     @Override
-    public PersonasDependientesModel findById(Long id) {
+    public PersonasDependientes findById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("HermanosDependientes no encontrado con ID: " + id));
     }
 
     @Override
     @Transactional
-    public PersonasDependientesModel save(PersonasDependientesModel model) throws Exception {
+    public PersonasDependientes save(PersonasDependientes model) throws Exception {
         return repository.save(model);
     }
 
     @Override
-    public PersonasDependientesModel create(Map<String, Object> params) throws Exception {
-        PersonasDependientesModel model = new PersonasDependientesModel();
+    public PersonasDependientes create(Map<String, Object> params) throws Exception {
+        PersonasDependientes model = new PersonasDependientes();
         return this.save(this.build(params, model));
     }
 
     @Override
-    public PersonasDependientesModel update(PersonasDependientesModel model, Map<String, Object> params) throws Exception {
+    public PersonasDependientes update(PersonasDependientes model, Map<String, Object> params) throws Exception {
         return this.save(this.build(params, model));
     }
 
     @Override
-    public PersonasDependientesModel build(Map<String, Object> params, PersonasDependientesModel model) {
+    public PersonasDependientes build(Map<String, Object> params, PersonasDependientes model) {
         model.setNombrePersona(JsonUtils.obtString(params, "nombre_persona"));
         model.setEdad(JsonUtils.obtInteger(params, "edad"));
         model.setParentesco(JsonUtils.obtString(params, "parentesco"));
@@ -68,7 +66,7 @@ public class PersonasDependientesServiceJPA implements IPersonasDependientesServ
 
         Long idMiFamilia = JsonUtils.obtLong(params, "id_mi_familia");
         if (idMiFamilia != null) {
-            MiFamiliaModel miFamilia = miFamiliaRepository.findById(idMiFamilia)
+            MiFamilia miFamilia = miFamiliaRepository.findById(idMiFamilia)
                     .orElseThrow(() -> new IllegalArgumentException("MiFamilia no encontrada con ID: " + idMiFamilia));
             model.setMiFamilia(miFamilia);
         }
@@ -78,7 +76,7 @@ public class PersonasDependientesServiceJPA implements IPersonasDependientesServ
 
     @Override
     public void deleteById(Long id) {
-        PersonasDependientesModel model = this.findById(id);
+        PersonasDependientes model = this.findById(id);
         if (model != null) {
             repository.deleteById(id);
         }

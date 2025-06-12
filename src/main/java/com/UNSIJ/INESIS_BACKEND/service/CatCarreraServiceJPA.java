@@ -1,20 +1,19 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.UNSIJ.INESIS_BACKEND.model.CatCarrera;
 import com.UNSIJ.INESIS_BACKEND.repository.CatCarreraRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatCarreraService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Map;
 
 @Service
-public class CatCarreraServiceJPA implements ICatCarreraService{
-    
+public class CatCarreraServiceJPA implements ICatCarreraService {
+
     @Autowired
     private CatCarreraRepository catCarreraRepository;
 
@@ -25,12 +24,12 @@ public class CatCarreraServiceJPA implements ICatCarreraService{
 
     @Override
     public CatCarrera findById(Long id) {
-        return catCarreraRepository.findById(id).orElseThrow( ()->
+        return catCarreraRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("Ejemplo no encontrado con el ID: " + id));
     }
 
     @Override
-    @Transactional 
+    @Transactional
     public CatCarrera save(CatCarrera catCarrera) throws Exception {
         return catCarreraRepository.save(catCarrera);
     }
@@ -41,7 +40,7 @@ public class CatCarreraServiceJPA implements ICatCarreraService{
         try {
             //AQUI ASIGNAMOS VALORES QUE SOLO SE NECESITAN AL CREAR POR PRIMERA VEZ UN REGISTRO
             //POR EJEMPLO EL CAMPO ACTIVO
-        
+
             //AHORA LLAMAMOS AL METODO QUE SE OCUPA DE CONSTRUIR EL OBJETO
             this.build(params, catCarrera);
         } catch (IllegalArgumentException e) {
@@ -68,7 +67,7 @@ public class CatCarreraServiceJPA implements ICatCarreraService{
     }
 
     @Override
-    public CatCarrera build(Map<String, Object> params, CatCarrera catCarrera){
+    public CatCarrera build(Map<String, Object> params, CatCarrera catCarrera) {
         try {
             //PRIMERO DEBEMOS VERIFICAR QUE LOS VALORES QUE SON NOT NULL EN LA BASE EXISTAN EN EL JSON
             //AQUI SE DEBEN VALIDAR LOS DATOS QUE SE ESTAN RECIBIENDO Y SE LANZAN LAS EXCEPCIONES CORRESPONDIENTES
@@ -76,9 +75,10 @@ public class CatCarreraServiceJPA implements ICatCarreraService{
             //POR EJEMLO EL CAMPO NUMERO ES OBLIGATORIO
 
             //JsonUtils recibe el mapa y el nombre del parametro a extraer
-            Integer numero = JsonUtils.obtInteger(params,"numeroEjemplo");
+            Integer numero = JsonUtils.obtInteger(params, "numeroEjemplo");
             //VERIFICACION DEL CAMPO NUMERO
-            if(numero == null) throw new IllegalArgumentException("El campo numero es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            if (numero == null)
+                throw new IllegalArgumentException("El campo numero es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
             /*catCarreraModel.setNumeroEjemplo(numero);
             catCarreraModel.setNombreEjemplo(JsonUtils.obtString(params,"nombreEjemplo")); //TAMBIEN SE PUEDE HACER DE ESTA FORMA DIRECTA
             *///... Y SE REPITIRÁ ESTA SECCIÓN PARA CADA CAMPO EN EL JSON
@@ -104,7 +104,7 @@ public class CatCarreraServiceJPA implements ICatCarreraService{
     @Override
     public void deleteById(Long id) {
         CatCarrera catCarrera = this.findById(id);
-        if (catCarrera != null){
+        if (catCarrera != null) {
             catCarreraRepository.deleteById(id);
         }
     }

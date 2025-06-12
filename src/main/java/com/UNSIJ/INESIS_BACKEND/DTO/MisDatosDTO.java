@@ -1,9 +1,8 @@
 package com.UNSIJ.INESIS_BACKEND.DTO;
 
-import java.util.List;
-
-
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class MisDatosDTO {
@@ -21,5 +20,5 @@ public class MisDatosDTO {
     private String estadoCivil;
 
     private List<String> mediosTraslado; // Solo los nombres
-    
+
 }

@@ -4,29 +4,29 @@
  */
 package com.UNSIJ.INESIS_BACKEND.service.interfaces;
 
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.ServiciosViviendaModel;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.ServiciosVivienda;
+
 import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author 24mda
  */
 public interface IServiciosViviendaService {
 
-    List<ServiciosViviendaModel> findAll();
+    List<ServiciosVivienda> findAll();
 
-    ServiciosViviendaModel findById(Long id);
+    ServiciosVivienda findById(Long id);
 
-    ServiciosViviendaModel save(ServiciosViviendaModel model) throws Exception;
+    ServiciosVivienda save(ServiciosVivienda model) throws Exception;
 
-    ServiciosViviendaModel create(Map<String, Object> params) throws Exception;
+    ServiciosVivienda create(Map<String, Object> params) throws Exception;
 
-    ServiciosViviendaModel update(ServiciosViviendaModel model, Map<String, Object> params) throws Exception;
+    ServiciosVivienda update(ServiciosVivienda model, Map<String, Object> params) throws Exception;
 
-    ServiciosViviendaModel build(Map<String, Object> params, ServiciosViviendaModel model);
+    ServiciosVivienda build(Map<String, Object> params, ServiciosVivienda model);
 
-    ServiciosViviendaModel updateInstance(ServiciosViviendaModel instance) throws Exception;
+    ServiciosVivienda updateInstance(ServiciosVivienda instance) throws Exception;
 
     void deleteById(Long id);
 }

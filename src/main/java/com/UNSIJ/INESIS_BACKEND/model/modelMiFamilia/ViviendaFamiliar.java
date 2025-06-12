@@ -1,19 +1,12 @@
 package com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "ViviendaFamiliar")
-public class ViviendaFamiliarModel {
+public class ViviendaFamiliar {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,13 +25,13 @@ public class ViviendaFamiliarModel {
 
     @ManyToOne
     @JoinColumn(name = "id_cat_situacion_vivienda")
-    private CatSituacionViviendaModel situacionVivienda;
+    private CatSituacionVivienda situacionVivienda;
 
     @ManyToOne
     @JoinColumn(name = "id_cat_tipo_vivienda")
-    private CatTipoViviendaModel tipoVivienda;
+    private CatTipoVivienda tipoVivienda;
 
     @ManyToOne
     @JoinColumn(name = "id_cat_material_vivienda")
-    private CatMaterialViviendaModel materialVivienda;
+    private CatMaterialVivienda materialVivienda;
 }

@@ -5,9 +5,6 @@
 
 package com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.*;
 import lombok.Data;
 

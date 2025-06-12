@@ -1,21 +1,20 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import java.util.List;
-import java.util.Map;
-
-import com.UNSIJ.INESIS_BACKEND.model.Ocupacion;
 import com.UNSIJ.INESIS_BACKEND.model.CatTipoTrabajo;
+import com.UNSIJ.INESIS_BACKEND.model.GastosIngresos;
+import com.UNSIJ.INESIS_BACKEND.model.Ocupacion;
+import com.UNSIJ.INESIS_BACKEND.model.Trabajo;
 import com.UNSIJ.INESIS_BACKEND.repository.CatTipoTrabajoRepository;
+import com.UNSIJ.INESIS_BACKEND.repository.GastosIngresosRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.OcupacionRepository;
+import com.UNSIJ.INESIS_BACKEND.service.interfaces.IGastosIngresosService;
+import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.UNSIJ.INESIS_BACKEND.model.GastosIngresos;
-import com.UNSIJ.INESIS_BACKEND.model.Trabajo;
-import com.UNSIJ.INESIS_BACKEND.repository.GastosIngresosRepository;
-import com.UNSIJ.INESIS_BACKEND.service.interfaces.IGastosIngresosService;
-import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class GastosIngresosServiceJPA implements IGastosIngresosService {
@@ -94,7 +93,8 @@ public class GastosIngresosServiceJPA implements IGastosIngresosService {
                 gastosIngresos.setNombreQuienDependes(nombreQuienDependes);
 
                 Long idTrabajoTipo = JsonUtils.obtLong(params, "trabajoTipo");
-                if (idTrabajoTipo == null) throw new IllegalArgumentException("El campo 'idTrabajoTipo' es obligatorio.");
+                if (idTrabajoTipo == null)
+                    throw new IllegalArgumentException("El campo 'idTrabajoTipo' es obligatorio.");
                 CatTipoTrabajo catTipoTrabajo = catTipoTrabajoRepository.findById(idTrabajoTipo)
                         .orElseThrow(() -> new IllegalArgumentException(
                                 "Ocupacion no encontrado con el ID: " + idTrabajoTipo));

@@ -4,19 +4,18 @@
  */
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatEscolaridadModel;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatEscolaridad;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.CatEscolaridadRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatEscolaridadService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author 24mda
  */
 @Service
@@ -26,37 +25,37 @@ public class CatEscolaridadServiceJPA implements ICatEscolaridadService {
     private CatEscolaridadRepository repository;
 
     @Override
-    public List<CatEscolaridadModel> findAll() {
+    public List<CatEscolaridad> findAll() {
         return repository.findAll();
     }
 
     @Override
-    public CatEscolaridadModel findById(Long id) {
+    public CatEscolaridad findById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Escolaridad no encontrada con ID: " + id));
     }
 
     @Override
     @Transactional
-    public CatEscolaridadModel save(CatEscolaridadModel model) throws Exception {
+    public CatEscolaridad save(CatEscolaridad model) throws Exception {
         return repository.save(model);
     }
 
     @Override
-    public CatEscolaridadModel create(Map<String, Object> params) throws Exception {
-        CatEscolaridadModel model = new CatEscolaridadModel();
+    public CatEscolaridad create(Map<String, Object> params) throws Exception {
+        CatEscolaridad model = new CatEscolaridad();
         model = this.build(params, model);
         return this.save(model);
     }
 
     @Override
-    public CatEscolaridadModel update(CatEscolaridadModel model, Map<String, Object> params) throws Exception {
+    public CatEscolaridad update(CatEscolaridad model, Map<String, Object> params) throws Exception {
         model = this.build(params, model);
         return this.save(model);
     }
 
     @Override
-    public CatEscolaridadModel build(Map<String, Object> params, CatEscolaridadModel model) {
+    public CatEscolaridad build(Map<String, Object> params, CatEscolaridad model) {
         try {
             String nombreEscolaridad = JsonUtils.obtString(params, "nombreEscolaridad");
             if (nombreEscolaridad == null || nombreEscolaridad.trim().isEmpty()) {
@@ -70,15 +69,15 @@ public class CatEscolaridadServiceJPA implements ICatEscolaridadService {
     }
 
     @Override
-    public CatEscolaridadModel updateInstance(CatEscolaridadModel instance) throws Exception {
-        CatEscolaridadModel dbModel = this.findById(instance.getId());
+    public CatEscolaridad updateInstance(CatEscolaridad instance) throws Exception {
+        CatEscolaridad dbModel = this.findById(instance.getId());
         dbModel.setNombreEscolaridad(instance.getNombreEscolaridad());
         return this.save(dbModel);
     }
 
     @Override
     public void deleteById(Long id) {
-        CatEscolaridadModel model = this.findById(id);
+        CatEscolaridad model = this.findById(id);
         if (model != null) {
             repository.deleteById(id);
         }

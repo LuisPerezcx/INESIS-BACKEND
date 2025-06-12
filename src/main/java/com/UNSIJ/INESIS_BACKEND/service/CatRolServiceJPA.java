@@ -1,16 +1,15 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.UNSIJ.INESIS_BACKEND.model.CatRol;
 import com.UNSIJ.INESIS_BACKEND.repository.CatRolRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatRolService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class CatRolServiceJPA implements ICatRolService {
@@ -66,7 +65,8 @@ public class CatRolServiceJPA implements ICatRolService {
     public CatRol build(Map<String, Object> params, CatRol catRolModel) {
         try {
             String nombre = JsonUtils.obtString(params, "nombreRol");
-            if (nombre == null || nombre.isEmpty()) throw new IllegalArgumentException("El campo nombre es obligatorio");
+            if (nombre == null || nombre.isEmpty())
+                throw new IllegalArgumentException("El campo nombre es obligatorio");
             catRolModel.setNombreRol(nombre);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());

@@ -17,23 +17,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatTipoViviendaModel;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatTipoVivienda;
 import com.UNSIJ.INESIS_BACKEND.service.CatTipoViviendaServiceJPA;
+
 import java.util.List;
 import java.util.Map;
+
 /**
- *
  * @author 24mda
  */
 
 @RestController
 @RequestMapping("/cat_tipo_vivienda")
 public class CatTipoViviendaController {
- @Autowired
+    @Autowired
     private CatTipoViviendaServiceJPA serviceCatTipoViviendaJPA;
 
     @GetMapping
-    public List<CatTipoViviendaModel> list() {
+    public List<CatTipoVivienda> list() {
         return serviceCatTipoViviendaJPA.findAll();
     }
 
@@ -49,11 +50,11 @@ public class CatTipoViviendaController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            CatTipoViviendaModel catTipoViviendaModel = serviceCatTipoViviendaJPA.create(params);
-            return ResponseEntity.status(HttpStatus.CREATED).body(catTipoViviendaModel);
+            CatTipoVivienda catTipoVivienda = serviceCatTipoViviendaJPA.create(params);
+            return ResponseEntity.status(HttpStatus.CREATED).body(catTipoVivienda);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
-        }catch
+        } catch
         (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
@@ -62,11 +63,11 @@ public class CatTipoViviendaController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            CatTipoViviendaModel updated = serviceCatTipoViviendaJPA.update(serviceCatTipoViviendaJPA.findById(id), params);
+            CatTipoVivienda updated = serviceCatTipoViviendaJPA.update(serviceCatTipoViviendaJPA.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(updated);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
     }

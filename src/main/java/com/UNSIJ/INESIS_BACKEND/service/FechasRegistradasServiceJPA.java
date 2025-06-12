@@ -9,8 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -101,22 +101,22 @@ public class FechasRegistradasServiceJPA implements IFechasRegistradasService {
                 throw new IllegalArgumentException("El campo 'carrera' es obligatorio");
             }
 
-        CatCarrera carrera = carreraServiceJPA.findById(idCarrera);
-        if (carrera == null) {
-            throw new IllegalArgumentException("Carrera no encontrada con el ID: " + idCarrera);
-        }
-        fechasRegistradas.setCarrera(carrera);
+            CatCarrera carrera = carreraServiceJPA.findById(idCarrera);
+            if (carrera == null) {
+                throw new IllegalArgumentException("Carrera no encontrada con el ID: " + idCarrera);
+            }
+            fechasRegistradas.setCarrera(carrera);
 
-        // Obtener fechas
-        java.sql.Date fechaInicio = JsonUtils.obtDate(params, "fechaInicio");
-        java.sql.Date fechaFin = JsonUtils.obtDate(params, "fechaFin");
+            // Obtener fechas
+            java.sql.Date fechaInicio = JsonUtils.obtDate(params, "fechaInicio");
+            java.sql.Date fechaFin = JsonUtils.obtDate(params, "fechaFin");
 
-        if (fechaInicio == null || fechaFin == null) {
-            throw new IllegalArgumentException("Las fechas son obligatorias");
-        }
+            if (fechaInicio == null || fechaFin == null) {
+                throw new IllegalArgumentException("Las fechas son obligatorias");
+            }
 
-        fechasRegistradas.setFechaInicio(fechaInicio);
-        fechasRegistradas.setFechaFin(fechaFin);
+            fechasRegistradas.setFechaInicio(fechaInicio);
+            fechasRegistradas.setFechaFin(fechaFin);
 
             // Obtener valor de 'active' o asignar true por defecto
             Boolean active = null;

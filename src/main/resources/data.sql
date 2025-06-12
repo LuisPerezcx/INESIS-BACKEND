@@ -864,16 +864,16 @@ WHERE NOT EXISTS (SELECT 1 FROM cat_parentesco WHERE nombre_parentesco = 'Abuela
 SELECT 1;
 
 INSERT INTO cat_servicio_otro (nombre_servicio)
-SELECT 'Agua' WHERE NOT EXISTS (SELECT 1 FROM cat_servicio_otro WHERE nombre_servicio = 'Internet');
+SELECT 'Agua' WHERE NOT EXISTS (SELECT 1 FROM cat_servicio_otro WHERE nombre_servicio = 'Agua');
 
 INSERT INTO cat_servicio_otro (nombre_servicio)
-SELECT 'Luz' WHERE NOT EXISTS (SELECT 1 FROM cat_servicio_otro WHERE nombre_servicio = 'Televisión por cable');
+SELECT 'Luz' WHERE NOT EXISTS (SELECT 1 FROM cat_servicio_otro WHERE nombre_servicio = 'Luz');
 
 INSERT INTO cat_servicio_otro (nombre_servicio)
-SELECT 'Drenaje' WHERE NOT EXISTS (SELECT 1 FROM cat_servicio_otro WHERE nombre_servicio = 'Gas natural');
+SELECT 'Drenaje' WHERE NOT EXISTS (SELECT 1 FROM cat_servicio_otro WHERE nombre_servicio = 'Drenaje');
 
 INSERT INTO cat_servicio_otro (nombre_servicio)
-SELECT 'Telefono' WHERE NOT EXISTS (SELECT 1 FROM cat_servicio_otro WHERE nombre_servicio = 'Teléfono fijo');
+SELECT 'Telefono' WHERE NOT EXISTS (SELECT 1 FROM cat_servicio_otro WHERE nombre_servicio = 'Telefono');
 
 INSERT INTO cat_servicio_otro (nombre_servicio)
 SELECT 'Otro' WHERE NOT EXISTS (SELECT 1 FROM cat_servicio_otro WHERE nombre_servicio = 'Otro');

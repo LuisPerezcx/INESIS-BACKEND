@@ -4,10 +4,8 @@
  */
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.ServiciosViviendaModel;
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.ViviendaFamiliarModel;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.ServiciosVivienda;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.ViviendaFamiliar;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.ServiciosViviendaRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.ViviendaFamiliarRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IServiciosViviendaService;
@@ -20,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author 24mda
  */
 @Service
@@ -33,41 +30,41 @@ public class ServiciosViviendaServiceJPA implements IServiciosViviendaService {
     private ViviendaFamiliarRepository viviendaFamiliarRepository;
 
     @Override
-    public List<ServiciosViviendaModel> findAll() {
+    public List<ServiciosVivienda> findAll() {
         return repository.findAll();
     }
 
     @Override
-    public ServiciosViviendaModel findById(Long id) {
+    public ServiciosVivienda findById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Servicio vivienda no encontrado con ID: " + id));
     }
 
     @Override
     @Transactional
-    public ServiciosViviendaModel save(ServiciosViviendaModel model) throws Exception {
+    public ServiciosVivienda save(ServiciosVivienda model) throws Exception {
         return repository.save(model);
     }
 
     @Override
-    public ServiciosViviendaModel create(Map<String, Object> params) throws Exception {
-        ServiciosViviendaModel model = new ServiciosViviendaModel();
+    public ServiciosVivienda create(Map<String, Object> params) throws Exception {
+        ServiciosVivienda model = new ServiciosVivienda();
         return this.save(this.build(params, model));
     }
 
     @Override
-    public ServiciosViviendaModel update(ServiciosViviendaModel model, Map<String, Object> params) throws Exception {
+    public ServiciosVivienda update(ServiciosVivienda model, Map<String, Object> params) throws Exception {
         return this.save(this.build(params, model));
     }
 
     @Override
-    public ServiciosViviendaModel build(Map<String, Object> params, ServiciosViviendaModel model) {
+    public ServiciosVivienda build(Map<String, Object> params, ServiciosVivienda model) {
         Long viviendaFamiliarId = JsonUtils.obtLong(params, "id_vivienda_familiar");
         if (viviendaFamiliarId == null) {
             throw new IllegalArgumentException("El campo 'id_vivienda_familiar' es obligatorio.");
         }
 
-        ViviendaFamiliarModel vivienda = viviendaFamiliarRepository.findById(viviendaFamiliarId)
+        ViviendaFamiliar vivienda = viviendaFamiliarRepository.findById(viviendaFamiliarId)
                 .orElseThrow(() -> new IllegalArgumentException("Vivienda familiar no encontrada con ID: " + viviendaFamiliarId));
 
         model.setViviendaFamiliar(vivienda);
@@ -75,15 +72,15 @@ public class ServiciosViviendaServiceJPA implements IServiciosViviendaService {
     }
 
     @Override
-    public ServiciosViviendaModel updateInstance(ServiciosViviendaModel instance) throws Exception {
-        ServiciosViviendaModel dbModel = this.findById(instance.getId());
+    public ServiciosVivienda updateInstance(ServiciosVivienda instance) throws Exception {
+        ServiciosVivienda dbModel = this.findById(instance.getId());
         dbModel.setViviendaFamiliar(instance.getViviendaFamiliar());
         return this.save(dbModel);
     }
 
     @Override
     public void deleteById(Long id) {
-        ServiciosViviendaModel model = this.findById(id);
+        ServiciosVivienda model = this.findById(id);
         if (model != null) {
             repository.deleteById(id);
         }

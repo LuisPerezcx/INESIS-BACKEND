@@ -6,12 +6,14 @@
 package com.UNSIJ.INESIS_BACKEND.service.interfaces;
 
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatServiciosOtro;
+
 import java.util.List;
+
 /**
- *
  * @author Alumnos
  */
-public interface  ICatServiciosOtroService {
+public interface ICatServiciosOtroService {
     List<CatServiciosOtro> findAll();
+
     CatServiciosOtro findById(Long id);
 }

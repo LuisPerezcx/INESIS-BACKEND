@@ -1,17 +1,15 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import java.util.List;
-import java.util.Map;
-
+import com.UNSIJ.INESIS_BACKEND.model.Domicilio;
+import com.UNSIJ.INESIS_BACKEND.repository.DomicilioRepository;
+import com.UNSIJ.INESIS_BACKEND.service.interfaces.IDomicilioService;
+import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.UNSIJ.INESIS_BACKEND.model.Domicilio;
-import com.UNSIJ.INESIS_BACKEND.model.Ejemplo;
-import com.UNSIJ.INESIS_BACKEND.repository.DomicilioRepository;
-import com.UNSIJ.INESIS_BACKEND.service.interfaces.IDomicilioService;
-import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class DomicilioServiceJPA implements IDomicilioService {
@@ -25,7 +23,7 @@ public class DomicilioServiceJPA implements IDomicilioService {
 
     @Override
     public Domicilio findById(Long id) {
-        return domicilioRepository.findById(id).orElseThrow( ()->
+        return domicilioRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("Domicilio no encontrado con el ID: " + id));
     }
 
@@ -65,7 +63,7 @@ public class DomicilioServiceJPA implements IDomicilioService {
     }
 
     @Override
-    public Domicilio build(Map<String, Object> params, Domicilio domicilio){
+    public Domicilio build(Map<String, Object> params, Domicilio domicilio) {
         try {
             //domicilio.setEstado(JsonUtils.obtString(params, "estado"));
             //domicilio.setMunicipio(JsonUtils.obtString(params, "municipio"));
@@ -101,7 +99,7 @@ public class DomicilioServiceJPA implements IDomicilioService {
     @Override
     public void deleteById(Long id) {
         Domicilio domicilio = this.findById(id);
-        if (domicilio!= null){
+        if (domicilio != null) {
             domicilioRepository.deleteById(id);
         }
     }

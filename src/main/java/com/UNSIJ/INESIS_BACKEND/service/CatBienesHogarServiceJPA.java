@@ -4,19 +4,14 @@
  */
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatBienesHogarModel;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatBienesHogar;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.CatBienesHogarRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatBienesHogarService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-/**
- *
- * @author 24mda
- */
+
 import java.util.List;
 import java.util.Map;
 
@@ -27,25 +22,25 @@ public class CatBienesHogarServiceJPA implements ICatBienesHogarService {
     private CatBienesHogarRepository repository;
 
     @Override
-    public List<CatBienesHogarModel> findAll() {
+    public List<CatBienesHogar> findAll() {
         return repository.findAll();
     }
 
     @Override
-    public CatBienesHogarModel findById(Long id) {
+    public CatBienesHogar findById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Bien del hogar no encontrado con ID: " + id));
     }
 
     @Override
     @Transactional
-    public CatBienesHogarModel save(CatBienesHogarModel model) throws Exception {
+    public CatBienesHogar save(CatBienesHogar model) throws Exception {
         return repository.save(model);
     }
 
     @Override
-    public CatBienesHogarModel create(Map<String, Object> params) throws Exception {
-        CatBienesHogarModel model = new CatBienesHogarModel();
+    public CatBienesHogar create(Map<String, Object> params) throws Exception {
+        CatBienesHogar model = new CatBienesHogar();
         try {
             model = this.build(params, model);
         } catch (Exception e) {
@@ -56,7 +51,7 @@ public class CatBienesHogarServiceJPA implements ICatBienesHogarService {
     }
 
     @Override
-    public CatBienesHogarModel update(CatBienesHogarModel model, Map<String, Object> params) throws Exception {
+    public CatBienesHogar update(CatBienesHogar model, Map<String, Object> params) throws Exception {
         try {
             model = this.build(params, model);
         } catch (Exception e) {
@@ -67,7 +62,7 @@ public class CatBienesHogarServiceJPA implements ICatBienesHogarService {
     }
 
     @Override
-    public CatBienesHogarModel build(Map<String, Object> params, CatBienesHogarModel model) {
+    public CatBienesHogar build(Map<String, Object> params, CatBienesHogar model) {
         try {
             String nombre = JsonUtils.obtString(params, "nombreBien");
             if (nombre == null || nombre.trim().isEmpty()) {
@@ -82,15 +77,15 @@ public class CatBienesHogarServiceJPA implements ICatBienesHogarService {
     }
 
     @Override
-    public CatBienesHogarModel updateInstance(CatBienesHogarModel instance) throws Exception {
-        CatBienesHogarModel dbModel = this.findById(instance.getId());
+    public CatBienesHogar updateInstance(CatBienesHogar instance) throws Exception {
+        CatBienesHogar dbModel = this.findById(instance.getId());
         dbModel.setNombreBien(instance.getNombreBien());
         return this.save(dbModel);
     }
 
     @Override
     public void deleteById(Long id) {
-        CatBienesHogarModel model = this.findById(id);
+        CatBienesHogar model = this.findById(id);
         if (model != null) {
             repository.deleteById(id);
         }

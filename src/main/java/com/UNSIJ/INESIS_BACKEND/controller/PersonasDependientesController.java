@@ -16,14 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.PersonasDependientesModel;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.PersonasDependientes;
 import com.UNSIJ.INESIS_BACKEND.service.PersonasDependientesServiceJPA;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author Alumnos
  */
 @RestController
@@ -34,7 +33,7 @@ public class PersonasDependientesController {
     private PersonasDependientesServiceJPA service;
 
     @GetMapping
-    public List<PersonasDependientesModel> list() {
+    public List<PersonasDependientes> list() {
         return service.findAll();
     }
 
@@ -52,7 +51,7 @@ public class PersonasDependientesController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            PersonasDependientesModel createHermanos = service.create(params);
+            PersonasDependientes createHermanos = service.create(params);
             return ResponseEntity.status(HttpStatus.CREATED).body(createHermanos);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -64,7 +63,7 @@ public class PersonasDependientesController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            PersonasDependientesModel updated = service.update(service.findById(id), params);
+            PersonasDependientes updated = service.update(service.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(updated);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

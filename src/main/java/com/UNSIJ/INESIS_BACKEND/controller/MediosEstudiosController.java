@@ -16,14 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatMediosEstudioModel;
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MediosEstudioModel;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MediosEstudio;
 import com.UNSIJ.INESIS_BACKEND.service.MediosEstudiosServiceJPA;
+
 import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author 24mda
  */
 @RestController
@@ -34,7 +33,7 @@ public class MediosEstudiosController {
     private MediosEstudiosServiceJPA serviceMediosEstudiosJPA;
 
     @GetMapping
-    public List<MediosEstudioModel> list() {
+    public List<MediosEstudio> list() {
         return serviceMediosEstudiosJPA.findAll();
     }
 
@@ -52,8 +51,8 @@ public class MediosEstudiosController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            MediosEstudioModel mediosEstudioModel = serviceMediosEstudiosJPA.create(params);
-            return ResponseEntity.status(HttpStatus.CREATED).body(mediosEstudioModel);
+            MediosEstudio mediosEstudio = serviceMediosEstudiosJPA.create(params);
+            return ResponseEntity.status(HttpStatus.CREATED).body(mediosEstudio);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -64,7 +63,7 @@ public class MediosEstudiosController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            MediosEstudioModel updated = serviceMediosEstudiosJPA.update(serviceMediosEstudiosJPA.findById(id), params);
+            MediosEstudio updated = serviceMediosEstudiosJPA.update(serviceMediosEstudiosJPA.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(updated);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

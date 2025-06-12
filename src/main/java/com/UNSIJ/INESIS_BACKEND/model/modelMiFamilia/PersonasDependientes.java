@@ -1,19 +1,12 @@
 package com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "personas_dependientes")
-public class PersonasDependientesModel {
+public class PersonasDependientes {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,5 +27,5 @@ public class PersonasDependientesModel {
 
     @ManyToOne
     @JoinColumn(name = "id_mi_familia")
-    private MiFamiliaModel miFamilia;
+    private MiFamilia miFamilia;
 }

@@ -26,7 +26,7 @@ public class CatParentescoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> show(@PathVariable Long id){
+    public ResponseEntity<?> show(@PathVariable Long id) {
         try {
             CatParentesco catParentesco = catParentescoServiceJPA.findById(id);
             return ResponseEntity.ok(catParentesco);

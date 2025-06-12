@@ -4,30 +4,29 @@
  */
 package com.UNSIJ.INESIS_BACKEND.service.interfaces;
 
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.BienesHogarModel;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.BienesHogar;
+
 import java.util.List;
 import java.util.Map;
 
 /**
- *
- *
  * @author 24mda
  */
 public interface IBienesHogarService {
 
-    List<BienesHogarModel> findAll();
+    List<BienesHogar> findAll();
 
-    BienesHogarModel findById(Long id);
+    BienesHogar findById(Long id);
 
-    BienesHogarModel save(BienesHogarModel model) throws Exception;
+    BienesHogar save(BienesHogar model) throws Exception;
 
-    BienesHogarModel create(Map<String, Object> params) throws Exception;
+    BienesHogar create(Map<String, Object> params) throws Exception;
 
-    BienesHogarModel update(BienesHogarModel model, Map<String, Object> params) throws Exception;
+    BienesHogar update(BienesHogar model, Map<String, Object> params) throws Exception;
 
-    BienesHogarModel build(Map<String, Object> params, BienesHogarModel model);
+    BienesHogar build(Map<String, Object> params, BienesHogar model);
 
-    BienesHogarModel updateInstance(BienesHogarModel instance) throws Exception;
+    BienesHogar updateInstance(BienesHogar instance) throws Exception;
 
     void deleteById(Long id);
 }
