@@ -1,7 +1,7 @@
 package com.UNSIJ.INESIS_BACKEND.controller;
 
-import com.UNSIJ.INESIS_BACKEND.model.FechasRegistradas;
-import com.UNSIJ.INESIS_BACKEND.service.FechasRegistradasServiceJPA;
+import com.UNSIJ.INESIS_BACKEND.model.MiTutor;
+import com.UNSIJ.INESIS_BACKEND.service.MiTutorServiceJPA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,22 +11,21 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/fechas-registradas")
-public class FechasRegistradasController {
-
+@RequestMapping("/miTutor")
+public class MiTutorController {
     @Autowired
-    private FechasRegistradasServiceJPA fechasRegistradasServiceJPA;
+    private MiTutorServiceJPA miTutorServiceJPA; // aquí siempre es el service no la interfaz
 
     @GetMapping
-    public List<FechasRegistradas> list() {
-        return fechasRegistradasServiceJPA.findAll();
+    public List<MiTutor> list() {
+        return miTutorServiceJPA.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> show(@PathVariable Long id) {
+    public ResponseEntity<?> show(@PathVariable Long id){
         try {
-            FechasRegistradas fechasRegistradas = fechasRegistradasServiceJPA.findById(id);
-            return ResponseEntity.ok(fechasRegistradas);
+            MiTutor miTutor = miTutorServiceJPA.findById(id);
+            return ResponseEntity.ok(miTutor);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
@@ -34,11 +33,13 @@ public class FechasRegistradasController {
         }
     }
 
+    //AQUI SIEMPRE RECIBIR UN MAPA, ES LA FORMA DE RECIBIR UN JSON
+    //NO RECIBIR UNA INSTANCIA DE LA CLASE
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            FechasRegistradas fechasRegistradas = fechasRegistradasServiceJPA.create(params);
-            return ResponseEntity.status(HttpStatus.CREATED).body(fechasRegistradas);
+            MiTutor miTutor = miTutorServiceJPA.create(params);
+            return ResponseEntity.status(HttpStatus.CREATED).body(miTutor);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -49,9 +50,8 @@ public class FechasRegistradasController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            FechasRegistradas fechasRegistradasUpdated = fechasRegistradasServiceJPA
-                    .update(fechasRegistradasServiceJPA.findById(id), params);
-            return ResponseEntity.status(HttpStatus.CREATED).body(fechasRegistradasUpdated);
+            MiTutor miTutorUpdated = miTutorServiceJPA.update(miTutorServiceJPA.findById(id),params);
+            return ResponseEntity.status(HttpStatus.CREATED).body(miTutorUpdated);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
@@ -60,10 +60,10 @@ public class FechasRegistradasController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> remove(@PathVariable Long id) {
+    public ResponseEntity<?> remove(@PathVariable Long id){
         try {
-            fechasRegistradasServiceJPA.findById(id); // Para lanzar excepción si no se encuentra el registro
-            fechasRegistradasServiceJPA.deleteById(id);
+            miTutorServiceJPA.findById(id);
+            miTutorServiceJPA.deleteById(id);
             return ResponseEntity.noContent().build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -71,20 +71,4 @@ public class FechasRegistradasController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
     }
-
-    @GetMapping("/carrera/{idCarrera}")
-public ResponseEntity<?> getByCarrera(@PathVariable Long idCarrera) {
-    try {
-        FechasRegistradas fecha = fechasRegistradasServiceJPA.findByCarreraId(idCarrera);
-        return ResponseEntity.ok(fecha);
-    } catch (IllegalArgumentException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-    } catch (Exception e) {
-        e.printStackTrace(); 
-        
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al buscar la fecha por carrera.");
-    }
-}
-
-
 }

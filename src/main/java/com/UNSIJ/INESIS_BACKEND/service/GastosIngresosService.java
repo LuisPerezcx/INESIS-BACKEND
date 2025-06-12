@@ -51,7 +51,7 @@ public class GastosIngresosService {
             Map<String, Object> reciboData = (Map<String, Object>) params.get("reciboLuz");
             System.out.println("ReciboLuzData recibido: " + reciboData);
     
-            ReciboLuzModel recibo = new ReciboLuzModel();
+            ReciboLuz recibo = new ReciboLuz();
             recibo.setTitular((String) reciboData.get("titular"));
             recibo.setPeriodoInicio((String) reciboData.getOrDefault("periodoInicio", null));
             recibo.setPeriodoFin((String) reciboData.getOrDefault("periodoFin", null));
@@ -90,7 +90,7 @@ public class GastosIngresosService {
                 if (persona.containsKey("idParentesco")) {
                     Long idParentesco = ((Number) persona.get("idParentesco")).longValue();
                     System.out.println("Buscando Parentesco con ID: " + idParentesco);
-                    ingreso.setParentescoModel(parentescoRepo.findById(idParentesco)
+                    ingreso.setParentesco(parentescoRepo.findById(idParentesco)
                         .orElseThrow(() -> new IllegalArgumentException("Parentesco no encontrado")));
                 } else {
                     System.out.println("ERROR: Persona sin idParentesco");

@@ -71,12 +71,6 @@ public class TransporteServiceJPA implements ITransporteService {
     @Override
     public Transporte build(Map<String, Object> params, Transporte transporte) {
         try {
-
-            String llevaVehiculo = JsonUtils.obtString(params, "llevaVehiculo");
-            if (llevaVehiculo == null || llevaVehiculo.isEmpty())
-                throw new IllegalArgumentException("El campo 'lleva vehiculo' es obligatorio.");
-            transporte.setLlevaVehiculo(llevaVehiculo);
-
             String marca = JsonUtils.obtString(params, "marca");
             if (marca == null || marca.isEmpty())
                 throw new IllegalArgumentException("El campo 'marca' es obligatorio.");
@@ -116,10 +110,10 @@ public class TransporteServiceJPA implements ITransporteService {
     public Transporte updateInstance(Transporte transporteInstance) throws Exception {
         Transporte transporteBD = this.findById(transporteInstance.getIdTransporte());
 
-        transporteBD.setLlevaVehiculo(transporteInstance.getLlevaVehiculo());
         transporteBD.setMarca(transporteInstance.getMarca());
         transporteBD.setModelo(transporteInstance.getModelo());
         transporteBD.setAnio(transporteInstance.getAnio());
+        transporteBD.setCatTipoTransporte(transporteInstance.getCatTipoTransporte());
 
         return this.save(transporteBD);
     }

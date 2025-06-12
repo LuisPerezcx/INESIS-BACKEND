@@ -1,13 +1,16 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatSituacionViviendaModel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -18,18 +21,6 @@ public class MisDatos {
     @Column(name = "id_mis_datos")
     private Long id;
 
-    @NotNull
-    @Column(name = "nombre_completo")
-    private String nombreCompleto;
-
-    @ManyToOne
-    @JoinColumn(name = "id_cat_carrera", nullable = true) // NO NULO
-    private CatCarreraModel carrera;
-
-    @ManyToOne
-    @JoinColumn(name = "id_cat_semestre", nullable = false)
-    private CatSemestreModel semestre;
-
     @ManyToOne
     @JoinColumn(name = "id_cat_sexo")
     private CatSexoModel sexo;
@@ -37,6 +28,9 @@ public class MisDatos {
     @ManyToOne
     @JoinColumn(name = "id_cat_estado_civil")
     private CatEstadoCivil estadoCivil;
+
+    @Column(name = "seccion_completa")
+    private boolean completo = false;
 
     @NotNull
     @Column(name = "recursos_suficientes")
@@ -59,28 +53,44 @@ public class MisDatos {
     private String idioma;
 
     @NotNull
-    @Column(name = "situacion_vivienda")
-    private String situacionVivienda;
-
-    @NotNull
     @Column(name = "nombre_casa_huesped")
     private String nombreCasaHuesped;
 
+    @NotNull
+    @Column(name = "lleva_automovil")
+    private Boolean llevaAutomovil;
+
+    @NotNull
+    @Column(name = "lleva_motocicleta")
+    private Boolean llevamotocicleta;
+
+    @ManyToOne
+    @JoinColumn(name = "id_cat_situacion_vivienda")
+    private CatSituacionViviendaModel situacionVivienda;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_gastos_ingresos")
+    @ToString.Exclude
     private GastosIngresos gastosIngresos;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "id_transporte")
-    @JsonIgnore
-    private Transporte transporte;
+    @JoinColumn(name = "id_transporte_automovil")
+    private Transporte transporteAutomovil;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_transporte_motocicleta")
+    private Transporte transporteMotocicleta;
 
     @OneToMany(mappedBy = "misDatos", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
-    private List<MedioTraslado> mediosTraslado;
+    private List<MedioTraslado> mediosTraslado = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_domicilio")
     private Domicilio domicilio;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_alumno", referencedColumnName = "id_alumno")
+    @JsonIgnore
+    private Alumno alumno;
 }

@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.UNSIJ.INESIS_BACKEND.model.GastosIngresos;
-import com.UNSIJ.INESIS_BACKEND.service.GastosIngresosJPA;
+import com.UNSIJ.INESIS_BACKEND.service.GastosIngresosServiceJPA;
 import com.UNSIJ.INESIS_BACKEND.service.GastosIngresosService;
 
 @RestController
 @RequestMapping("/gastosIngresos") // esta es la ruta para este controlador
 public class GastosIngresosController {
     @Autowired
-    private GastosIngresosJPA gastosIngresosServiceJPA; // aquí siempre es el service no la interfaz
+    private GastosIngresosServiceJPA gastosIngresosServiceJPA; // aquí siempre es el service no la interfaz
 
     @Autowired
     private GastosIngresosService gastosService;

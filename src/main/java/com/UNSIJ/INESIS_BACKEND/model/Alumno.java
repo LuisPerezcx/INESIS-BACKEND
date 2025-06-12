@@ -3,15 +3,13 @@ package com.UNSIJ.INESIS_BACKEND.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "alumno")
-public class AlumnoModel {
+public class Alumno {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,8 +21,12 @@ public class AlumnoModel {
     private String nombre;
 
     @NotNull
-    @Column(name = "apellido")
-    private String apellido;
+    @Column(name = "apellido_paterno")
+    private String apellidoPaterno;
+
+    @NotNull
+    @Column(name = "apellido_materno")
+    private String apellidoMaterno;
 
     @NotNull
     @Column(name = "curp", unique = true)
@@ -45,12 +47,12 @@ public class AlumnoModel {
     @ManyToOne
     @JoinColumn(name = "id_cat_carrera", referencedColumnName = "id_cat_carrera")
     @NotNull
-    private CatCarreraModel carrera;
+    private CatCarrera carrera;
 
     @ManyToOne
     @JoinColumn(name = "id_semestre", referencedColumnName = "id_cat_semestre")
     @NotNull
-    private CatSemestreModel semestre;
+    private CatSemestre semestre;
 
     @ManyToOne
     @JoinColumn(name = "id_sexo", referencedColumnName = "id_cat_sexo")
@@ -59,11 +61,13 @@ public class AlumnoModel {
 
     @ManyToOne
     @JoinColumn(name = "id_cat_grupo")
-    private CatGrupoModel grupo;
+    private CatGrupo grupo;
 
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
     @JsonBackReference
-    private UsuarioModel usuario;
+    private Usuario usuario;
 
+    @OneToOne(mappedBy = "alumno")
+    private MisDatos misDatos;
 }

@@ -1,11 +1,6 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
@@ -17,8 +12,8 @@ public class MiTutor {
     @Column(name = "id_tutor")
     private Long idTutor;
 
-    @Column(name = "nombre_completo")
-    private String nombreCompleto;
+    @Column(name = "nombre_tutor")
+    private String nombreTutor;
 
     @Column(name = "telefono")
     private String telefono;
@@ -26,15 +21,31 @@ public class MiTutor {
     @Column(name = "correo")
     private String correo;
 
-    @Column(name = "trabajador_sunero")
+    @Column(name = "trabajador_suneo")
     private Boolean trabajadorSuneo;
 
     @Column(name = "comparte_vivienda")
     private Boolean comparteVivienda;
 
-    @Column(name = "tipo_trabajo")
-    private String tipoTrabajo;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_cat_tipo_trabajo")
+    private CatTipoTrabajo catTipoTrabajo;
 
     @Column(name = "ocupacion_otro")
     private String ocupacionOtro;
+
+    @Column(name = "modulo_completo")
+    private Boolean moduloCompleto;
+
+    @ManyToOne
+    @JoinColumn(name = "id_cat_parentesco")
+    private CatParentesco parentesco;
+
+    @ManyToOne
+    @JoinColumn(name = "id_cat_ocupacion")
+    private Ocupacion ocupacion;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "id_domicilio")
+    private Domicilio domicilio;
 }

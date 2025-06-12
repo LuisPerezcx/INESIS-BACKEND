@@ -1,6 +1,6 @@
 package com.UNSIJ.INESIS_BACKEND.controller;
 
-import com.UNSIJ.INESIS_BACKEND.model.UsuarioModel;
+import com.UNSIJ.INESIS_BACKEND.model.Usuario;
 import com.UNSIJ.INESIS_BACKEND.service.UsuarioServiceJPA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,14 +19,14 @@ public class UsuarioController {
     private UsuarioServiceJPA usuarioServiceJPA;
 
     @GetMapping
-    public List<UsuarioModel> list() {
+    public List<Usuario> list() {
         return usuarioServiceJPA.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id) {
         try {
-            UsuarioModel usuario = usuarioServiceJPA.findById(id);
+            Usuario usuario = usuarioServiceJPA.findById(id);
             return ResponseEntity.ok(usuario);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -38,7 +38,7 @@ public class UsuarioController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            UsuarioModel usuario = usuarioServiceJPA.create(params);
+            Usuario usuario = usuarioServiceJPA.create(params);
             return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -50,7 +50,7 @@ public class UsuarioController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            UsuarioModel usuarioUpdated = usuarioServiceJPA.update(usuarioServiceJPA.findById(id), params);
+            Usuario usuarioUpdated = usuarioServiceJPA.update(usuarioServiceJPA.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(usuarioUpdated);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -75,7 +75,7 @@ public class UsuarioController {
     @GetMapping("/byAlumno/{idAlumno}")
     public ResponseEntity<?> obtenerUsuarioPorAlumno(@PathVariable Long idAlumno) {
         try {
-            UsuarioModel usuario = usuarioServiceJPA.findByAlumnoId(idAlumno);
+            Usuario usuario = usuarioServiceJPA.findByAlumnoId(idAlumno);
             return ResponseEntity.ok(usuario);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -94,7 +94,7 @@ public class UsuarioController {
                 return ResponseEntity.badRequest().body(error);
             }
 
-            UsuarioModel usuarioLogueado = usuarioServiceJPA.validarLogin(usuario, contrasenia);
+            Usuario usuarioLogueado = usuarioServiceJPA.validarLogin(usuario, contrasenia);
             return ResponseEntity.ok(usuarioLogueado);
 
         } catch (IllegalArgumentException e) {
@@ -109,4 +109,32 @@ public class UsuarioController {
         }
     }
 
+    @PostMapping("/verificar-contrasena")
+    public ResponseEntity<?> verificarContrasena(@RequestBody Map<String, String> credentials) {
+        try {
+            String usuario = credentials.get("usuario");
+            String contrasena = credentials.get("contrasena");
+
+            if (usuario == null || contrasena == null) {
+                Map<String, String> error = new HashMap<>();
+                error.put("mensaje", "Usuario y contraseña son obligatorios");
+                return ResponseEntity.badRequest().body(error);
+            }
+
+            boolean esValida = usuarioServiceJPA.verificarContrasena(usuario, contrasena);
+            Map<String, Object> result = new HashMap<>();
+            result.put("valida", esValida);
+            return ResponseEntity.ok(result);
+
+        } catch (IllegalArgumentException e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("mensaje", e.getMessage());
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+
+        } catch (Exception e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("mensaje", "Error interno del servidor");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
+    }
 }

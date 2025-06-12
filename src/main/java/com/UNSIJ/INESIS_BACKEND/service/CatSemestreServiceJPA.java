@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.UNSIJ.INESIS_BACKEND.model.CatSemestreModel;
+import com.UNSIJ.INESIS_BACKEND.model.CatSemestre;
 import com.UNSIJ.INESIS_BACKEND.repository.CatSemestreRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatSemestreService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
@@ -20,56 +20,56 @@ public class CatSemestreServiceJPA implements ICatSemestreService{
     private CatSemestreRepository catSemestreRepository;
 
     @Override
-    public List<CatSemestreModel> findAll() {
+    public List<CatSemestre> findAll() {
         return catSemestreRepository.findAll();
     }
 
     @Override
-    public CatSemestreModel findById(Long id) {
+    public CatSemestre findById(Long id) {
         return catSemestreRepository.findById(id).orElseThrow( ()->
-                new IllegalArgumentException("Ejemplo no encontrado con el ID: " + id));
+                new IllegalArgumentException("Semestre no encontrado con el ID: " + id));
     }
 
     @Override
     @Transactional 
-    public CatSemestreModel save(CatSemestreModel catSemestreModel) throws Exception {
-        return catSemestreRepository.save(catSemestreModel);
+    public CatSemestre save(CatSemestre catSemestre) throws Exception {
+        return catSemestreRepository.save(catSemestre);
     }
 
     @Override
-    public CatSemestreModel create(Map<String, Object> params) throws Exception {
-        CatSemestreModel catSemestreModel = new CatSemestreModel();
+    public CatSemestre create(Map<String, Object> params) throws Exception {
+        CatSemestre catSemestre = new CatSemestre();
         try {
             //AQUI ASIGNAMOS VALORES QUE SOLO SE NECESITAN AL CREAR POR PRIMERA VEZ UN REGISTRO
             //POR EJEMPLO EL CAMPO ACTIVO
         
             //AHORA LLAMAMOS AL METODO QUE SE OCUPA DE CONSTRUIR EL OBJETO
-            this.build(params, catSemestreModel);
+            this.build(params, catSemestre);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
             throw new IllegalArgumentException("Error al construir el ejemplo");
         }
-        return this.save(catSemestreModel);
+        return this.save(catSemestre);
     }
 
     //ESTE METODO SE OCUPA AL ACTUALIZAR DESDE EL FRONTEND YA QUE RECIBE UN MAPA(JSON)
     @Override
-    public CatSemestreModel update(CatSemestreModel catSemestreModel, Map<String, Object> params) throws Exception {
+    public CatSemestre update(CatSemestre catSemestre, Map<String, Object> params) throws Exception {
         try {
-            this.build(params, catSemestreModel);
+            this.build(params, catSemestre);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
             throw new IllegalArgumentException("Error al construir el ejemplo");
         }
-        return this.save(catSemestreModel);
+        return this.save(catSemestre);
     }
 
     @Override
-    public CatSemestreModel build(Map<String, Object> params, CatSemestreModel catSemestreModel){
+    public CatSemestre build(Map<String, Object> params, CatSemestre catSemestre){
         try {
             //PRIMERO DEBEMOS VERIFICAR QUE LOS VALORES QUE SON NOT NULL EN LA BASE EXISTAN EN EL JSON
             //AQUI SE DEBEN VALIDAR LOS DATOS QUE SE ESTAN RECIBIENDO Y SE LANZAN LAS EXCEPCIONES CORRESPONDIENTES
@@ -89,13 +89,13 @@ public class CatSemestreServiceJPA implements ICatSemestreService{
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
             throw new IllegalArgumentException("Error al construir el ejemplo");
         }
-        return catSemestreModel;
+        return catSemestre;
     }
 
     //ESTE METODO SE OCUPA CUANDO YA TENEMOS LA INSTANCIA QUE QUEREMOS ACTUALIZAR
     @Override
-    public CatSemestreModel updateInstance(CatSemestreModel catSemestreInstance) throws Exception {
-        CatSemestreModel catSemestreBD = this.findById(catSemestreInstance.getId());
+    public CatSemestre updateInstance(CatSemestre catSemestreInstance) throws Exception {
+        CatSemestre catSemestreBD = this.findById(catSemestreInstance.getId());
        /*  catCarreraBD.setActive(catCarreraInstance.isActive());
         catCarreraBD.setNumeroEjemplo(catCarreraInstance.getNumeroEjemplo());
         catCarreraBD.setNombreEjemplo(catCarreraInstance.getNombreEjemplo());*/
@@ -104,8 +104,8 @@ public class CatSemestreServiceJPA implements ICatSemestreService{
 
     @Override
     public void deleteById(Long id) {
-        CatSemestreModel catSemestreModel = this.findById(id);
-        if (catSemestreModel!= null){
+        CatSemestre catSemestre = this.findById(id);
+        if (catSemestre != null){
             catSemestreRepository.deleteById(id);
         }
     }

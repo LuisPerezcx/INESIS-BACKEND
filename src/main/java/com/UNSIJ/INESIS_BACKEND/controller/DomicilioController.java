@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -23,7 +24,6 @@ import org.springframework.web.client.RestTemplate;
 import com.UNSIJ.INESIS_BACKEND.model.Domicilio;
 import com.UNSIJ.INESIS_BACKEND.model.Ejemplo;
 import com.UNSIJ.INESIS_BACKEND.service.DomicilioServiceJPA;
-import com.UNSIJ.INESIS_BACKEND.service.EjemploServiceJPA;
 
 @RestController
 @RequestMapping("/domicilio")
@@ -36,6 +36,9 @@ public class DomicilioController {
     public List<Domicilio> list() {
         return domicilioServiceJPA.findAll();
     }
+
+    @Value("{api.key}")
+    private String apiKey;
 
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id){
@@ -90,6 +93,9 @@ public class DomicilioController {
 
     @GetMapping("/codigo_postal")
     public ResponseEntity<String> obtenerColoniasPorCP(@RequestParam String cp) {
+        if(cp.length() != 5) {
+            return null;
+        }
         String urlApiExterna = "https://api.tau.com.mx/dipomex/v1/codigo_postal?cp=" + cp;
 
         RestTemplate restTemplate = new RestTemplate();
@@ -111,6 +117,7 @@ public class DomicilioController {
             // Retornas la respuesta tal cual a tu frontend
             return ResponseEntity.ok(response.getBody());
         } catch (Exception e) {
+            e.printStackTrace();
             // Manejo básico de errores
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("{\"error\":\"No se pudo obtener datos del CP\"}");

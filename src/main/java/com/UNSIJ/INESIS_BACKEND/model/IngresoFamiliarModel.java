@@ -43,7 +43,7 @@ public class IngresoFamiliarModel {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "id_cat_parentesco", referencedColumnName = "id_cat_parentesco")
-    ParentescoModel parentescoModel;
+    Parentesco parentesco;
 
 
     /* 
