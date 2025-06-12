@@ -22,7 +22,7 @@ public class MiTutorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> show(@PathVariable Long id){
+    public ResponseEntity<?> show(@PathVariable Long id) {
         try {
             MiTutor miTutor = miTutorServiceJPA.findById(id);
             return ResponseEntity.ok(miTutor);
@@ -50,7 +50,7 @@ public class MiTutorController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            MiTutor miTutorUpdated = miTutorServiceJPA.update(miTutorServiceJPA.findById(id),params);
+            MiTutor miTutorUpdated = miTutorServiceJPA.update(miTutorServiceJPA.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(miTutorUpdated);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -60,7 +60,7 @@ public class MiTutorController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> remove(@PathVariable Long id){
+    public ResponseEntity<?> remove(@PathVariable Long id) {
         try {
             miTutorServiceJPA.findById(id);
             miTutorServiceJPA.deleteById(id);

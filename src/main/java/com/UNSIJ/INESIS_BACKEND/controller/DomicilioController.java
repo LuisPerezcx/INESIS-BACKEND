@@ -41,7 +41,7 @@ public class DomicilioController {
     private String apiKey;
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> show(@PathVariable Long id){
+    public ResponseEntity<?> show(@PathVariable Long id) {
         try {
             Domicilio domicilio = domicilioServiceJPA.findById(id);
             return ResponseEntity.ok(domicilio);
@@ -69,7 +69,7 @@ public class DomicilioController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            Domicilio domicilioUpdated = domicilioServiceJPA.update(domicilioServiceJPA.findById(id),params);
+            Domicilio domicilioUpdated = domicilioServiceJPA.update(domicilioServiceJPA.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(domicilioUpdated);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -79,7 +79,7 @@ public class DomicilioController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> remove(@PathVariable Long id){
+    public ResponseEntity<?> remove(@PathVariable Long id) {
         try {
             domicilioServiceJPA.findById(id);
             domicilioServiceJPA.deleteById(id);
@@ -93,7 +93,7 @@ public class DomicilioController {
 
     @GetMapping("/codigo_postal")
     public ResponseEntity<String> obtenerColoniasPorCP(@RequestParam String cp) {
-        if(cp.length() != 5) {
+        if (cp.length() != 5) {
             return null;
         }
         String urlApiExterna = "https://api.tau.com.mx/dipomex/v1/codigo_postal?cp=" + cp;
@@ -108,10 +108,10 @@ public class DomicilioController {
 
         try {
             ResponseEntity<String> response = restTemplate.exchange(
-                urlApiExterna,
-                HttpMethod.GET,
-                entity,
-                String.class
+                    urlApiExterna,
+                    HttpMethod.GET,
+                    entity,
+                    String.class
             );
 
             // Retornas la respuesta tal cual a tu frontend
@@ -120,7 +120,7 @@ public class DomicilioController {
             e.printStackTrace();
             // Manejo básico de errores
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("{\"error\":\"No se pudo obtener datos del CP\"}");
+                    .body("{\"error\":\"No se pudo obtener datos del CP\"}");
         }
     }
 }

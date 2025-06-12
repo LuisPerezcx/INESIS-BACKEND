@@ -4,30 +4,26 @@
  */
 package com.UNSIJ.INESIS_BACKEND.service.interfaces;
 
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatInternetModel;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatInternet;
 
-/**
- *
- * @author 24mda
- */
 import java.util.List;
 import java.util.Map;
 
 public interface ICatInternetService {
 
-    List<CatInternetModel> findAll();
+    List<CatInternet> findAll();
 
-    CatInternetModel findById(Long id);
+    CatInternet findById(Long id);
 
-    CatInternetModel save(CatInternetModel model) throws Exception;
+    CatInternet save(CatInternet model) throws Exception;
 
-    CatInternetModel create(Map<String, Object> params) throws Exception;
+    CatInternet create(Map<String, Object> params) throws Exception;
 
-    CatInternetModel update(CatInternetModel model, Map<String, Object> params) throws Exception;
+    CatInternet update(CatInternet model, Map<String, Object> params) throws Exception;
 
-    CatInternetModel build(Map<String, Object> params, CatInternetModel model);
+    CatInternet build(Map<String, Object> params, CatInternet model);
 
-    CatInternetModel updateInstance(CatInternetModel instance) throws Exception;
+    CatInternet updateInstance(CatInternet instance) throws Exception;
 
     void deleteById(Long id);
 }

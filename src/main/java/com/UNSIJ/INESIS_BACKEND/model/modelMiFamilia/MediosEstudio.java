@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "medios_estudio")
-public class MediosEstudioModel {
+public class MediosEstudio {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,5 +15,5 @@ public class MediosEstudioModel {
 
     @ManyToOne
     @JoinColumn(name = "id_cat_medios_estudios")
-    private CatMediosEstudioModel catMediosEstudio;
+    private CatMediosEstudio catMediosEstudio;
 }

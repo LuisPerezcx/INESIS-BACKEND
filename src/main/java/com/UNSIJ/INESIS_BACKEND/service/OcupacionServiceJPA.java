@@ -21,7 +21,7 @@ public class OcupacionServiceJPA implements IOcupacionService {
 
     @Override
     public Ocupacion findById(Long id) {
-        return ocupacionRepository.findById(id).orElseThrow( ()->
+        return ocupacionRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("Ocupacion no encontrado con el ID: " + id));
     }
 

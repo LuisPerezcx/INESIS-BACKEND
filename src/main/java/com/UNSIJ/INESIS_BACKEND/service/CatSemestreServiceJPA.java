@@ -1,21 +1,20 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.UNSIJ.INESIS_BACKEND.model.CatSemestre;
 import com.UNSIJ.INESIS_BACKEND.repository.CatSemestreRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatSemestreService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Map;
 
 @Service
-public class CatSemestreServiceJPA implements ICatSemestreService{
-    
-    
+public class CatSemestreServiceJPA implements ICatSemestreService {
+
+
     @Autowired
     private CatSemestreRepository catSemestreRepository;
 
@@ -26,12 +25,12 @@ public class CatSemestreServiceJPA implements ICatSemestreService{
 
     @Override
     public CatSemestre findById(Long id) {
-        return catSemestreRepository.findById(id).orElseThrow( ()->
+        return catSemestreRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("Semestre no encontrado con el ID: " + id));
     }
 
     @Override
-    @Transactional 
+    @Transactional
     public CatSemestre save(CatSemestre catSemestre) throws Exception {
         return catSemestreRepository.save(catSemestre);
     }
@@ -42,7 +41,7 @@ public class CatSemestreServiceJPA implements ICatSemestreService{
         try {
             //AQUI ASIGNAMOS VALORES QUE SOLO SE NECESITAN AL CREAR POR PRIMERA VEZ UN REGISTRO
             //POR EJEMPLO EL CAMPO ACTIVO
-        
+
             //AHORA LLAMAMOS AL METODO QUE SE OCUPA DE CONSTRUIR EL OBJETO
             this.build(params, catSemestre);
         } catch (IllegalArgumentException e) {
@@ -69,7 +68,7 @@ public class CatSemestreServiceJPA implements ICatSemestreService{
     }
 
     @Override
-    public CatSemestre build(Map<String, Object> params, CatSemestre catSemestre){
+    public CatSemestre build(Map<String, Object> params, CatSemestre catSemestre) {
         try {
             //PRIMERO DEBEMOS VERIFICAR QUE LOS VALORES QUE SON NOT NULL EN LA BASE EXISTAN EN EL JSON
             //AQUI SE DEBEN VALIDAR LOS DATOS QUE SE ESTAN RECIBIENDO Y SE LANZAN LAS EXCEPCIONES CORRESPONDIENTES
@@ -77,9 +76,10 @@ public class CatSemestreServiceJPA implements ICatSemestreService{
             //POR EJEMLO EL CAMPO NUMERO ES OBLIGATORIO
 
             //JsonUtils recibe el mapa y el nombre del parametro a extraer
-            Integer numero = JsonUtils.obtInteger(params,"numeroEjemplo");
+            Integer numero = JsonUtils.obtInteger(params, "numeroEjemplo");
             //VERIFICACION DEL CAMPO NUMERO
-            if(numero == null) throw new IllegalArgumentException("El campo numero es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            if (numero == null)
+                throw new IllegalArgumentException("El campo numero es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
             /*catCarreraModel.setNumeroEjemplo(numero);
             catCarreraModel.setNombreEjemplo(JsonUtils.obtString(params,"nombreEjemplo")); //TAMBIEN SE PUEDE HACER DE ESTA FORMA DIRECTA
             *///... Y SE REPITIRÁ ESTA SECCIÓN PARA CADA CAMPO EN EL JSON
@@ -105,7 +105,7 @@ public class CatSemestreServiceJPA implements ICatSemestreService{
     @Override
     public void deleteById(Long id) {
         CatSemestre catSemestre = this.findById(id);
-        if (catSemestre != null){
+        if (catSemestre != null) {
             catSemestreRepository.deleteById(id);
         }
     }

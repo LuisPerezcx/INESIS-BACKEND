@@ -5,32 +5,31 @@
 
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatMaterialViviendaModel;
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatSituacionViviendaModel;
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatTipoViviendaModel;
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.ViviendaFamiliarModel;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatMaterialVivienda;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatSituacionVivienda;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatTipoVivienda;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.ViviendaFamiliar;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.CatMaterialViviendaRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.CatSituacionViviendaRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.CatTipoViviendaRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.ViviendaFamiliarRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IViviendaFamiliarService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Map;
+
 /**
- *
  * @author 24mda
  */
 
 
 @Service
-public class ViviendaFamiliarServiceJPA implements IViviendaFamiliarService{
- @Autowired
+public class ViviendaFamiliarServiceJPA implements IViviendaFamiliarService {
+    @Autowired
     private ViviendaFamiliarRepository repository;
 
     @Autowired
@@ -43,35 +42,35 @@ public class ViviendaFamiliarServiceJPA implements IViviendaFamiliarService{
     private CatMaterialViviendaRepository materialViviendaRepository;
 
     @Override
-    public List<ViviendaFamiliarModel> findAll() {
+    public List<ViviendaFamiliar> findAll() {
         return repository.findAll();
     }
 
     @Override
-    public ViviendaFamiliarModel findById(Long id) {
+    public ViviendaFamiliar findById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Vivienda Familiar no encontrada con ID: " + id));
     }
 
     @Override
     @Transactional
-    public ViviendaFamiliarModel save(ViviendaFamiliarModel model) throws Exception {
+    public ViviendaFamiliar save(ViviendaFamiliar model) throws Exception {
         return repository.save(model);
     }
 
     @Override
-    public ViviendaFamiliarModel create(Map<String, Object> params) throws Exception {
-        ViviendaFamiliarModel model = new ViviendaFamiliarModel();
+    public ViviendaFamiliar create(Map<String, Object> params) throws Exception {
+        ViviendaFamiliar model = new ViviendaFamiliar();
         return this.save(this.build(params, model));
     }
 
     @Override
-    public ViviendaFamiliarModel update(ViviendaFamiliarModel model, Map<String, Object> params) throws Exception {
+    public ViviendaFamiliar update(ViviendaFamiliar model, Map<String, Object> params) throws Exception {
         return this.save(this.build(params, model));
     }
 
     @Override
-    public ViviendaFamiliarModel build(Map<String, Object> params, ViviendaFamiliarModel model) {
+    public ViviendaFamiliar build(Map<String, Object> params, ViviendaFamiliar model) {
         Integer numPersonas = JsonUtils.obtInteger(params, "num_personas_habitan");
         String serviciosOtro = (String) params.get("servicios_otro");
 
@@ -85,7 +84,7 @@ public class ViviendaFamiliarServiceJPA implements IViviendaFamiliarService{
         if (idSituacion == null) {
             throw new IllegalArgumentException("El campo 'id_cat_situacion_vivienda' es obligatorio.");
         }
-        CatSituacionViviendaModel situacion = situacionViviendaRepository.findById(idSituacion)
+        CatSituacionVivienda situacion = situacionViviendaRepository.findById(idSituacion)
                 .orElseThrow(() -> new IllegalArgumentException("Situación vivienda no encontrada con ID: " + idSituacion));
         model.setSituacionVivienda(situacion);
 
@@ -93,7 +92,7 @@ public class ViviendaFamiliarServiceJPA implements IViviendaFamiliarService{
         if (idTipo == null) {
             throw new IllegalArgumentException("El campo 'id_cat_tipo_vivienda' es obligatorio.");
         }
-        CatTipoViviendaModel tipo = tipoViviendaRepository.findById(idTipo)
+        CatTipoVivienda tipo = tipoViviendaRepository.findById(idTipo)
                 .orElseThrow(() -> new IllegalArgumentException("Tipo vivienda no encontrado con ID: " + idTipo));
         model.setTipoVivienda(tipo);
 
@@ -101,7 +100,7 @@ public class ViviendaFamiliarServiceJPA implements IViviendaFamiliarService{
         if (idMaterial == null) {
             throw new IllegalArgumentException("El campo 'id_cat_material_vivienda' es obligatorio.");
         }
-        CatMaterialViviendaModel material = materialViviendaRepository.findById(idMaterial)
+        CatMaterialVivienda material = materialViviendaRepository.findById(idMaterial)
                 .orElseThrow(() -> new IllegalArgumentException("Material vivienda no encontrado con ID: " + idMaterial));
         model.setMaterialVivienda(material);
 
@@ -109,8 +108,8 @@ public class ViviendaFamiliarServiceJPA implements IViviendaFamiliarService{
     }
 
     @Override
-    public ViviendaFamiliarModel updateInstance(ViviendaFamiliarModel instance) throws Exception {
-        ViviendaFamiliarModel dbModel = this.findById(instance.getId());
+    public ViviendaFamiliar updateInstance(ViviendaFamiliar instance) throws Exception {
+        ViviendaFamiliar dbModel = this.findById(instance.getId());
         dbModel.setNumPersonasHabitan(instance.getNumPersonasHabitan());
         dbModel.setServiciosOtro(instance.getServiciosOtro());
         dbModel.setSituacionVivienda(instance.getSituacionVivienda());
@@ -121,7 +120,7 @@ public class ViviendaFamiliarServiceJPA implements IViviendaFamiliarService{
 
     @Override
     public void deleteById(Long id) {
-        ViviendaFamiliarModel model = this.findById(id);
+        ViviendaFamiliar model = this.findById(id);
         if (model != null) {
             repository.deleteById(id);
         }

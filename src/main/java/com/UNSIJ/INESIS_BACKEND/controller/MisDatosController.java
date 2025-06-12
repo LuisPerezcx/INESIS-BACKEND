@@ -32,7 +32,7 @@ public class MisDatosController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> show(@PathVariable Long id){
+    public ResponseEntity<?> show(@PathVariable Long id) {
         try {
             MisDatos misDatos = misDatosServiceJPA.findById(id);
             return ResponseEntity.ok(misDatos);
@@ -75,7 +75,7 @@ public class MisDatosController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            MisDatos misDatosUpdate = misDatosServiceJPA.update(misDatosServiceJPA.findById(id),params);
+            MisDatos misDatosUpdate = misDatosServiceJPA.update(misDatosServiceJPA.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(misDatosUpdate);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -85,7 +85,7 @@ public class MisDatosController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> remove(@PathVariable Long id){
+    public ResponseEntity<?> remove(@PathVariable Long id) {
         try {
             misDatosServiceJPA.findById(id); // PARA TIRAR LA EXEPCION SI NO SE ENCUENTRA EL REGISTRO
             misDatosServiceJPA.deleteById(id);
@@ -97,34 +97,34 @@ public class MisDatosController {
         }
     }
 
-private MisDatosDTO convertirAMisDatosDTO(MisDatos misDatos) {
-    MisDatosDTO dto = new MisDatosDTO();
+    private MisDatosDTO convertirAMisDatosDTO(MisDatos misDatos) {
+        MisDatosDTO dto = new MisDatosDTO();
 
-    dto.setId(misDatos.getId());
-    //dto.setNombreCompleto(misDatos.getNombreCompleto());
-    dto.setIdioma(misDatos.getIdioma());
-    dto.setRecursosSuficientes(misDatos.getRecursosSuficientes());
-    dto.setFamiliarComunero(misDatos.getFamiliarComunero());
-    dto.setUtilizaCelular(misDatos.getUtilizaCelular());
-    dto.setTieneComputadora(misDatos.getTieneComputadora());
+        dto.setId(misDatos.getId());
+        //dto.setNombreCompleto(misDatos.getNombreCompleto());
+        dto.setIdioma(misDatos.getIdioma());
+        dto.setRecursosSuficientes(misDatos.getRecursosSuficientes());
+        dto.setFamiliarComunero(misDatos.getFamiliarComunero());
+        dto.setUtilizaCelular(misDatos.getUtilizaCelular());
+        dto.setTieneComputadora(misDatos.getTieneComputadora());
 
-    // Extraer los nombres de entidades relacionadas
-    //dto.setCarrera(misDatos.getCarrera() != null ? misDatos.getCarrera().getNombreCarrera() : null);
-    //dto.setSemestre(misDatos.getSemestre() != null ? misDatos.getSemestre().getNombreSemestre() : null);
-    dto.setSexo(misDatos.getSexo() != null ? misDatos.getSexo().getNombreSexo() : null);
-    dto.setEstadoCivil(misDatos.getEstadoCivil() != null ? misDatos.getEstadoCivil().getNombreEstadoCivil() : null);
+        // Extraer los nombres de entidades relacionadas
+        //dto.setCarrera(misDatos.getCarrera() != null ? misDatos.getCarrera().getNombreCarrera() : null);
+        //dto.setSemestre(misDatos.getSemestre() != null ? misDatos.getSemestre().getNombreSemestre() : null);
+        dto.setSexo(misDatos.getSexo() != null ? misDatos.getSexo().getNombreSexo() : null);
+        dto.setEstadoCivil(misDatos.getEstadoCivil() != null ? misDatos.getEstadoCivil().getNombreEstadoCivil() : null);
 
-    // Mapear solo los nombres de medios de traslado
-    if (misDatos.getMediosTraslado() != null) {
-        dto.setMediosTraslado(
-            misDatos.getMediosTraslado().stream()
-                .map(mt -> mt.getCatMediosTransporte().getNombreMedio())
-                .toList()
-        );
+        // Mapear solo los nombres de medios de traslado
+        if (misDatos.getMediosTraslado() != null) {
+            dto.setMediosTraslado(
+                    misDatos.getMediosTraslado().stream()
+                            .map(mt -> mt.getCatMediosTransporte().getNombreMedio())
+                            .toList()
+            );
+        }
+
+        return dto;
     }
-
-    return dto;
-}
 
 
 }

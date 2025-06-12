@@ -5,22 +5,25 @@
 
 package com.UNSIJ.INESIS_BACKEND.service.interfaces;
 
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatEscolaridadModel;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatEscolaridad;
 
-/**
- *
- * @author 24mda
- */
 import java.util.List;
 import java.util.Map;
 
 public interface ICatEscolaridadService {
-    List<CatEscolaridadModel> findAll();
-    CatEscolaridadModel findById(Long id);
-    CatEscolaridadModel save(CatEscolaridadModel model) throws Exception;
-    CatEscolaridadModel create(Map<String, Object> params) throws Exception;
-    CatEscolaridadModel update(CatEscolaridadModel model, Map<String, Object> params) throws Exception;
-    CatEscolaridadModel build(Map<String, Object> params, CatEscolaridadModel model);
-    CatEscolaridadModel updateInstance(CatEscolaridadModel instance) throws Exception;
+    List<CatEscolaridad> findAll();
+
+    CatEscolaridad findById(Long id);
+
+    CatEscolaridad save(CatEscolaridad model) throws Exception;
+
+    CatEscolaridad create(Map<String, Object> params) throws Exception;
+
+    CatEscolaridad update(CatEscolaridad model, Map<String, Object> params) throws Exception;
+
+    CatEscolaridad build(Map<String, Object> params, CatEscolaridad model);
+
+    CatEscolaridad updateInstance(CatEscolaridad instance) throws Exception;
+
     void deleteById(Long id);
 }

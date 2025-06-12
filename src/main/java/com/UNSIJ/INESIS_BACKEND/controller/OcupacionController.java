@@ -24,7 +24,7 @@ public class OcupacionController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> show(@PathVariable Long id){
+    public ResponseEntity<?> show(@PathVariable Long id) {
         try {
             Ocupacion ocupacion = ocupacionServiceJPA.findById(id);
             return ResponseEntity.ok(ocupacion);

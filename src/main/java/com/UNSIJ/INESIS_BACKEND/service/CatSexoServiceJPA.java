@@ -1,20 +1,19 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.UNSIJ.INESIS_BACKEND.model.CatSexoModel;
 import com.UNSIJ.INESIS_BACKEND.repository.CatSexoRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatSexoService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class CatSexoServiceJPA implements ICatSexoService {
-    
+
     @Autowired
     private CatSexoRepository catSexoRepository;
 
@@ -30,7 +29,7 @@ public class CatSexoServiceJPA implements ICatSexoService {
     }
 
     @Override
-    @Transactional 
+    @Transactional
     public CatSexoModel save(CatSexoModel catSexoModel) throws Exception {
         return catSexoRepository.save(catSexoModel);
     }
@@ -66,7 +65,8 @@ public class CatSexoServiceJPA implements ICatSexoService {
     public CatSexoModel build(Map<String, Object> params, CatSexoModel catSexoModel) {
         try {
             String nombre = JsonUtils.obtString(params, "nombreSexo");
-            if (nombre == null || nombre.isEmpty()) throw new IllegalArgumentException("El campo nombre es obligatorio");
+            if (nombre == null || nombre.isEmpty())
+                throw new IllegalArgumentException("El campo nombre es obligatorio");
             catSexoModel.setNombreSexo(nombre);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());

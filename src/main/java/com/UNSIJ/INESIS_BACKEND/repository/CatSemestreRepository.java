@@ -1,9 +1,8 @@
 package com.UNSIJ.INESIS_BACKEND.repository;
 
+import com.UNSIJ.INESIS_BACKEND.model.CatSemestre;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.UNSIJ.INESIS_BACKEND.model.CatSemestre;
+public interface CatSemestreRepository extends JpaRepository<CatSemestre, Long> {
 
-public interface CatSemestreRepository extends JpaRepository <CatSemestre, Long>{
-    
 }

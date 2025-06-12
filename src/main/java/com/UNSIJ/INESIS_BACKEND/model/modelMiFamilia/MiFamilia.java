@@ -1,19 +1,12 @@
 package com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "MiFamilia")
-public class MiFamiliaModel {
+public class MiFamilia {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,12 +19,6 @@ public class MiFamiliaModel {
 
     @Column(name = "telefono")
     private String telefono;
-
-    @Column(name = "escolaridadPadre")
-    private String escolaridadPadre;
-
-    @Column(name = "escolaridadMadre")
-    private String escolaridadMadre;
 
     @Column(name = "num_hermanos")
     private Integer numHermanos;
@@ -47,9 +34,17 @@ public class MiFamiliaModel {
 
     @ManyToOne
     @JoinColumn(name = "id_vivienda_familiar")
-    private ViviendaFamiliarModel viviendaFamiliar;
+    private ViviendaFamiliar viviendaFamiliar;
 
     @ManyToOne
     @JoinColumn(name = "id_medios_estudio")
-    private MediosEstudioModel mediosEstudio;
+    private MediosEstudio mediosEstudio;
+
+    @ManyToOne
+    @JoinColumn(name = "id_cat_escolaridad_padre")
+    private CatEscolaridad escolaridadPadre;
+
+    @ManyToOne
+    @JoinColumn(name = "id_cat_escolaridad_madre")
+    private CatEscolaridad escolaridadMadre;
 }

@@ -19,10 +19,10 @@ import com.UNSIJ.INESIS_BACKEND.model.CatSexoModel;
 import com.UNSIJ.INESIS_BACKEND.service.CatSexoServiceJPA;
 
 @RestController
-@RequestMapping("/sexo") 
+@RequestMapping("/sexo")
 public class CatSexoController {
-     @Autowired
-    private CatSexoServiceJPA sexoServiceJPA; 
+    @Autowired
+    private CatSexoServiceJPA sexoServiceJPA;
 
     @GetMapping
     public List<CatSexoModel> list() {
@@ -30,7 +30,7 @@ public class CatSexoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> show(@PathVariable Long id){
+    public ResponseEntity<?> show(@PathVariable Long id) {
         try {
             CatSexoModel catSexoModel = sexoServiceJPA.findById(id);
             return ResponseEntity.ok(catSexoModel);
@@ -66,7 +66,7 @@ public class CatSexoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> remove(@PathVariable Long id){
+    public ResponseEntity<?> remove(@PathVariable Long id) {
         try {
             sexoServiceJPA.findById(id); // PARA TIRAR LA EXCEPCIÓN SI NO SE ENCUENTRA EL REGISTRO
             sexoServiceJPA.deleteById(id);

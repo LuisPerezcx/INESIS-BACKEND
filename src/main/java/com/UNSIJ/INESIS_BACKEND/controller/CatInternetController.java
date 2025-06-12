@@ -16,14 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatInternetModel;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatInternet;
 import com.UNSIJ.INESIS_BACKEND.service.CatInternetServiceJPA;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author 24mda
  */
 @RestController
@@ -34,15 +33,15 @@ public class CatInternetController {
     private CatInternetServiceJPA internetServiceJPA;
 
     @GetMapping
-    public List<CatInternetModel> list() {
+    public List<CatInternet> list() {
         return internetServiceJPA.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id) {
         try {
-            CatInternetModel catInternetModel = internetServiceJPA.findById(id);
-            return ResponseEntity.ok(catInternetModel);
+            CatInternet catInternet = internetServiceJPA.findById(id);
+            return ResponseEntity.ok(catInternet);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
@@ -53,7 +52,7 @@ public class CatInternetController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            CatInternetModel catInternetCreate = internetServiceJPA.create(params);
+            CatInternet catInternetCreate = internetServiceJPA.create(params);
             return ResponseEntity.status(HttpStatus.CREATED).body(catInternetCreate);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -65,7 +64,7 @@ public class CatInternetController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            CatInternetModel updatedCatInternet = internetServiceJPA.update(internetServiceJPA.findById(id), params);
+            CatInternet updatedCatInternet = internetServiceJPA.update(internetServiceJPA.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(updatedCatInternet);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

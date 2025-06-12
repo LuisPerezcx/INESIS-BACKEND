@@ -73,18 +73,18 @@ public class FechasRegistradasController {
     }
 
     @GetMapping("/carrera/{idCarrera}")
-public ResponseEntity<?> getByCarrera(@PathVariable Long idCarrera) {
-    try {
-        FechasRegistradas fecha = fechasRegistradasServiceJPA.findByCarreraId(idCarrera);
-        return ResponseEntity.ok(fecha);
-    } catch (IllegalArgumentException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-    } catch (Exception e) {
-        e.printStackTrace(); 
-        
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al buscar la fecha por carrera.");
+    public ResponseEntity<?> getByCarrera(@PathVariable Long idCarrera) {
+        try {
+            FechasRegistradas fecha = fechasRegistradasServiceJPA.findByCarreraId(idCarrera);
+            return ResponseEntity.ok(fecha);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al buscar la fecha por carrera.");
+        }
     }
-}
 
 
 }

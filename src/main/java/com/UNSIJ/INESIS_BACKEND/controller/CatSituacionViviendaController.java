@@ -17,31 +17,31 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatSituacionViviendaModel;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatSituacionVivienda;
 import com.UNSIJ.INESIS_BACKEND.service.CatSituacionViviendaServiceJPA;
 
 import java.util.List;
 import java.util.Map;
+
 /**
- *
  * @author 24mda
  */
 @RestController
 @RequestMapping("/cat_situacion_vivienda")
 public class CatSituacionViviendaController {
-@Autowired
+    @Autowired
     private CatSituacionViviendaServiceJPA serviceCatSituacionViviendaJPA;
 
     @GetMapping
-    public List<CatSituacionViviendaModel> list() {
+    public List<CatSituacionVivienda> list() {
         return serviceCatSituacionViviendaJPA.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id) {
         try {
-            CatSituacionViviendaModel catSituacionViviendaModel = serviceCatSituacionViviendaJPA.findById(id);
-            return ResponseEntity.ok(catSituacionViviendaModel);
+            CatSituacionVivienda catSituacionVivienda = serviceCatSituacionViviendaJPA.findById(id);
+            return ResponseEntity.ok(catSituacionVivienda);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
@@ -50,11 +50,11 @@ public class CatSituacionViviendaController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            CatSituacionViviendaModel createCatSituacionVivienda = serviceCatSituacionViviendaJPA.create(params);
+            CatSituacionVivienda createCatSituacionVivienda = serviceCatSituacionViviendaJPA.create(params);
             return ResponseEntity.status(HttpStatus.CREATED).body(createCatSituacionVivienda);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
     }
@@ -62,11 +62,11 @@ public class CatSituacionViviendaController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            CatSituacionViviendaModel updated = serviceCatSituacionViviendaJPA.update(serviceCatSituacionViviendaJPA.findById(id), params);
+            CatSituacionVivienda updated = serviceCatSituacionViviendaJPA.update(serviceCatSituacionViviendaJPA.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(updated);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
     }

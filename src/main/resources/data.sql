@@ -488,16 +488,20 @@ WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_transporte WHERE nombre_tipo = 'Privado
 SELECT 1;
 
 INSERT INTO cat_medios_transporte (nombre_medio)
-SELECT 'Automóvil de amigos'
-WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Automóvil de amigos');
+SELECT 'Automóvil propio'
+WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Automóvil propio');
 
 INSERT INTO cat_medios_transporte (nombre_medio)
 SELECT 'Bicicleta'
 WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Bicicleta');
 
 INSERT INTO cat_medios_transporte (nombre_medio)
-SELECT 'Mototaxi'
-WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Mototaxi');
+SELECT 'Automóvil de amigos'
+WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Automóvil de amigos');
+
+INSERT INTO cat_medios_transporte (nombre_medio)
+SELECT 'Motocicleta'
+WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Motocicleta');
 
 INSERT INTO cat_medios_transporte (nombre_medio)
 SELECT 'Caminando'
@@ -508,16 +512,12 @@ SELECT 'Automovil familiar'
 WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Automovil familiar');
 
 INSERT INTO cat_medios_transporte (nombre_medio)
-SELECT 'Colectivo'
+SELECT 'Mototaxi'
 WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Colectivo');
 
 INSERT INTO cat_medios_transporte (nombre_medio)
 SELECT 'Taxi'
 WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Taxi');
-
-INSERT INTO cat_medios_transporte (nombre_medio)
-SELECT 'Microbús'
-WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Microbús');
 
 # ------------------------------------------- REGISTRO DE CAT_OCUPACION
 
@@ -856,3 +856,24 @@ WHERE NOT EXISTS (SELECT 1 FROM cat_parentesco WHERE nombre_parentesco = 'Abuela
 
 
 
+
+
+-- -------------------------------
+-- REGISTROS PARA cat_servicio_otro
+-- -------------------------------
+SELECT 1;
+
+INSERT INTO cat_servicio_otro (nombre_servicio)
+SELECT 'Agua' WHERE NOT EXISTS (SELECT 1 FROM cat_servicio_otro WHERE nombre_servicio = 'Agua');
+
+INSERT INTO cat_servicio_otro (nombre_servicio)
+SELECT 'Luz' WHERE NOT EXISTS (SELECT 1 FROM cat_servicio_otro WHERE nombre_servicio = 'Luz');
+
+INSERT INTO cat_servicio_otro (nombre_servicio)
+SELECT 'Drenaje' WHERE NOT EXISTS (SELECT 1 FROM cat_servicio_otro WHERE nombre_servicio = 'Drenaje');
+
+INSERT INTO cat_servicio_otro (nombre_servicio)
+SELECT 'Telefono' WHERE NOT EXISTS (SELECT 1 FROM cat_servicio_otro WHERE nombre_servicio = 'Telefono');
+
+INSERT INTO cat_servicio_otro (nombre_servicio)
+SELECT 'Otro' WHERE NOT EXISTS (SELECT 1 FROM cat_servicio_otro WHERE nombre_servicio = 'Otro');

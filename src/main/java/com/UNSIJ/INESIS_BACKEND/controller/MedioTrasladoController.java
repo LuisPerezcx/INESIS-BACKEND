@@ -10,7 +10,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/medio_traslado")
 public class MedioTrasladoController {
-     @Autowired
+    @Autowired
     private MediosTrasladoRepository repository;
 
     @GetMapping("/usuario/{idMisDatos}")

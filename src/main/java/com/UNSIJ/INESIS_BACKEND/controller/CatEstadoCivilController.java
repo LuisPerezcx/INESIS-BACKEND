@@ -21,7 +21,7 @@ import com.UNSIJ.INESIS_BACKEND.service.CatEstadoCivilServiceJPA;
 @RestController
 @RequestMapping("/estadoCivil") // esta es la ruta para este controlador
 public class CatEstadoCivilController {
- @Autowired
+    @Autowired
     private CatEstadoCivilServiceJPA catEstadoCivilServiceJPA; // aquí siempre es el service no la interfaz
 
     @GetMapping
@@ -30,7 +30,7 @@ public class CatEstadoCivilController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> show(@PathVariable Long id){
+    public ResponseEntity<?> show(@PathVariable Long id) {
         try {
             CatEstadoCivil catEstadoCivil = catEstadoCivilServiceJPA.findById(id);
             return ResponseEntity.ok(catEstadoCivil);
@@ -58,7 +58,7 @@ public class CatEstadoCivilController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            CatEstadoCivil catEstadoCivilUpdate = catEstadoCivilServiceJPA.update(catEstadoCivilServiceJPA.findById(id),params);
+            CatEstadoCivil catEstadoCivilUpdate = catEstadoCivilServiceJPA.update(catEstadoCivilServiceJPA.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(catEstadoCivilUpdate);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -68,7 +68,7 @@ public class CatEstadoCivilController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> remove(@PathVariable Long id){
+    public ResponseEntity<?> remove(@PathVariable Long id) {
         try {
             catEstadoCivilServiceJPA.findById(id); // PARA TIRAR LA EXEPCION SI NO SE ENCUENTRA EL REGISTRO
             catEstadoCivilServiceJPA.deleteById(id);
@@ -78,5 +78,5 @@ public class CatEstadoCivilController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
-    }   
+    }
 }

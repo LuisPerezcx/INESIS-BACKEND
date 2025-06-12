@@ -5,21 +5,28 @@
 
 package com.UNSIJ.INESIS_BACKEND.service.interfaces;
 
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatTipoViviendaModel;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatTipoVivienda;
 
 import java.util.List;
 import java.util.Map;
+
 /**
- *
  * @author 24mda
  */
 public interface ICatTipoViviendaService {
-    List<CatTipoViviendaModel> findAll();
-    CatTipoViviendaModel findById(Long id);
-    CatTipoViviendaModel save(CatTipoViviendaModel model) throws Exception;
-    CatTipoViviendaModel create(Map<String, Object> params) throws Exception;
-    CatTipoViviendaModel update(CatTipoViviendaModel model, Map<String, Object> params) throws Exception;
-    CatTipoViviendaModel build(Map<String, Object> params, CatTipoViviendaModel model);
-    CatTipoViviendaModel updateInstance(CatTipoViviendaModel instance) throws Exception;
+    List<CatTipoVivienda> findAll();
+
+    CatTipoVivienda findById(Long id);
+
+    CatTipoVivienda save(CatTipoVivienda model) throws Exception;
+
+    CatTipoVivienda create(Map<String, Object> params) throws Exception;
+
+    CatTipoVivienda update(CatTipoVivienda model, Map<String, Object> params) throws Exception;
+
+    CatTipoVivienda build(Map<String, Object> params, CatTipoVivienda model);
+
+    CatTipoVivienda updateInstance(CatTipoVivienda instance) throws Exception;
+
     void deleteById(Long id);
 }
