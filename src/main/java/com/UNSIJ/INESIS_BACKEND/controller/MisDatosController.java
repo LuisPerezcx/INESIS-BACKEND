@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.UNSIJ.INESIS_BACKEND.dto.MisDatosDTO;
+import com.UNSIJ.INESIS_BACKEND.DTO.MisDatosDTO;
 import com.UNSIJ.INESIS_BACKEND.model.MisDatos;
 import com.UNSIJ.INESIS_BACKEND.service.MisDatosServiceJPA;
 
