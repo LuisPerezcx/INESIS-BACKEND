@@ -4,19 +4,18 @@
  */
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatMaterialViviendaModel;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatMaterialVivienda;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.CatMaterialViviendaRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatMaterialViviendaService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author 24mda
  */
 
@@ -27,37 +26,37 @@ public class CatMaterialViviendaServiceJPA implements ICatMaterialViviendaServic
     private CatMaterialViviendaRepository repository;
 
     @Override
-    public List<CatMaterialViviendaModel> findAll() {
+    public List<CatMaterialVivienda> findAll() {
         return repository.findAll();
     }
 
     @Override
-    public CatMaterialViviendaModel findById(Long id) {
+    public CatMaterialVivienda findById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Material de vivienda no encontrado con ID: " + id));
     }
 
     @Override
     @Transactional
-    public CatMaterialViviendaModel save(CatMaterialViviendaModel model) throws Exception {
+    public CatMaterialVivienda save(CatMaterialVivienda model) throws Exception {
         return repository.save(model);
     }
 
     @Override
-    public CatMaterialViviendaModel create(Map<String, Object> params) throws Exception {
-        CatMaterialViviendaModel model = new CatMaterialViviendaModel();
+    public CatMaterialVivienda create(Map<String, Object> params) throws Exception {
+        CatMaterialVivienda model = new CatMaterialVivienda();
         model = this.build(params, model);
         return this.save(model);
     }
 
     @Override
-    public CatMaterialViviendaModel update(CatMaterialViviendaModel model, Map<String, Object> params) throws Exception {
+    public CatMaterialVivienda update(CatMaterialVivienda model, Map<String, Object> params) throws Exception {
         model = this.build(params, model);
         return this.save(model);
     }
 
     @Override
-    public CatMaterialViviendaModel build(Map<String, Object> params, CatMaterialViviendaModel model) {
+    public CatMaterialVivienda build(Map<String, Object> params, CatMaterialVivienda model) {
         try {
             String nombreMaterial = JsonUtils.obtString(params, "nombreMaterial");
             if (nombreMaterial == null || nombreMaterial.trim().isEmpty()) {
@@ -71,15 +70,15 @@ public class CatMaterialViviendaServiceJPA implements ICatMaterialViviendaServic
     }
 
     @Override
-    public CatMaterialViviendaModel updateInstance(CatMaterialViviendaModel instance) throws Exception {
-        CatMaterialViviendaModel dbModel = this.findById(instance.getId());
+    public CatMaterialVivienda updateInstance(CatMaterialVivienda instance) throws Exception {
+        CatMaterialVivienda dbModel = this.findById(instance.getId());
         dbModel.setNombreMaterial(instance.getNombreMaterial());
         return this.save(dbModel);
     }
 
     @Override
     public void deleteById(Long id) {
-        CatMaterialViviendaModel model = this.findById(id);
+        CatMaterialVivienda model = this.findById(id);
         if (model != null) {
             repository.deleteById(id);
         }

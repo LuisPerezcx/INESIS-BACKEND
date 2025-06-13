@@ -3,7 +3,7 @@ package com.UNSIJ.INESIS_BACKEND.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatSituacionViviendaModel;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatSituacionVivienda;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -23,7 +23,7 @@ public class MisDatos {
 
     @ManyToOne
     @JoinColumn(name = "id_cat_sexo")
-    private CatSexoModel sexo;
+    private CatSexo sexo;
 
     @ManyToOne
     @JoinColumn(name = "id_cat_estado_civil")
@@ -66,7 +66,7 @@ public class MisDatos {
 
     @ManyToOne
     @JoinColumn(name = "id_cat_situacion_vivienda")
-    private CatSituacionViviendaModel situacionVivienda;
+    private CatSituacionVivienda situacionVivienda;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_gastos_ingresos")

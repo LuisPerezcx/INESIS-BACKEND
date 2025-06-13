@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatEscolaridadModel;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatEscolaridad;
 import com.UNSIJ.INESIS_BACKEND.service.CatEscolaridadServiceJPA;
+
 import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author 24mda
  */
 @RestController
@@ -33,14 +33,14 @@ public class CatEscolaridadController {
     private CatEscolaridadServiceJPA serviceEscolaridadServiceJPA;
 
     @GetMapping
-    public List<CatEscolaridadModel> list() {
+    public List<CatEscolaridad> list() {
         return serviceEscolaridadServiceJPA.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id) {
         try {
-            CatEscolaridadModel catEscolaridad = serviceEscolaridadServiceJPA.findById(id);
+            CatEscolaridad catEscolaridad = serviceEscolaridadServiceJPA.findById(id);
             return ResponseEntity.ok(catEscolaridad);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -52,7 +52,7 @@ public class CatEscolaridadController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            CatEscolaridadModel catEscolaridadCreate = serviceEscolaridadServiceJPA.create(params);
+            CatEscolaridad catEscolaridadCreate = serviceEscolaridadServiceJPA.create(params);
             return ResponseEntity.status(HttpStatus.CREATED).body(catEscolaridadCreate);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -64,7 +64,7 @@ public class CatEscolaridadController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            CatEscolaridadModel catEscolaridadUpdated = serviceEscolaridadServiceJPA.update(serviceEscolaridadServiceJPA.findById(id), params);
+            CatEscolaridad catEscolaridadUpdated = serviceEscolaridadServiceJPA.update(serviceEscolaridadServiceJPA.findById(id), params);
 
             return ResponseEntity.status(HttpStatus.CREATED).body(catEscolaridadUpdated);
         } catch (IllegalArgumentException e) {

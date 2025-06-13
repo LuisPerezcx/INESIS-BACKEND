@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,13 +25,13 @@ public class PDFServiceJPA {
         return (valor != null && !valor.trim().isEmpty()) ? valor : valorPorDefecto;
     }
 
-    public static String domicilio(String calle, String numero, String colonia, String localidad, String casaHuesped ){
+    public static String domicilio(String calle, String numero, String colonia, String localidad, String casaHuesped) {
         String calleSeguro = (calle != null && !calle.trim().isEmpty() ? calle.trim() : " ");
         String numeroSeguro = (numero != null && !numero.trim().isEmpty() ? numero.trim() : " ");
         String coloniaSeguro = (colonia != null && !colonia.trim().isEmpty() ? colonia.trim() : " ");
         String localidadSeguro = (localidad != null && !localidad.trim().isEmpty() ? localidad.trim() : " ");
         String casaHuspedSeguro = (casaHuesped != null && !casaHuesped.trim().isEmpty() ? casaHuesped.trim() : " ");
-      return (calleSeguro +" "+ numeroSeguro + " "+ coloniaSeguro + " "+ localidadSeguro + " "+ casaHuspedSeguro).trim();
+        return (calleSeguro + " " + numeroSeguro + " " + coloniaSeguro + " " + localidadSeguro + " " + casaHuspedSeguro).trim();
     }
 
     public static String nombreCompletoSeguro(String nombre, String apellidoP, String apellidoM) {
@@ -42,13 +41,13 @@ public class PDFServiceJPA {
         return (nombreSeguro + " " + apellidopSeguro + " " + apellidoMSeguro).trim();
     }
 
-    public static String domicilioTelefono(String domicilio, String telefono){
-        String domSeguro = (domicilio != null && !domicilio.trim().isEmpty()) ? domicilio.trim() :" ";
-        String telSeguro = (telefono != null && !telefono.trim().isEmpty()) ? telefono.trim() :" ";
+    public static String domicilioTelefono(String domicilio, String telefono) {
+        String domSeguro = (domicilio != null && !domicilio.trim().isEmpty()) ? domicilio.trim() : " ";
+        String telSeguro = (telefono != null && !telefono.trim().isEmpty()) ? telefono.trim() : " ";
         return (domSeguro + " " + telSeguro).trim();
     }
 
-    public static String marcaTransporte(String marca, String modelo, Integer anio){
+    public static String marcaTransporte(String marca, String modelo, Integer anio) {
         String marcaSeguro = (marca != null && !marca.trim().isEmpty() ? marca.trim() : "");
         String modeloSeguro = (modelo != null && !modelo.trim().isEmpty() ? modelo.trim() : "");
         String anioSeguro = (anio != null) ? anio.toString() : "";
@@ -256,10 +255,10 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.empleadoGobierno, ocupacionSeleccionada == 2 ? "X" : "", true);
             form.setField(PDF.ESE.empleadoPrivado, ocupacionSeleccionada == 3 ? "X" : "", true);
             form.setField(PDF.ESE.negocioPropio, ocupacionSeleccionada == 4 ? "X" : "", true);
-            form.setField(PDF.ESE.jubilado,  ocupacionSeleccionada == 5 ? "X" : "", true);
-            form.setField(PDF.ESE.laborCampo,  ocupacionSeleccionada == 6 ? "X" : "", true);
+            form.setField(PDF.ESE.jubilado, ocupacionSeleccionada == 5 ? "X" : "", true);
+            form.setField(PDF.ESE.laborCampo, ocupacionSeleccionada == 6 ? "X" : "", true);
             form.setField(PDF.ESE.empleadoComunal, ocupacionSeleccionada == 7 ? "X" : "", true);
-            form.setField(PDF.ESE.otroOcupacion,  ocupacionSeleccionada == 8 ? "X" : "", true);
+            form.setField(PDF.ESE.otroOcupacion, ocupacionSeleccionada == 8 ? "X" : "", true);
 
 
             form.setField(PDF.ESE.numHermanos, " ", true);
@@ -287,7 +286,7 @@ public class PDFServiceJPA {
 
             Boolean recursos = alumno.getMisDatos().getRecursosSuficientes();
             form.setField(PDF.ESE.recursosSi, recursos != null && recursos ? "X" : "", true);
-            form.setField(PDF.ESE.recursosNo, recursos != null && recursos ? "X" : "" , true);
+            form.setField(PDF.ESE.recursosNo, recursos != null && recursos ? "X" : "", true);
 
             List<Long> idsMediosSeleccionados = alumno.getMisDatos().getMediosTraslado().stream()
                     .map(medio -> medio.getCatMediosTransporte().getId())

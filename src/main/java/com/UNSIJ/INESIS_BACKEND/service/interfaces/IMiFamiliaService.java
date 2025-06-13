@@ -4,20 +4,27 @@
  */
 
 package com.UNSIJ.INESIS_BACKEND.service.interfaces;
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MiFamiliaModel;
+
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MiFamilia;
 
 import java.util.List;
 import java.util.Map;
+
 /**
- *
  * @author 24mda
  */
 public interface IMiFamiliaService {
-    List<MiFamiliaModel> findAll();
-    MiFamiliaModel findById(Long id);
-    MiFamiliaModel save(MiFamiliaModel model) throws Exception;
-    MiFamiliaModel create(Map<String, Object> params) throws Exception;
-    MiFamiliaModel update(MiFamiliaModel model, Map<String, Object> params) throws Exception;
-    MiFamiliaModel build(Map<String, Object> params, MiFamiliaModel model);
-    void deleteById(Long id); 
+    List<MiFamilia> findAll();
+
+    MiFamilia findById(Long id);
+
+    MiFamilia save(MiFamilia model) throws Exception;
+
+    MiFamilia create(Map<String, Object> params) throws Exception;
+
+    MiFamilia update(MiFamilia model, Map<String, Object> params) throws Exception;
+
+    MiFamilia build(Map<String, Object> params, MiFamilia model);
+
+    void deleteById(Long id);
 }

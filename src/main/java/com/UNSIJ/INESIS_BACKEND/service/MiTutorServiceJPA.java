@@ -2,7 +2,9 @@ package com.UNSIJ.INESIS_BACKEND.service;
 
 import com.UNSIJ.INESIS_BACKEND.model.*;
 import com.UNSIJ.INESIS_BACKEND.repository.CatParentescoRepository;
+import com.UNSIJ.INESIS_BACKEND.repository.CatTipoTrabajoRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.MiTutorRepository;
+import com.UNSIJ.INESIS_BACKEND.repository.OcupacionRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IMiTutorService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,12 @@ public class MiTutorServiceJPA implements IMiTutorService {
     @Autowired
     private CatParentescoRepository catParentescoRepository;
 
+    @Autowired
+    private CatTipoTrabajoRepository catTipoTrabajoRepository;
+
+    @Autowired
+    private OcupacionRepository ocupacionRepository;
+
     @Override
     public List<MiTutor> findAll() {
         return miTutorRepository.findAll();
@@ -30,7 +38,7 @@ public class MiTutorServiceJPA implements IMiTutorService {
 
     @Override
     public MiTutor findById(Long id) {
-        return miTutorRepository.findById(id).orElseThrow( ()->
+        return miTutorRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("Ejemplo no encontrado con el ID: " + id));
     }
 
@@ -70,10 +78,10 @@ public class MiTutorServiceJPA implements IMiTutorService {
     }
 
     @Override
-    public MiTutor build(Map<String, Object> params, MiTutor miTutor){
+    public MiTutor build(Map<String, Object> params, MiTutor miTutor) {
         try {
-            String nombreTutor = JsonUtils.obtString(params,"nombreTutor");
-            if(nombreTutor == null) throw new IllegalArgumentException("El campo nombre completo es obligatorio");
+            String nombreTutor = JsonUtils.obtString(params, "nombreTutor");
+            if (nombreTutor == null) throw new IllegalArgumentException("El campo nombre completo es obligatorio");
             miTutor.setNombreTutor(nombreTutor);
 
             Long idCatParentesco = JsonUtils.obtLong(params, "parentesco");
@@ -85,56 +93,60 @@ public class MiTutorServiceJPA implements IMiTutorService {
                             "Tipo de transporte no encontrado con el ID: " + idCatParentesco));
             miTutor.setParentesco(catParentesco);
 
-            String telefono = JsonUtils.obtString(params,"telefono");
-            if(telefono == null) throw new IllegalArgumentException("El campo telefono es obligatorio");
+            String telefono = JsonUtils.obtString(params, "telefono");
+            if (telefono == null) throw new IllegalArgumentException("El campo telefono es obligatorio");
             miTutor.setTelefono(telefono);
 
-            String correo = JsonUtils.obtString(params,"correo");
-            if(correo == null) throw new IllegalArgumentException("El campo correo es obligatorio");
+            String correo = JsonUtils.obtString(params, "correo");
+            if (correo == null) throw new IllegalArgumentException("El campo correo es obligatorio");
             miTutor.setCorreo(correo);
 
-            String trabajadorSuneoString = JsonUtils.obtString(params,"trabajadorSuneo");
-            Boolean trabajadorSuneo = JsonUtils.obtBoolean(params,"trabajadorSuneo");
-            if(trabajadorSuneoString != null){
-                if("Si".equalsIgnoreCase(trabajadorSuneoString)){
+            String trabajadorSuneoString = JsonUtils.obtString(params, "trabajadorSuneo");
+            Boolean trabajadorSuneo = JsonUtils.obtBoolean(params, "trabajadorSuneo");
+            if (trabajadorSuneoString != null) {
+                if ("Si".equalsIgnoreCase(trabajadorSuneoString)) {
                     trabajadorSuneo = true;
-                } else if("No".equalsIgnoreCase(trabajadorSuneoString)) {
+                } else if ("No".equalsIgnoreCase(trabajadorSuneoString)) {
                     trabajadorSuneo = false;
                 } else {
                     throw new IllegalArgumentException("El valor de trabajador suneo debe ser Si o No");
                 }
             }
-            if(trabajadorSuneo == null)
+            if (trabajadorSuneo == null)
                 throw new IllegalArgumentException("El campo trabajador suneo es obligatorio");
             miTutor.setTrabajadorSuneo(trabajadorSuneo);
 
-            String comparteViviendaString = JsonUtils.obtString(params,"comparteVivienda");
-            Boolean comparteVivienda = JsonUtils.obtBoolean(params,"comparteVivienda");
-            if(comparteViviendaString != null){
-                if("Si".equalsIgnoreCase(comparteViviendaString)){
-                    comparteVivienda = true;
-                } else if("No".equalsIgnoreCase(comparteViviendaString)) {
-                    comparteVivienda = false;
-                } else {
-                    throw new IllegalArgumentException("El valor de comparte vivienda debe ser Si o No");
-                }
-            }
-            if(comparteVivienda == null)
-                throw new IllegalArgumentException("El campo comparte vivienda es obligatorio");
-            miTutor.setTrabajadorSuneo(trabajadorSuneo);
+            miTutor.setComparteVivienda(JsonUtils.parseBooleanFlexible(params.get("comparteVivienda"), "comparteVivienda"));
 
-            String tipoTrabajo = JsonUtils.obtString(params,"tipoTrabajo");
-            if(tipoTrabajo == null) throw new IllegalArgumentException("El campo tipo trabajo es obligatorio");
-            miTutor.setTipoTrabajo(tipoTrabajo);
+            Long idTrabajoTipo = JsonUtils.obtLong(params, "trabajoTipo");
+            if (idTrabajoTipo == null) throw new IllegalArgumentException("El campo 'idTrabajoTipo' es obligatorio.");
+            CatTipoTrabajo catTipoTrabajo = catTipoTrabajoRepository.findById(idTrabajoTipo)
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Tipo trabajo no encontrado con el ID: " + idTrabajoTipo));
+            miTutor.setCatTipoTrabajo(catTipoTrabajo);
 
-            String ocupacionOtro = JsonUtils.obtString(params,"ocupacionOtro");
+            Long idOcupacion = JsonUtils.obtLong(params, "ocupacion");
+            if (idOcupacion == null) throw new IllegalArgumentException("El campo 'idOcupacion' es obligatorio.");
+            Ocupacion ocupacion = ocupacionRepository.findById(idOcupacion)
+                    .orElseThrow(() -> new IllegalArgumentException(
+                            "Ocupacion no encontrado con el ID: " + idOcupacion));
+            miTutor.setOcupacion(ocupacion);
+
+            String ocupacionOtro = JsonUtils.obtString(params, "ocupacionOtro");
             miTutor.setOcupacionOtro(ocupacionOtro);
 
             miTutor = this.save(miTutor);
-            Map<String, Object> domicilioParams = (Map<String, Object>) params.get("domicilio");
+
+            Map<String, Object> domicilioParams = (Map<String, Object>) params.get("datosDomicilio");
             if (domicilioParams != null) {
-                Domicilio domicilio = domicilioServiceJPA.create(domicilioParams);
-                miTutor.setDomicilio(domicilio);
+                if (domicilioParams.get("idDomicilio") != null) {
+                    Long idDomicilio = Long.valueOf(domicilioParams.get("idDomicilio").toString());
+                    Domicilio domicilioExistente = domicilioServiceJPA.findById(idDomicilio);
+                    miTutor.setDomicilio(domicilioExistente);
+                } else {
+                    Domicilio domicilio = domicilioServiceJPA.create(domicilioParams);
+                    miTutor.setDomicilio(domicilio);
+                }
             }
 
         } catch (IllegalArgumentException e) {
@@ -157,7 +169,7 @@ public class MiTutorServiceJPA implements IMiTutorService {
     @Override
     public void deleteById(Long id) {
         MiTutor miTutor = this.findById(id);
-        if (miTutor != null){
+        if (miTutor != null) {
             miTutorRepository.deleteById(id);
         }
     }

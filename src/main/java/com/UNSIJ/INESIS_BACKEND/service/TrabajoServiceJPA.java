@@ -1,16 +1,15 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.UNSIJ.INESIS_BACKEND.model.Trabajo;
 import com.UNSIJ.INESIS_BACKEND.repository.TrabajoRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.ITrabajoService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class TrabajoServiceJPA implements ITrabajoService {
@@ -24,7 +23,7 @@ public class TrabajoServiceJPA implements ITrabajoService {
 
     @Override
     public Trabajo findById(Long id) {
-        return trabajoRepository.findById(id).orElseThrow( ()->
+        return trabajoRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("Ejemplo no encontrado con el ID: " + id));
     }
 
@@ -64,18 +63,18 @@ public class TrabajoServiceJPA implements ITrabajoService {
     }
 
     @Override
-    public Trabajo build(Map<String, Object> params, Trabajo trabajo){
+    public Trabajo build(Map<String, Object> params, Trabajo trabajo) {
         try {
-            String nombreTrabajo = JsonUtils.obtString(params,"nombreTrabajo");
+            String nombreTrabajo = JsonUtils.obtString(params, "nombreTrabajo");
             trabajo.setNombreTrabajo(nombreTrabajo);
 
-            String telefonoTrabajo = JsonUtils.obtString(params,"telefonoTrabajo");
+            String telefonoTrabajo = JsonUtils.obtString(params, "telefonoTrabajo");
             trabajo.setTelefonoTrabajo(telefonoTrabajo);
 
-            Double ingresoMensual = JsonUtils.obtDouble(params,"ingresoMensual");
+            Double ingresoMensual = JsonUtils.obtDouble(params, "ingresoMensual");
             trabajo.setIngresoMensual(ingresoMensual);
 
-            String domicilioTrabajo = JsonUtils.obtString(params,"domicilioTrabajo");
+            String domicilioTrabajo = JsonUtils.obtString(params, "domicilioTrabajo");
             trabajo.setDomicilioTrabajo(domicilioTrabajo);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
@@ -101,7 +100,7 @@ public class TrabajoServiceJPA implements ITrabajoService {
     @Override
     public void deleteById(Long id) {
         Trabajo trabajo = this.findById(id);
-        if (trabajo!= null){
+        if (trabajo != null) {
             trabajoRepository.deleteById(id);
         }
     }

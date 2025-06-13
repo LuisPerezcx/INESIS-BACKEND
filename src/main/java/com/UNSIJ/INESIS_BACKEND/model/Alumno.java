@@ -1,7 +1,6 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -57,7 +56,7 @@ public class Alumno {
     @ManyToOne
     @JoinColumn(name = "id_sexo", referencedColumnName = "id_cat_sexo")
     @NotNull
-    private CatSexoModel sexo;
+    private CatSexo sexo;
 
     @ManyToOne
     @JoinColumn(name = "id_cat_grupo")
@@ -70,4 +69,7 @@ public class Alumno {
 
     @OneToOne(mappedBy = "alumno")
     private MisDatos misDatos;
+
+    
+    private Boolean completo;
 }

@@ -1,22 +1,14 @@
 package com.UNSIJ.INESIS_BACKEND.controller;
 
-import java.util.List;
-import java.util.Map;
-
+import com.UNSIJ.INESIS_BACKEND.model.Trabajo;
+import com.UNSIJ.INESIS_BACKEND.service.TrabajoServiceJPA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.UNSIJ.INESIS_BACKEND.model.Trabajo;
-import com.UNSIJ.INESIS_BACKEND.service.TrabajoServiceJPA;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/trabajo")
@@ -30,7 +22,7 @@ public class TrabajoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> show(@PathVariable Long id){
+    public ResponseEntity<?> show(@PathVariable Long id) {
         try {
             Trabajo trabajo = trabajoServiceJPA.findById(id);
             return ResponseEntity.ok(trabajo);
@@ -58,7 +50,7 @@ public class TrabajoController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            Trabajo trabajoUpdated = trabajoServiceJPA.update(trabajoServiceJPA.findById(id),params);
+            Trabajo trabajoUpdated = trabajoServiceJPA.update(trabajoServiceJPA.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(trabajoUpdated);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -68,7 +60,7 @@ public class TrabajoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> remove(@PathVariable Long id){
+    public ResponseEntity<?> remove(@PathVariable Long id) {
         try {
             trabajoServiceJPA.findById(id); // PARA TIRAR LA EXEPCION SI NO SE ENCUENTRA EL REGISTRO
             trabajoServiceJPA.deleteById(id);

@@ -19,19 +19,19 @@ import com.UNSIJ.INESIS_BACKEND.model.CatCarrera;
 import com.UNSIJ.INESIS_BACKEND.service.CatCarreraServiceJPA;
 
 @RestController
-@RequestMapping("/carrera") 
+@RequestMapping("/carrera")
 public class CatCarreraController {
-     @Autowired
-    private CatCarreraServiceJPA carreraServiceJPA; 
+    @Autowired
+    private CatCarreraServiceJPA carreraServiceJPA;
 
-    
+
     @GetMapping
     public List<CatCarrera> list() {
         return carreraServiceJPA.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> show(@PathVariable Long id){
+    public ResponseEntity<?> show(@PathVariable Long id) {
         try {
             CatCarrera catCatCarrera = carreraServiceJPA.findById(id);
             return ResponseEntity.ok(catCatCarrera);
@@ -59,7 +59,7 @@ public class CatCarreraController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            CatCarrera catCatCarreraUpdate = carreraServiceJPA.update(carreraServiceJPA.findById(id),params);
+            CatCarrera catCatCarreraUpdate = carreraServiceJPA.update(carreraServiceJPA.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(catCatCarreraUpdate);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -69,7 +69,7 @@ public class CatCarreraController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> remove(@PathVariable Long id){
+    public ResponseEntity<?> remove(@PathVariable Long id) {
         try {
             carreraServiceJPA.findById(id); // PARA TIRAR LA EXEPCION SI NO SE ENCUENTRA EL REGISTRO
             carreraServiceJPA.deleteById(id);

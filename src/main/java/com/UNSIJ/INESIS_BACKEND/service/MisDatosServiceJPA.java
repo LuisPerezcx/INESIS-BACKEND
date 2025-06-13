@@ -1,19 +1,18 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import com.UNSIJ.INESIS_BACKEND.model.*;
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatSituacionViviendaModel;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatSituacionVivienda;
 import com.UNSIJ.INESIS_BACKEND.repository.*;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.CatSituacionViviendaRepository;
+import com.UNSIJ.INESIS_BACKEND.service.interfaces.IMisDatosService;
+import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.UNSIJ.INESIS_BACKEND.service.interfaces.IMisDatosService;
-import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class MisDatosServiceJPA implements IMisDatosService {
@@ -204,7 +203,7 @@ public class MisDatosServiceJPA implements IMisDatosService {
             System.out.println("Situacion vivienda: " + idSituacionVivienda);
             if (idSituacionVivienda == null)
                 throw new IllegalArgumentException("El campo 'situacionVivienda' es obligatorio");
-            CatSituacionViviendaModel cat = catSituacionViviendaRepository.findById(idSituacionVivienda)
+            CatSituacionVivienda cat = catSituacionViviendaRepository.findById(idSituacionVivienda)
                     .orElseThrow(() -> new IllegalArgumentException("Situación de vivienda no encontrada"));
             misDatos.setSituacionVivienda(cat);
 
@@ -216,7 +215,7 @@ public class MisDatosServiceJPA implements IMisDatosService {
             misDatos = this.save(misDatos);
             Map<String, Object> domicilioParams = (Map<String, Object>) params.get("domicilio");
             if (domicilioParams != null) {
-                if(misDatos.getDomicilio() != null) {
+                if (misDatos.getDomicilio() != null) {
                     misDatos.setDomicilio(domicilioServiceJPA.update(misDatos.getDomicilio(), domicilioParams));
                 } else {
                     Domicilio domicilio = domicilioServiceJPA.create(domicilioParams);

@@ -4,21 +4,29 @@
  */
 
 package com.UNSIJ.INESIS_BACKEND.service.interfaces;
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MediosEstudioModel;
+
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MediosEstudio;
 
 import java.util.List;
 import java.util.Map;
+
 /**
- *
  * @author 24mda
  */
 public interface IMediosEstudiosService {
-    List<MediosEstudioModel> findAll();
-    MediosEstudioModel findById(Long id);
-    MediosEstudioModel save(MediosEstudioModel model) throws Exception;
-    MediosEstudioModel create(Map<String, Object> params) throws Exception;
-    MediosEstudioModel update(MediosEstudioModel model, Map<String, Object> params) throws Exception;
-    MediosEstudioModel build(Map<String, Object> params, MediosEstudioModel model);
-    MediosEstudioModel updateInstance(MediosEstudioModel instance) throws Exception;
+    List<MediosEstudio> findAll();
+
+    MediosEstudio findById(Long id);
+
+    MediosEstudio save(MediosEstudio model) throws Exception;
+
+    MediosEstudio create(Map<String, Object> params) throws Exception;
+
+    MediosEstudio update(MediosEstudio model, Map<String, Object> params) throws Exception;
+
+    MediosEstudio build(Map<String, Object> params, MediosEstudio model);
+
+    MediosEstudio updateInstance(MediosEstudio instance) throws Exception;
+
     void deleteById(Long id);
 }

@@ -30,7 +30,7 @@ public class CatiTipoTransporteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> show(@PathVariable Long id){
+    public ResponseEntity<?> show(@PathVariable Long id) {
         try {
             CatTipoTransporte catTipoTransporte = catTipoTransporteServiceJPA.findById(id);
             return ResponseEntity.ok(catTipoTransporte);
@@ -56,7 +56,7 @@ public class CatiTipoTransporteController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            CatTipoTransporte catTipoTransporteUpdate = catTipoTransporteServiceJPA.update(catTipoTransporteServiceJPA.findById(id),params);
+            CatTipoTransporte catTipoTransporteUpdate = catTipoTransporteServiceJPA.update(catTipoTransporteServiceJPA.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(catTipoTransporteUpdate);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -66,7 +66,7 @@ public class CatiTipoTransporteController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> remove(@PathVariable Long id){
+    public ResponseEntity<?> remove(@PathVariable Long id) {
         try {
             catTipoTransporteServiceJPA.findById(id); // PARA TIRAR LA EXEPCION SI NO SE ENCUENTRA EL REGISTRO
             catTipoTransporteServiceJPA.deleteById(id);

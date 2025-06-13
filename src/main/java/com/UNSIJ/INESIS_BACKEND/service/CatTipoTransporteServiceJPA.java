@@ -1,16 +1,15 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.UNSIJ.INESIS_BACKEND.model.CatTipoTransporte;
 import com.UNSIJ.INESIS_BACKEND.repository.CatTipoTransporteRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatTipoTransporteService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class CatTipoTransporteServiceJPA implements ICatTipoTransporteService {
@@ -24,7 +23,7 @@ public class CatTipoTransporteServiceJPA implements ICatTipoTransporteService {
 
     @Override
     public CatTipoTransporte findById(Long id) {
-        return catTipoTransporteRepository.findById(id).orElseThrow( ()->
+        return catTipoTransporteRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("CatTipoTransporte no encontrado con el ID: " + id));
     }
 
@@ -64,9 +63,9 @@ public class CatTipoTransporteServiceJPA implements ICatTipoTransporteService {
     }
 
     @Override
-    public CatTipoTransporte build(Map<String, Object> params, CatTipoTransporte catTipoTransporte){
+    public CatTipoTransporte build(Map<String, Object> params, CatTipoTransporte catTipoTransporte) {
         try {
-            String  nombreTipo = JsonUtils.obtString(params, "nombreTipo");
+            String nombreTipo = JsonUtils.obtString(params, "nombreTipo");
             catTipoTransporte.setNombreTipo(nombreTipo);
 
         } catch (IllegalArgumentException e) {
@@ -89,7 +88,7 @@ public class CatTipoTransporteServiceJPA implements ICatTipoTransporteService {
     @Override
     public void deleteById(Long id) {
         CatTipoTransporte catTipoTransporte = this.findById(id);
-        if (catTipoTransporte!= null){
+        if (catTipoTransporte != null) {
             catTipoTransporteRepository.deleteById(id);
         }
     }

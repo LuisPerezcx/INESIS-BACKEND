@@ -1,9 +1,6 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
-import org.hibernate.validator.constraints.Length;
-
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data

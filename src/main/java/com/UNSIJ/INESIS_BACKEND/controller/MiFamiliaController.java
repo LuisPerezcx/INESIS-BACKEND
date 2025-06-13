@@ -17,12 +17,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MiFamiliaModel;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MiFamilia;
 import com.UNSIJ.INESIS_BACKEND.service.MiFamiliaServiceJPA;
+
 import java.util.List;
 import java.util.Map;
+
 /**
- *
  * @author 24mda
  */
 
@@ -30,11 +31,11 @@ import java.util.Map;
 @RestController
 @RequestMapping("/mi_familia")
 public class MiFamiliaController {
-@Autowired
+    @Autowired
     private MiFamiliaServiceJPA service;
 
     @GetMapping
-    public List<MiFamiliaModel> list() {
+    public List<MiFamilia> list() {
         return service.findAll();
     }
 
@@ -52,7 +53,7 @@ public class MiFamiliaController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            MiFamiliaModel model = service.create(params);
+            MiFamilia model = service.create(params);
             return ResponseEntity.status(HttpStatus.CREATED).body(model);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -64,7 +65,7 @@ public class MiFamiliaController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            MiFamiliaModel updated = service.update(service.findById(id), params);
+            MiFamilia updated = service.update(service.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(updated);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

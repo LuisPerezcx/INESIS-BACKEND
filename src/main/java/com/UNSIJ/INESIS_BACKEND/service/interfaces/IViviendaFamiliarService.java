@@ -5,24 +5,27 @@
 
 package com.UNSIJ.INESIS_BACKEND.service.interfaces;
 
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.ViviendaFamiliarModel;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.ViviendaFamiliar;
 
-/**
- *
- * @author 24mda
- */
 import java.util.List;
 import java.util.Map;
 
 public interface IViviendaFamiliarService {
-List<ViviendaFamiliarModel> findAll();
-    ViviendaFamiliarModel findById(Long id);
-    ViviendaFamiliarModel save(ViviendaFamiliarModel model) throws Exception;
-    ViviendaFamiliarModel create(Map<String, Object> params) throws Exception;
-    ViviendaFamiliarModel update(ViviendaFamiliarModel model, Map<String, Object> params) throws Exception;
-    ViviendaFamiliarModel build(Map<String, Object> params, ViviendaFamiliarModel model);
-    ViviendaFamiliarModel updateInstance(ViviendaFamiliarModel instance) throws Exception;
+    List<ViviendaFamiliar> findAll();
+
+    ViviendaFamiliar findById(Long id);
+
+    ViviendaFamiliar save(ViviendaFamiliar model) throws Exception;
+
+    ViviendaFamiliar create(Map<String, Object> params) throws Exception;
+
+    ViviendaFamiliar update(ViviendaFamiliar model, Map<String, Object> params) throws Exception;
+
+    ViviendaFamiliar build(Map<String, Object> params, ViviendaFamiliar model);
+
+    ViviendaFamiliar updateInstance(ViviendaFamiliar instance) throws Exception;
+
     void deleteById(Long id);
-    
+
 
 }

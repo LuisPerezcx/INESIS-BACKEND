@@ -10,11 +10,18 @@ import java.util.Map;
 // los siguientes son los que deben ir siempre
 public interface IEjemploService {
     List<Ejemplo> findAll();
+
     Ejemplo findById(Long id);
+
     Ejemplo save(Ejemplo ejemplo) throws Exception;
+
     Ejemplo create(Map<String, Object> params) throws Exception;
+
     Ejemplo update(Ejemplo ejemplo, Map<String, Object> params) throws Exception;
+
     Ejemplo build(Map<String, Object> params, Ejemplo ejemplo) throws IllegalArgumentException;
+
     Ejemplo updateInstance(Ejemplo ejemplo) throws Exception;
+
     void deleteById(Long id);
 }

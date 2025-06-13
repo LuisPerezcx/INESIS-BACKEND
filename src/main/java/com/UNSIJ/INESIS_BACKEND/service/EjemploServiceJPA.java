@@ -23,7 +23,7 @@ public class EjemploServiceJPA implements IEjemploService {
 
     @Override
     public Ejemplo findById(Long id) {
-        return ejemploRepository.findById(id).orElseThrow( ()->
+        return ejemploRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("Ejemplo no encontrado con el ID: " + id));
     }
 
@@ -67,7 +67,7 @@ public class EjemploServiceJPA implements IEjemploService {
     }
 
     @Override
-    public Ejemplo build(Map<String, Object> params, Ejemplo ejemplo){
+    public Ejemplo build(Map<String, Object> params, Ejemplo ejemplo) {
         try {
             //PRIMERO DEBEMOS VERIFICAR QUE LOS VALORES QUE SON NOT NULL EN LA BASE EXISTAN EN EL JSON
             //AQUI SE DEBEN VALIDAR LOS DATOS QUE SE ESTAN RECIBIENDO Y SE LANZAN LAS EXCEPCIONES CORRESPONDIENTES
@@ -75,11 +75,12 @@ public class EjemploServiceJPA implements IEjemploService {
             //POR EJEMLO EL CAMPO NUMERO ES OBLIGATORIO
 
             //JsonUtils recibe el mapa y el nombre del parametro a extraer
-            Integer numero = JsonUtils.obtInteger(params,"numeroEjemplo");
+            Integer numero = JsonUtils.obtInteger(params, "numeroEjemplo");
             //VERIFICACION DEL CAMPO NUMERO
-            if(numero == null) throw new IllegalArgumentException("El campo numero es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            if (numero == null)
+                throw new IllegalArgumentException("El campo numero es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
             ejemplo.setNumeroEjemplo(numero);
-            ejemplo.setNombreEjemplo(JsonUtils.obtString(params,"nombreEjemplo")); //TAMBIEN SE PUEDE HACER DE ESTA FORMA DIRECTA
+            ejemplo.setNombreEjemplo(JsonUtils.obtString(params, "nombreEjemplo")); //TAMBIEN SE PUEDE HACER DE ESTA FORMA DIRECTA
             //... Y SE REPITIRÁ ESTA SECCIÓN PARA CADA CAMPO EN EL JSON
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
@@ -103,7 +104,7 @@ public class EjemploServiceJPA implements IEjemploService {
     @Override
     public void deleteById(Long id) {
         Ejemplo ejemplo = this.findById(id);
-        if (ejemplo!= null){
+        if (ejemplo != null) {
             ejemploRepository.deleteById(id);
         }
     }

@@ -3,8 +3,6 @@ package com.UNSIJ.INESIS_BACKEND.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 /*
 EJEMPLO DE COMO DEBERAN CREEAR SUS MODELOS
@@ -32,7 +30,7 @@ public class Ejemplo {
     private Long id;
 
     @NotNull
-    private boolean active=false;
+    private boolean active = false;
 
     @NotNull
     @Column(name = "numero_ejemplo")
