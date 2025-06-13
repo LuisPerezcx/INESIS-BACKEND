@@ -90,10 +90,10 @@ public class GastosIngresosService implements IGatosIngresoFamiliares {
                 ingreso.setGastosIngresosFamiliares(gIngresosFamiliares);
                 ingresoFamiliarJPA.save(ingreso);
             }
-
-            Map<String, Object> ingresoFamiliar = (Map<String, Object>) params.get("s");
+/* Map<String, Object> ingresoFamiliar = (Map<String, Object>) params.get("s");
             IngresoFamiliarModel ingresoFamiliarModel = ingresoFamiliarJPA.create(ingresoFamiliar);
-            gIngresosFamiliares.setIngresoFamiliarModel(ingresoFamiliarModel);
+            gIngresosFamiliares.setIngresoFamiliarModel(ingresoFamiliarModel);*/
+            
 
 
 
@@ -104,6 +104,7 @@ public class GastosIngresosService implements IGatosIngresoFamiliares {
             throw new IllegalArgumentException("Error al construir el ejemplo");
         }
 
+        System.out.println("Cuerpo que se manda a la base"+gIngresosFamiliares);
         return gIngresosFamiliares;
     }
 

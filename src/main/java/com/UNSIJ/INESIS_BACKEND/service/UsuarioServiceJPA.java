@@ -135,7 +135,11 @@ public class UsuarioServiceJPA implements IUsuarioService {
         Usuario user = usuarioRepository.findByUsuario(usuario)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 
-        if (!user.getContrasenia().equals(contrasenia)) {
+        // Generar el hash de la contraseña que llega (solo para mostrar)
+        String hashGenerado = passwordEncoder.encode(contrasenia);
+        System.out.println("Hash generado de la contraseña recibida: " + hashGenerado);
+
+        if (!passwordEncoder.matches(contrasenia, user.getContrasenia())) {
             throw new IllegalArgumentException("Contraseña incorrecta");
         }
 
