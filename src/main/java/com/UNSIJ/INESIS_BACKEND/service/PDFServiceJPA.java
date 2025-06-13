@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class PDFServiceJPA {
 
     @Autowired
-    private AlumnoRepository alumnoRepository;
+    private AlumnoServiceJPA alumnoServiceJPA;
 
     public static String valorSeguro(String valor, String valorPorDefecto) {
         return (valor != null && !valor.trim().isEmpty()) ? valor : valorPorDefecto;
@@ -58,9 +58,9 @@ public class PDFServiceJPA {
 
 
     public String generarPdf(Long idAlumno){
-        Alumno alumno = alumnoRepository.findById(idAlumno).orElseThrow(() -> new RuntimeException(" Alumno con el id no encontrado"));
-
         try {
+            Alumno alumno = alumnoServiceJPA.findById(idAlumno);
+
             // Ruta del PDF base (con campos de formulario)
             PdfReader reader = new PdfReader("estudioSocioEconomico.pdf");
 
@@ -339,6 +339,8 @@ public class PDFServiceJPA {
 
             System.out.println("PDF generado con éxito.");
             return base64Pdf;
+        }catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             throw new RuntimeException("Error al generar el pdf "+ e.getMessage(), e);
         }
