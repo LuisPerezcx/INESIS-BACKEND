@@ -1,11 +1,7 @@
 package com.UNSIJ.INESIS_BACKEND.controller;
 
-import com.UNSIJ.INESIS_BACKEND.dto.DatosFamiliaresDTO;
-import com.UNSIJ.INESIS_BACKEND.model.Ejemplo;
 import com.UNSIJ.INESIS_BACKEND.model.GastosIngresosFamiliares;
 import com.UNSIJ.INESIS_BACKEND.service.GastosIngresosService;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

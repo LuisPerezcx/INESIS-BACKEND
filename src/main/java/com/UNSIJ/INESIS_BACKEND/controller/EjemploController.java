@@ -22,7 +22,7 @@ public class EjemploController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> show(@PathVariable Long id){
+    public ResponseEntity<?> show(@PathVariable Long id) {
         try {
             Ejemplo ejemplo = ejemploServiceJPA.findById(id);
             return ResponseEntity.ok(ejemplo);
@@ -50,7 +50,7 @@ public class EjemploController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            Ejemplo ejemploUpdated = ejemploServiceJPA.update(ejemploServiceJPA.findById(id),params);
+            Ejemplo ejemploUpdated = ejemploServiceJPA.update(ejemploServiceJPA.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(ejemploUpdated);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -60,7 +60,7 @@ public class EjemploController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> remove(@PathVariable Long id){
+    public ResponseEntity<?> remove(@PathVariable Long id) {
         try {
             ejemploServiceJPA.findById(id);
             ejemploServiceJPA.deleteById(id);

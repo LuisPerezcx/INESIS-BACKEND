@@ -1,9 +1,7 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
 import com.UNSIJ.INESIS_BACKEND.model.CatParentesco;
-import com.UNSIJ.INESIS_BACKEND.model.Ejemplo;
 import com.UNSIJ.INESIS_BACKEND.repository.CatParentescoRepository;
-import com.UNSIJ.INESIS_BACKEND.repository.EjemploRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatParentesco;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +20,7 @@ public class CatParentescoServiceJPA implements ICatParentesco {
 
     @Override
     public CatParentesco findById(Long id) {
-        return catParentescoRepository.findById(id).orElseThrow( ()->
+        return catParentescoRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("Ejemplo no encontrado con el ID: " + id));
     }
 }

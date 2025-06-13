@@ -26,7 +26,7 @@ public class CatTipoTrabajoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> show(@PathVariable Long id){
+    public ResponseEntity<?> show(@PathVariable Long id) {
         try {
             CatTipoTrabajo catTipoTrabajo = catTipoTrabajaoServiceJPA.findById(id);
             return ResponseEntity.ok(catTipoTrabajo);

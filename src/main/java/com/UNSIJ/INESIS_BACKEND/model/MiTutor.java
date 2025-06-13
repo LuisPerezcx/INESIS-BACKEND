@@ -1,5 +1,6 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -21,14 +22,15 @@ public class MiTutor {
     @Column(name = "correo")
     private String correo;
 
-    @Column(name = "trabajador_sunero")
+    @Column(name = "trabajador_suneo")
     private Boolean trabajadorSuneo;
 
     @Column(name = "comparte_vivienda")
     private Boolean comparteVivienda;
 
-    @Column(name = "tipo_trabajo")
-    private String tipoTrabajo;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_cat_tipo_trabajo")
+    private CatTipoTrabajo catTipoTrabajo;
 
     @Column(name = "ocupacion_otro")
     private String ocupacionOtro;
@@ -47,4 +49,9 @@ public class MiTutor {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "id_domicilio")
     private Domicilio domicilio;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_alumno", referencedColumnName = "id_alumno")
+    @JsonIgnore
+    private Alumno alumno;
 }

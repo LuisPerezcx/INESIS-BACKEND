@@ -4,19 +4,14 @@
  */
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatInternetModel;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatInternet;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.CatInternetRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatInternetService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- *
- * @author 24mda
- */
 import java.util.List;
 import java.util.Map;
 
@@ -27,25 +22,25 @@ public class CatInternetServiceJPA implements ICatInternetService {
     private CatInternetRepository repository;
 
     @Override
-    public List<CatInternetModel> findAll() {
+    public List<CatInternet> findAll() {
         return repository.findAll();
     }
 
     @Override
-    public CatInternetModel findById(Long id) {
+    public CatInternet findById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Internet no encontrado con ID: " + id));
     }
 
     @Override
     @Transactional
-    public CatInternetModel save(CatInternetModel model) throws Exception {
+    public CatInternet save(CatInternet model) throws Exception {
         return repository.save(model);
     }
 
     @Override
-    public CatInternetModel create(Map<String, Object> params) throws Exception {
-        CatInternetModel model = new CatInternetModel();
+    public CatInternet create(Map<String, Object> params) throws Exception {
+        CatInternet model = new CatInternet();
         try {
             model = this.build(params, model);
         } catch (Exception e) {
@@ -56,7 +51,7 @@ public class CatInternetServiceJPA implements ICatInternetService {
     }
 
     @Override
-    public CatInternetModel update(CatInternetModel model, Map<String, Object> params) throws Exception {
+    public CatInternet update(CatInternet model, Map<String, Object> params) throws Exception {
         try {
             model = this.build(params, model);
         } catch (Exception e) {
@@ -67,7 +62,7 @@ public class CatInternetServiceJPA implements ICatInternetService {
     }
 
     @Override
-    public CatInternetModel build(Map<String, Object> params, CatInternetModel model) {
+    public CatInternet build(Map<String, Object> params, CatInternet model) {
         try {
             String nombreInternet = JsonUtils.obtString(params, "nombreInternet");
             if (nombreInternet == null || nombreInternet.trim().isEmpty()) {
@@ -82,15 +77,15 @@ public class CatInternetServiceJPA implements ICatInternetService {
     }
 
     @Override
-    public CatInternetModel updateInstance(CatInternetModel instance) throws Exception {
-        CatInternetModel dbModel = this.findById(instance.getId());
+    public CatInternet updateInstance(CatInternet instance) throws Exception {
+        CatInternet dbModel = this.findById(instance.getId());
         dbModel.setNombreInternet(instance.getNombreInternet());
         return this.save(dbModel);
     }
 
     @Override
     public void deleteById(Long id) {
-        CatInternetModel model = this.findById(id);
+        CatInternet model = this.findById(id);
         if (model != null) {
             repository.deleteById(id);
         }

@@ -1,17 +1,15 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import java.util.List;
-import java.util.Map;
-
+import com.UNSIJ.INESIS_BACKEND.model.CatEstadoCivil;
+import com.UNSIJ.INESIS_BACKEND.repository.CatEstadoCivilRepository;
+import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatEstadoCivilService;
+import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.UNSIJ.INESIS_BACKEND.model.CatEstadoCivil;
-import com.UNSIJ.INESIS_BACKEND.model.Ejemplo;
-import com.UNSIJ.INESIS_BACKEND.repository.CatEstadoCivilRepository;
-import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatEstadoCivilService;
-import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class CatEstadoCivilServiceJPA implements ICatEstadoCivilService {
@@ -25,7 +23,7 @@ public class CatEstadoCivilServiceJPA implements ICatEstadoCivilService {
 
     @Override
     public CatEstadoCivil findById(Long id) {
-        return catEstadoCivilRepository.findById(id).orElseThrow( ()->
+        return catEstadoCivilRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("Ejemplo no encontrado con el ID: " + id));
     }
 
@@ -65,7 +63,7 @@ public class CatEstadoCivilServiceJPA implements ICatEstadoCivilService {
     }
 
     @Override
-    public CatEstadoCivil build(Map<String, Object> params, CatEstadoCivil catEstadoCivil){
+    public CatEstadoCivil build(Map<String, Object> params, CatEstadoCivil catEstadoCivil) {
         try {
             String nombreEstadoCivil = JsonUtils.obtString(params, "nombreEstadoCivil");
             if (nombreEstadoCivil == null || nombreEstadoCivil.isEmpty()) {
@@ -92,7 +90,7 @@ public class CatEstadoCivilServiceJPA implements ICatEstadoCivilService {
     @Override
     public void deleteById(Long id) {
         CatEstadoCivil catEstadoCivil = this.findById(id);
-        if (catEstadoCivil!= null){
+        if (catEstadoCivil != null) {
             catEstadoCivilRepository.deleteById(id);
         }
     }

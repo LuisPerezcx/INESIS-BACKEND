@@ -19,10 +19,10 @@ import com.UNSIJ.INESIS_BACKEND.model.CatSemestre;
 import com.UNSIJ.INESIS_BACKEND.service.CatSemestreServiceJPA;
 
 @RestController
-@RequestMapping("/semestre") 
+@RequestMapping("/semestre")
 public class CatSemestreController {
-     @Autowired
-    private CatSemestreServiceJPA semestreServiceJPA; 
+    @Autowired
+    private CatSemestreServiceJPA semestreServiceJPA;
 
     @GetMapping
     public List<CatSemestre> list() {
@@ -30,7 +30,7 @@ public class CatSemestreController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> show(@PathVariable Long id){
+    public ResponseEntity<?> show(@PathVariable Long id) {
         try {
             CatSemestre catSemestre = semestreServiceJPA.findById(id);
             return ResponseEntity.ok(catSemestre);
@@ -66,7 +66,7 @@ public class CatSemestreController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> remove(@PathVariable Long id){
+    public ResponseEntity<?> remove(@PathVariable Long id) {
         try {
             semestreServiceJPA.findById(id); // PARA TIRAR LA EXCEPCIÓN SI NO SE ENCUENTRA EL REGISTRO
             semestreServiceJPA.deleteById(id);

@@ -1,9 +1,7 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
 import com.UNSIJ.INESIS_BACKEND.model.CatTipoTrabajo;
-import com.UNSIJ.INESIS_BACKEND.model.Ejemplo;
 import com.UNSIJ.INESIS_BACKEND.repository.CatTipoTrabajoRepository;
-import com.UNSIJ.INESIS_BACKEND.repository.EjemploRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatTipoTrabajoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +20,7 @@ public class CatTipoTrabajaoServiceJPA implements ICatTipoTrabajoService {
 
     @Override
     public CatTipoTrabajo findById(Long id) {
-        return catTipoTrabajoRepository.findById(id).orElseThrow( ()->
+        return catTipoTrabajoRepository.findById(id).orElseThrow(() ->
                 new IllegalArgumentException("CatTipoTrabajo no encontrado con el ID: " + id));
     }
 }

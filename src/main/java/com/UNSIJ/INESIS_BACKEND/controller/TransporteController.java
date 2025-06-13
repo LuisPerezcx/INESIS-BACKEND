@@ -1,22 +1,14 @@
 package com.UNSIJ.INESIS_BACKEND.controller;
 
-import java.util.List;
-import java.util.Map;
-
+import com.UNSIJ.INESIS_BACKEND.model.Transporte;
+import com.UNSIJ.INESIS_BACKEND.service.TransporteServiceJPA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.UNSIJ.INESIS_BACKEND.model.Transporte;
-import com.UNSIJ.INESIS_BACKEND.service.TransporteServiceJPA;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/transporte")
@@ -30,7 +22,7 @@ public class TransporteController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> show(@PathVariable Long id){
+    public ResponseEntity<?> show(@PathVariable Long id) {
         try {
             Transporte transporte = transporteServiceJPA.findById(id);
             return ResponseEntity.ok(transporte);
@@ -56,7 +48,7 @@ public class TransporteController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            Transporte transporteUpdated = transporteServiceJPA.update(transporteServiceJPA.findById(id),params);
+            Transporte transporteUpdated = transporteServiceJPA.update(transporteServiceJPA.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(transporteUpdated);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
@@ -66,7 +58,7 @@ public class TransporteController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> remove(@PathVariable Long id){
+    public ResponseEntity<?> remove(@PathVariable Long id) {
         try {
             transporteServiceJPA.findById(id); // PARA TIRAR LA EXEPCION SI NO SE ENCUENTRA EL REGISTRO
             transporteServiceJPA.deleteById(id);

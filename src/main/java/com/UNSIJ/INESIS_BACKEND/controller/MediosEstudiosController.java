@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-
 package com.UNSIJ.INESIS_BACKEND.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,24 +16,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatMediosEstudioModel;
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MediosEstudioModel;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MediosEstudio;
 import com.UNSIJ.INESIS_BACKEND.service.MediosEstudiosServiceJPA;
+
 import java.util.List;
 import java.util.Map;
+
 /**
- *
  * @author 24mda
  */
-
 @RestController
-@RequestMapping("/medios-estudios")
+@RequestMapping("/medios_estudios")
 public class MediosEstudiosController {
+
     @Autowired
     private MediosEstudiosServiceJPA serviceMediosEstudiosJPA;
 
     @GetMapping
-    public List<MediosEstudioModel> list() {
+    public List<MediosEstudio> list() {
         return serviceMediosEstudiosJPA.findAll();
     }
 
@@ -44,7 +43,7 @@ public class MediosEstudiosController {
             return ResponseEntity.ok(serviceMediosEstudiosJPA.findById(id));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
     }
@@ -52,11 +51,11 @@ public class MediosEstudiosController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            MediosEstudioModel mediosEstudioModel = serviceMediosEstudiosJPA.create(params);
-            return ResponseEntity.status(HttpStatus.CREATED).body(mediosEstudioModel);
+            MediosEstudio mediosEstudio = serviceMediosEstudiosJPA.create(params);
+            return ResponseEntity.status(HttpStatus.CREATED).body(mediosEstudio);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
     }
@@ -64,11 +63,11 @@ public class MediosEstudiosController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            MediosEstudioModel updated = serviceMediosEstudiosJPA.update(serviceMediosEstudiosJPA.findById(id), params);
+            MediosEstudio updated = serviceMediosEstudiosJPA.update(serviceMediosEstudiosJPA.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(updated);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
     }

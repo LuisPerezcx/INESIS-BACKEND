@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatBienesHogarModel;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatBienesHogar;
 import com.UNSIJ.INESIS_BACKEND.service.CatBienesHogarServiceJPA;
 
 /**
@@ -34,18 +34,18 @@ public class CatBienesHogarController {
     private CatBienesHogarServiceJPA serviceBienesHogarJPA;
 
     @GetMapping
-    public List<CatBienesHogarModel> list() {
+    public List<CatBienesHogar> list() {
         return serviceBienesHogarJPA.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id) {
         try {
-            CatBienesHogarModel bienesHogar = serviceBienesHogarJPA.findById(id);
+            CatBienesHogar bienesHogar = serviceBienesHogarJPA.findById(id);
             return ResponseEntity.ok(bienesHogar);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
     }
@@ -53,7 +53,7 @@ public class CatBienesHogarController {
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
-            CatBienesHogarModel bienesHogarCreate = serviceBienesHogarJPA.create(params);
+            CatBienesHogar bienesHogarCreate = serviceBienesHogarJPA.create(params);
             return ResponseEntity.status(HttpStatus.CREATED).body(bienesHogarCreate);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -65,7 +65,7 @@ public class CatBienesHogarController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
-            CatBienesHogarModel updatedBienes = serviceBienesHogarJPA.update(serviceBienesHogarJPA.findById(id), params);
+            CatBienesHogar updatedBienes = serviceBienesHogarJPA.update(serviceBienesHogarJPA.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(updatedBienes);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());

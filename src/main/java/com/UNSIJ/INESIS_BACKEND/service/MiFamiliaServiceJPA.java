@@ -5,11 +5,12 @@
 
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MediosEstudioModel;
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MiFamiliaModel;
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.ViviendaFamiliarModel;
+import com.UNSIJ.INESIS_BACKEND.model.Alumno;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatEscolaridad;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MediosEstudio;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MiFamilia;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.ViviendaFamiliar;
+import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.CatEscolaridadRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.MediosEstudioRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.MiFamiliaRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.ViviendaFamiliarRepository;
@@ -24,11 +25,10 @@ import java.util.Map;
 
 
 /**
- *
  * @author 24mda
  */
 @Service
-public class MiFamiliaServiceJPA implements IMiFamiliaService{
+public class MiFamiliaServiceJPA implements IMiFamiliaService {
     @Autowired
     private MiFamiliaRepository repository;
 
@@ -36,61 +36,104 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService{
     private ViviendaFamiliarRepository viviendaRepo;
 
     @Autowired
+    private CatEscolaridadRepository escolaridadRepo;
+
+    @Autowired
     private MediosEstudioRepository mediosRepo;
 
+    @Autowired
+    private AlumnoServiceJPA alumnoService;
+
     @Override
-    public List<MiFamiliaModel> findAll() {
+    public List<MiFamilia> findAll() {
         return repository.findAll();
     }
 
     @Override
-    public MiFamiliaModel findById(Long id) {
+    public MiFamilia findById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("MiFamilia no encontrada con ID: " + id));
     }
 
     @Override
     @Transactional
-    public MiFamiliaModel save(MiFamiliaModel model) throws Exception {
+    public MiFamilia save(MiFamilia model) throws Exception {
         return repository.save(model);
     }
 
     @Override
-    public MiFamiliaModel create(Map<String, Object> params) throws Exception {
-        MiFamiliaModel model = new MiFamiliaModel();
-        return this.save(this.build(params, model));
-    }
-
-    @Override
-    public MiFamiliaModel update(MiFamiliaModel model, Map<String, Object> params) throws Exception {
-        return this.save(this.build(params, model));
-    }
-
-    @Override
-    public MiFamiliaModel build(Map<String, Object> params, MiFamiliaModel model) {
-        model.setNombreCompleto(JsonUtils.obtString(params, "nombre_completo"));
-        model.setIdDomicilio(JsonUtils.obtInteger(params, "id_domicilio"));
-        model.setTelefono(JsonUtils.obtString(params, "telefono"));
-        model.setEscolaridadPadre(JsonUtils.obtString(params, "escolaridadPadre"));
-        model.setEscolaridadMadre(JsonUtils.obtString(params, "escolaridadMadre"));
-        model.setNumHermanos(JsonUtils.obtInteger(params, "num_hermanos"));
-        model.setNumHermanosEstudiando(JsonUtils.obtInteger(params, "num_hermanos_estudiando"));
-        model.setNumHermanosNoEstudiando(JsonUtils.obtInteger(params, "num_hermanos_no_estudiando"));
-        model.setNumHermanosLicenciatura(JsonUtils.obtInteger(params, "num_hermanos_licenciatura"));
-
-        Long idVivienda = JsonUtils.obtLong(params, "id_cat_vivienda_familiar");
-        Long idMedios = JsonUtils.obtLong(params, "id_medios_estudio");
-
-        if (idVivienda != null) {
-            ViviendaFamiliarModel vivienda = viviendaRepo.findById(idVivienda)
-                .orElseThrow(() -> new IllegalArgumentException("Vivienda no encontrada con ID: " + idVivienda));
-            model.setViviendaFamiliar(vivienda);
+    public MiFamilia create(Map<String, Object> params) throws Exception {
+        MiFamilia model = new MiFamilia();
+        try {
+            Long idAlumno = JsonUtils.obtLong(params, "alumnoId");
+            if (idAlumno == null) throw new IllegalArgumentException("El campo idAlumno es obligatorio");
+            Alumno alumno = alumnoService.findById(idAlumno);
+            model.setAlumno(alumno);
+            this.build(params, model);
+            model.setModuloCompleto(true);
+            model = this.save(model);
+            alumno.setMiFamilia(model);
+            alumnoService.save(alumno); // Guardar el alumno con la referencia a MiFamilia
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
+            throw new IllegalArgumentException("Error al construir misDatos (create)");
         }
+        return model;
+    }
 
-        if (idMedios != null) {
-            MediosEstudioModel medios = mediosRepo.findById(idMedios)
-                .orElseThrow(() -> new IllegalArgumentException("Medios de estudio no encontrado con ID: " + idMedios));
-            model.setMediosEstudio(medios);
+    @Override
+    public MiFamilia update(MiFamilia model, Map<String, Object> params) throws Exception {
+        return this.save(this.build(params, model));
+    }
+
+    @Override
+    public MiFamilia build(Map<String, Object> params, MiFamilia model) {
+        try {
+            model.setNombreCompleto(JsonUtils.obtString(params, "nombre_completo"));
+            model.setIdDomicilio(JsonUtils.obtInteger(params, "id_domicilio"));
+            model.setTelefono(JsonUtils.obtString(params, "telefono"));
+
+
+            model.setNumHermanos(JsonUtils.obtInteger(params, "num_hermanos"));
+            model.setNumHermanosEstudiando(JsonUtils.obtInteger(params, "num_hermanos_estudiando"));
+            model.setNumHermanosNoEstudiando(JsonUtils.obtInteger(params, "num_hermanos_no_estudiando"));
+            model.setNumHermanosLicenciatura(JsonUtils.obtInteger(params, "num_hermanos_licenciatura"));
+
+            Long idVivienda = JsonUtils.obtLong(params, "id_cat_vivienda_familiar");
+            Long idMedios = JsonUtils.obtLong(params, "id_medios_estudio");
+            Long idEscolaridadPadre = JsonUtils.obtLong(params, "id_escolaridad_padre");
+            Long idEscolaridadMadre = JsonUtils.obtLong(params, "id_escolaridad_madre");
+
+            if (idVivienda != null) {
+                ViviendaFamiliar vivienda = viviendaRepo.findById(idVivienda)
+                        .orElseThrow(() -> new IllegalArgumentException("Vivienda no encontrada con ID: " + idVivienda));
+                model.setViviendaFamiliar(vivienda);
+            }
+
+            if (idMedios != null) {
+                MediosEstudio medios = mediosRepo.findById(idMedios)
+                        .orElseThrow(() -> new IllegalArgumentException("Medios de estudio no encontrado con ID: " + idMedios));
+                model.setMediosEstudio(medios);
+            }
+
+            if (idEscolaridadPadre != null) {
+                CatEscolaridad escolaridadPadre = escolaridadRepo.findById(idEscolaridadPadre)
+                        .orElseThrow(() -> new IllegalArgumentException("Escolaridad del padre no encontrada con ID: " + idEscolaridadPadre));
+                model.setEscolaridadPadre(escolaridadPadre);
+            }
+
+            if (idEscolaridadMadre != null) {
+                CatEscolaridad escolaridadMadre = escolaridadRepo.findById(idEscolaridadMadre)
+                        .orElseThrow(() -> new IllegalArgumentException("Escolaridad de la madre no encontrada con ID: " + idEscolaridadMadre));
+                model.setEscolaridadMadre(escolaridadMadre);
+            }
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Error al construir el alumno");
         }
 
         return model;
@@ -98,7 +141,7 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService{
 
     @Override
     public void deleteById(Long id) {
-        MiFamiliaModel model = this.findById(id);
+        MiFamilia model = this.findById(id);
         if (model != null) {
             repository.deleteById(id);
         }
