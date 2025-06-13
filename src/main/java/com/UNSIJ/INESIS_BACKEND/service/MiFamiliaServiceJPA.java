@@ -5,6 +5,7 @@
 
 package com.UNSIJ.INESIS_BACKEND.service;
 
+import com.UNSIJ.INESIS_BACKEND.model.Alumno;
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatEscolaridad;
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MediosEstudio;
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MiFamilia;
@@ -40,6 +41,9 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
     @Autowired
     private MediosEstudioRepository mediosRepo;
 
+    @Autowired
+    private AlumnoServiceJPA alumnoService;
+
     @Override
     public List<MiFamilia> findAll() {
         return repository.findAll();
@@ -61,14 +65,22 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
     public MiFamilia create(Map<String, Object> params) throws Exception {
         MiFamilia model = new MiFamilia();
         try {
+            Long idAlumno = JsonUtils.obtLong(params, "alumnoId");
+            if (idAlumno == null) throw new IllegalArgumentException("El campo idAlumno es obligatorio");
+            Alumno alumno = alumnoService.findById(idAlumno);
+            model.setAlumno(alumno);
             this.build(params, model);
+            model.setModuloCompleto(true);
+            model = this.save(model);
+            alumno.setMiFamilia(model);
+            alumnoService.save(alumno); // Guardar el alumno con la referencia a MiFamilia
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
             throw new IllegalArgumentException("Error al construir misDatos (create)");
         }
-        return this.save(model);
+        return model;
     }
 
     @Override

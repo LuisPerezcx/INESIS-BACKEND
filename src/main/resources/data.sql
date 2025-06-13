@@ -513,7 +513,7 @@ WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Auto
 
 INSERT INTO cat_medios_transporte (nombre_medio)
 SELECT 'Mototaxi'
-WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Colectivo');
+WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Mototaxi');
 
 INSERT INTO cat_medios_transporte (nombre_medio)
 SELECT 'Taxi'

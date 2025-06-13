@@ -86,9 +86,9 @@ public class MisDatosServiceJPA implements IMisDatosService {
             Alumno alumno = alumnoService.findById(idAlumno);
             misDatos.setAlumno(alumno);
             this.build(params, misDatos);
+            misDatos.setModuloCompleto(true);
             misDatos = this.save(misDatos);
             alumno.setMisDatos(misDatos);
-            misDatos.setCompleto(true);
             alumnoService.save(alumno);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
@@ -149,12 +149,15 @@ public class MisDatosServiceJPA implements IMisDatosService {
             Map<String, Object> gastosIngresosParams = (Map<String, Object>) params.get("gastosIngresos");
             if (gastosIngresosParams != null) {
                 if (misDatos.getGastosIngresos() != null) {
+                    System.out.println("update");
                     misDatos.setGastosIngresos(gastosIngresosServiceJPA.update(misDatos.getGastosIngresos(), gastosIngresosParams));
                 } else {
+                    System.out.println("create");
                     GastosIngresos gastosIngresos = gastosIngresosServiceJPA.create(gastosIngresosParams);
                     misDatos.setGastosIngresos(gastosIngresos);
                 }
             }
+            System.out.println("dasdasd");
 
             Map<String, Object> transporteAutomovilParams = (Map<String, Object>) params.get("transporteAutomovil");
             if (misDatos.getLlevaAutomovil() && transporteAutomovilParams != null &&

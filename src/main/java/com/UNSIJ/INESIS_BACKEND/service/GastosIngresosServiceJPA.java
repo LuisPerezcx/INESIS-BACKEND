@@ -52,6 +52,7 @@ public class GastosIngresosServiceJPA implements IGastosIngresosService {
         GastosIngresos gastosIngresos = new GastosIngresos();
         try {
             this.build(params, gastosIngresos);
+            System.out.println("asdf");
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {

@@ -1,5 +1,7 @@
 package com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia;
 
+import com.UNSIJ.INESIS_BACKEND.model.Alumno;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -47,4 +49,12 @@ public class MiFamilia {
     @ManyToOne
     @JoinColumn(name = "id_cat_escolaridad_madre")
     private CatEscolaridad escolaridadMadre;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_alumno", referencedColumnName = "id_alumno")
+    @JsonIgnore
+    private Alumno alumno;
+
+    @Column(name = "modulo_completo")
+    private Boolean moduloCompleto;
 }
