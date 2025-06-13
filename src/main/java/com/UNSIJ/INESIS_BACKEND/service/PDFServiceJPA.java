@@ -197,10 +197,12 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.estadoActualFamilia, " ", true);
             form.setField(PDF.ESE.telefonoActualFamilia, " ", true);
             form.setField(PDF.ESE.dependeEconomicamente, valorSeguro(alumno.getMisDatos().getGastosIngresos().getNombreQuienDependes()," "), true);
-            form.setField(PDF.ESE.nombreEmpresa, valorSeguro(alumno.getMisDatos().getGastosIngresos().getTrabajo().getNombreTrabajo()," "), true);
-            form.setField(PDF.ESE.ingresoMensual,valorSeguro(String.valueOf(alumno.getMisDatos().getGastosIngresos().getTrabajo().getIngresoMensual())," "), true);
-            form.setField(PDF.ESE.domicilioTrabajo,domicilioTelefono(alumno.getMisDatos().getGastosIngresos().getTrabajo().getDomicilioTrabajo(),alumno.getMisDatos().getGastosIngresos().getTrabajo().getTelefonoTrabajo()), true);
+            if(alumno.getMisDatos().getGastosIngresos().getTrabajo() != null ){
+                form.setField(PDF.ESE.nombreEmpresa, valorSeguro(alumno.getMisDatos().getGastosIngresos().getTrabajo().getNombreTrabajo()," "), true);
+                form.setField(PDF.ESE.ingresoMensual,valorSeguro(String.valueOf(alumno.getMisDatos().getGastosIngresos().getTrabajo().getIngresoMensual())," "), true);
+                form.setField(PDF.ESE.domicilioTrabajo,domicilioTelefono(alumno.getMisDatos().getGastosIngresos().getTrabajo().getDomicilioTrabajo(),alumno.getMisDatos().getGastosIngresos().getTrabajo().getTelefonoTrabajo()), true);
 
+            }
 
             form.setField(PDF.ESE.aportanGasto, " ", true);
             form.setField(PDF.ESE.ingresoMensualPromedio, " ", true);
