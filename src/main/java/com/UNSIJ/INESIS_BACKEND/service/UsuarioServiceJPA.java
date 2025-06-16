@@ -152,4 +152,15 @@ public class UsuarioServiceJPA implements IUsuarioService {
         }
         return passwordEncoder.matches(contrasena, user.getContrasenia());
     }
+
+    @Transactional
+    public void cambiarContrasena(String usuario, String nuevaContrasena) {
+        Usuario user = usuarioRepository.findByUsuario(usuario)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+        // Cifrar la nueva contraseña antes de guardarla
+        String nuevaContrasenaCifrada = passwordEncoder.encode(nuevaContrasena);
+        user.setContrasenia(nuevaContrasenaCifrada);
+        usuarioRepository.save(user);
+    }
+
 }
