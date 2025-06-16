@@ -39,14 +39,12 @@ public class ReciboLuz {
 
     @NotNull
     @Column(name = "pago_bimestral")
-    private String pagoBimestral;
+    private Double ultimoPago; // Puedes usar BigDecimal si vas a operar con montos
 
     @NotNull
     @Column(name = "pago_promedio_mes")
-    private String pagoPromedioMes;
+    private Double promedioPago;
 
-    @Lob
-    @Column(name = "contenido_base64")
-    private String contenidoBase64;
-
+    @Column(name = "observaciones")
+    private String observaciones;
 }

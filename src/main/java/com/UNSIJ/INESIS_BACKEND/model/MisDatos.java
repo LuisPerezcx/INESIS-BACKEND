@@ -30,7 +30,7 @@ public class MisDatos {
     private CatEstadoCivil estadoCivil;
 
     @Column(name = "seccion_completa")
-    private boolean completo = false;
+    private boolean moduloCompleto = false;
 
     @NotNull
     @Column(name = "recursos_suficientes")

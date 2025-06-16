@@ -19,11 +19,11 @@ public class IngresoFamiliarModel {
 
     @NotNull
     @Column(name = "ingreso_bruto")
-    private String ingresoBruto;
+    private Double ingresoBruto;
 
     @NotNull
     @Column(name = "ingreso_neto")
-    private String ingresoNeto;
+    private Double ingresoNeto;
 
     @NotNull
     @Column(name = "lugar_trabajo")
@@ -36,7 +36,7 @@ public class IngresoFamiliarModel {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "id_cat_parentesco", referencedColumnName = "id_cat_parentesco")
-    Parentesco parentesco;
+    CatParentesco parentesco;
 
 
     /* 

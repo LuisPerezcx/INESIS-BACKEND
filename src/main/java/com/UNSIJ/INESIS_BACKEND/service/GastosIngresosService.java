@@ -1,145 +1,117 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import com.UNSIJ.INESIS_BACKEND.model.GastoFamiliarModel;
-import com.UNSIJ.INESIS_BACKEND.model.GastosIngresosFamiliares;
-import com.UNSIJ.INESIS_BACKEND.model.IngresoFamiliarModel;
-import com.UNSIJ.INESIS_BACKEND.model.ReciboLuz;
-import com.UNSIJ.INESIS_BACKEND.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.stereotype.Service;
+
+import com.UNSIJ.INESIS_BACKEND.model.*;
+import com.UNSIJ.INESIS_BACKEND.repository.*;
+import com.UNSIJ.INESIS_BACKEND.service.interfaces.IGatosIngresoFamiliares;
+import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
+
 @Service
-public class GastosIngresosService {
+public class GastosIngresosService implements IGatosIngresoFamiliares {
 
     @Autowired
-    private GastoFamiliarRepository gastoRepo;
-    @Autowired
-    private IngresoFamiliarRepository ingresoRepo;
-    @Autowired
-    private ReciboLuzRepository reciboRepo;
-    @Autowired
-    private GastosIngresosFamiliaresRepository familiaRepo;
-    @Autowired
-    private ParentescoRepository parentescoRepo;
-    @Autowired
-    private OcupacionRepository ocupacionRepo;
+    GastosIngresosFamiliaresRepository gastosIngresosFamiliaresRepository;
 
+    @Autowired
+    GastoFamiliarServiceJPA gastoFamiliarServiceJPA;
+
+    @Autowired
+    ReciboLuzFamiliaJPA reciboLuzFamiliaJPA;
+
+    @Autowired
+    IngresoFamiliarJPA ingresoFamiliarJPA;
+
+    @Override
     public List<GastosIngresosFamiliares> findAll() {
-        return familiaRepo.findAll();
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'findAll'");
     }
 
+    @Override
     public GastosIngresosFamiliares findById(Long id) {
-        return familiaRepo.findById(id).orElseThrow(() -> new IllegalArgumentException("No se encontró el registro con id: " + id));
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'findById'");
     }
 
-    public GastosIngresosFamiliares create(Map<String, Object> params) {
+    @Override
+    public GastosIngresosFamiliares save(GastosIngresosFamiliares GastosIngresosFamiliares) throws Exception {
+        return gastosIngresosFamiliaresRepository.save(GastosIngresosFamiliares);
+    }
+
+    @Override
+    public GastosIngresosFamiliares create(Map<String, Object> params) throws Exception {
+        GastosIngresosFamiliares ejemplo = new GastosIngresosFamiliares();
         try {
-            System.out.println("=== Recibiendo params ===");
-            System.out.println(params);
-
-            // === 1. GUARDAR GASTOS ===
-            Map<String, Object> gastoData = (Map<String, Object>) params.get("gastos");
-            System.out.println("GastoData recibido: " + gastoData);
-
-            GastoFamiliarModel gasto = new GastoFamiliarModel();
-            gasto.setGastoAlimentacion(getDoubleFromObject(gastoData.get("Alimentación")));
-            gasto.setGastoRenta(getDoubleFromObject(gastoData.get("Renta")));
-            gasto.setGastoServicios(getDoubleFromObject(gastoData.get("Servicios")));
-            gasto.setGastoEscolares(getDoubleFromObject(gastoData.get("Gastos escolares")));
-            gasto.setGastoRopa(getDoubleFromObject(gastoData.get("Ropa")));
-            gasto.setGastoTransporte(getDoubleFromObject(gastoData.get("Transporte")));
-            gasto.setGastoOtros(getDoubleFromObject(gastoData.get("Otros")));
-            gasto.setTotalGastos(getDoubleFromObject(gastoData.get("total")));
-            gasto = gastoRepo.save(gasto);
-            System.out.println("Gasto guardado con ID: " + gasto.getId());
-
-            // === 2. GUARDAR RECIBO DE LUZ ===
-            Map<String, Object> reciboData = (Map<String, Object>) params.get("reciboLuz");
-            System.out.println("ReciboLuzData recibido: " + reciboData);
-
-            ReciboLuz recibo = new ReciboLuz();
-            recibo.setTitular((String) reciboData.get("titular"));
-            recibo.setPeriodoInicio((String) reciboData.getOrDefault("periodoInicio", null));
-            recibo.setPeriodoFin((String) reciboData.getOrDefault("periodoFin", null));
-            recibo.setPagoBimestral((String) reciboData.getOrDefault("pagoBimestral", null));
-            recibo.setPagoPromedioMes((String) reciboData.getOrDefault("promedioPago", null));
-            recibo.setContenidoBase64((String) reciboData.get("contenidoBase64"));
-            recibo.setNombreArchivo((String) reciboData.getOrDefault("nombreArchivo", null));
-            recibo = reciboRepo.save(recibo);
-            System.out.println("Recibo guardado con ID: " + recibo.getId());
-
-            // === 3. GUARDAR GASTOS_INGRESOS_FAMILIARES ===
-            GastosIngresosFamiliares familia = new GastosIngresosFamiliares();
-            System.out.println("IngresoTotal recibido: " + params.get("ingresoTotal"));
-            System.out.println("PersonasDependen recibido: " + params.get("personasDependen"));
-            familia.setIngresoTotal(params.get("ingresoTotal").toString());
-            familia.setNumeroPersonasDependen(params.get("personasDependen").toString());
-            familia.setGastoFamiliarModel(gasto);
-            familia.setReciboLuzModel(recibo);
-            familia = familiaRepo.save(familia);
-            System.out.println("Familia guardada con ID: " + familia.getId());
-
-            // === 4. GUARDAR PERSONAS QUE APORTAN ===
-            List<Map<String, Object>> personas = (List<Map<String, Object>>) params.get("personas");
-            System.out.println("Personas recibidas: " + personas.size());
-
-            for (Map<String, Object> persona : personas) {
-                System.out.println("Procesando persona: " + persona);
-
-                IngresoFamiliarModel ingreso = new IngresoFamiliarModel();
-                ingreso.setNombrePersona((String) persona.get("name"));
-                ingreso.setIngresoBruto(String.valueOf(persona.get("gross")));
-                ingreso.setIngresoNeto(String.valueOf(persona.get("net")));
-                ingreso.setLugarTrabajo((String) persona.get("company"));
-                ingreso.setPuestoTrabajo((String) persona.get("job"));
-
-                if (persona.containsKey("idParentesco")) {
-                    Long idParentesco = ((Number) persona.get("idParentesco")).longValue();
-                    System.out.println("Buscando Parentesco con ID: " + idParentesco);
-                    ingreso.setParentesco(parentescoRepo.findById(idParentesco)
-                            .orElseThrow(() -> new IllegalArgumentException("Parentesco no encontrado")));
-                } else {
-                    System.out.println("ERROR: Persona sin idParentesco");
-                    throw new IllegalArgumentException("idParentesco es requerido para cada persona");
-                }
-
-                // Como quieres quitar el ocupacionModel, no hacemos nada aquí con él.
-
-                ingreso.setGastosIngresosFamiliares(familia);
-                ingresoRepo.save(ingreso);
-                System.out.println("Ingreso guardado para: " + ingreso.getNombrePersona());
-            }
-
-            return familia;
-
+            this.build(params, ejemplo);
+            ejemplo.setCompleto(true);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
-            System.err.println("Error al guardar los datos: " + e.getMessage());
-            throw new RuntimeException("Error al guardar los datos: " + e.getMessage(), e);
+            e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
+            throw new IllegalArgumentException("Error al construir el ejemplo");
         }
+        return this.save(ejemplo);
     }
 
+    @Override
+    public GastosIngresosFamiliares update(GastosIngresosFamiliares GastosIngresosFamiliares,
+            Map<String, Object> params) throws Exception {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    }
 
-    // Método auxiliar para convertir Object a Double sin lanzar NullPointerException
-    private Double getDoubleFromObject(Object obj) {
-        if (obj == null) return 0.0;
-        if (obj instanceof Number) return ((Number) obj).doubleValue();
+    @Override
+    public GastosIngresosFamiliares build(Map<String, Object> params, GastosIngresosFamiliares gIngresosFamiliares) {
         try {
-            return Double.parseDouble(obj.toString());
-        } catch (NumberFormatException e) {
-            return 0.0;
+            gIngresosFamiliares.setNummeroPersonasAportan(JsonUtils.obtInteger(params, "personasAportan"));
+            gIngresosFamiliares.setIngresoTotal(JsonUtils.obtInteger(params, "ingresoTotal"));
+            gIngresosFamiliares.setNumeroPersonasDependen(JsonUtils.obtInteger(params, "personasDependen"));
+
+            Map<String, Object> gastos = (Map<String, Object>) params.get("gastos");
+            GastoFamiliarModel gastoFamiliar = gastoFamiliarServiceJPA.create(gastos);
+            gIngresosFamiliares.setGastoFamiliarModel(gastoFamiliar);
+
+            Map<String, Object> reciboLuz = (Map<String, Object>) params.get("reciboLuz");
+            ReciboLuz reciboLuzM = reciboLuzFamiliaJPA.create(reciboLuz);
+            gIngresosFamiliares.setReciboLuzModel(reciboLuzM);
+
+            gIngresosFamiliares = gastosIngresosFamiliaresRepository.save(gIngresosFamiliares);
+
+            List<Map<String, Object>> personas = (List<Map<String, Object>>) params.get("personas");
+            for (Map<String, Object> personaData : personas) {
+                IngresoFamiliarModel ingreso = new IngresoFamiliarModel();
+                ingresoFamiliarJPA.build(personaData, ingreso);
+                ingreso.setGastosIngresosFamiliares(gIngresosFamiliares);
+                ingresoFamiliarJPA.save(ingreso);
+            }
+/* Map<String, Object> ingresoFamiliar = (Map<String, Object>) params.get("s");
+            IngresoFamiliarModel ingresoFamiliarModel = ingresoFamiliarJPA.create(ingresoFamiliar);
+            gIngresosFamiliares.setIngresoFamiliarModel(ingresoFamiliarModel);*/
+            
+
+
+
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
+            throw new IllegalArgumentException("Error al construir el ejemplo");
         }
+
+        System.out.println("Cuerpo que se manda a la base"+gIngresosFamiliares);
+        return gIngresosFamiliares;
     }
 
-
-    public GastosIngresosFamiliares update(GastosIngresosFamiliares existente, Map<String, Object> params) {
-        throw new UnsupportedOperationException("Actualizar aún no implementado");
-    }
-
+    @Override
     public void deleteById(Long id) {
-        familiaRepo.deleteById(id);
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'deleteById'");
     }
-}
 
+}

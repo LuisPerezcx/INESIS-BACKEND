@@ -14,7 +14,7 @@ public class GastoFamiliarModel {
     private Long id;
 
     @NotNull
-    @Column(name = "gasto_alimentacion")
+    @Column(name = "gasto_alimentacion")    
     private Double gastoAlimentacion;
 
     @NotNull

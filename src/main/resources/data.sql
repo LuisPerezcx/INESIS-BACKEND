@@ -18,7 +18,10 @@ WHERE NOT EXISTS (SELECT 1 FROM cat_rol WHERE nombre_rol = 'Revisor');
 #------------------- REGISTROS DE USUARIO -------------------
 SELECT 1;
 INSERT INTO usuario (id_cat_rol, usuario, contrasenia, estatus)
-SELECT 2, 'admin', 'admin123', 1
+SELECT 2, 'admin', '$2a$10$zEruov1alu6oS4DEHlkJM.W66f/YpSziRXekFqJ5H8IyCrYx7o9PK', 1
+
+
+
 WHERE NOT EXISTS (
     SELECT 1 FROM usuario WHERE usuario = 'admin'
 );
@@ -513,7 +516,7 @@ WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Auto
 
 INSERT INTO cat_medios_transporte (nombre_medio)
 SELECT 'Mototaxi'
-WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Colectivo');
+WHERE NOT EXISTS (SELECT 1 FROM cat_medios_transporte WHERE nombre_medio = 'Mototaxi');
 
 INSERT INTO cat_medios_transporte (nombre_medio)
 SELECT 'Taxi'

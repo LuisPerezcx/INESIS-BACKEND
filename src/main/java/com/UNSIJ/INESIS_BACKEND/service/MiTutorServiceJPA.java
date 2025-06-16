@@ -31,6 +31,9 @@ public class MiTutorServiceJPA implements IMiTutorService {
     @Autowired
     private OcupacionRepository ocupacionRepository;
 
+    @Autowired
+    AlumnoServiceJPA alumnoServiceJPA;
+
     @Override
     public List<MiTutor> findAll() {
         return miTutorRepository.findAll();
@@ -52,15 +55,22 @@ public class MiTutorServiceJPA implements IMiTutorService {
     public MiTutor create(Map<String, Object> params) throws Exception {
         MiTutor miTutor = new MiTutor();
         try {
+            Long idAlumno = JsonUtils.obtLong(params, "alumnoId");
+            if (idAlumno == null) throw new IllegalArgumentException("El campo 'idAlumno' es obligatorio.");
+            Alumno alumno = alumnoServiceJPA.findById(idAlumno);
+            miTutor.setAlumno(alumno);
             this.build(params, miTutor);
+            miTutor.setModuloCompleto(true);
+            miTutor = this.save(miTutor);
+            alumno.setMiTutor(miTutor);
+            alumnoServiceJPA.save(alumno);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
             throw new IllegalArgumentException("Error al construir el ejemplo");
         }
-        miTutor.setModuloCompleto(true);
-        return this.save(miTutor);
+        return miTutor;
     }
 
     //ESTE METODO SE OCUPA AL ACTUALIZAR DESDE EL FRONTEND YA QUE RECIBE UN MAPA(JSON)

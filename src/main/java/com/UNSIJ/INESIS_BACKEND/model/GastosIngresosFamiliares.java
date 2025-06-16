@@ -16,19 +16,19 @@ public class GastosIngresosFamiliares {
 
     @NotNull
     @Column(name = "completo")
-    private String completo;
+    private Boolean completo;
 
     @NotNull
     @Column(name = "num_personas_aportan")
-    private String nummeroPersonasAportan;
+    private int nummeroPersonasAportan;
 
     @NotNull
     @Column(name = "ingreso_total")
-    private String ingresoTotal;
+    private double ingresoTotal;
 
     @NotNull
     @Column(name = "num_personas_dependen")
-    private String numeroPersonasDependen;
+    private int numeroPersonasDependen;
 
     @NotNull
     @ManyToOne
@@ -36,12 +36,12 @@ public class GastosIngresosFamiliares {
     IngresoFamiliarModel ingresoFamiliarModel;
 
     @NotNull
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "id_gasto_familiar", referencedColumnName = "id_gasto_familiar")
     GastoFamiliarModel gastoFamiliarModel;
 
     @NotNull
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "id_recibo_luz", referencedColumnName = "id_recibo_luz")
     ReciboLuz reciboLuzModel;
 }
