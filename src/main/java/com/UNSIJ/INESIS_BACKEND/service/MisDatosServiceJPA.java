@@ -100,6 +100,7 @@ public class MisDatosServiceJPA implements IMisDatosService {
     }
 
     @Override
+    @Transactional
     public MisDatos update(MisDatos misDatos, Map<String, Object> params) throws Exception {
         try {
             this.build(params, misDatos);
@@ -149,15 +150,13 @@ public class MisDatosServiceJPA implements IMisDatosService {
             Map<String, Object> gastosIngresosParams = (Map<String, Object>) params.get("gastosIngresos");
             if (gastosIngresosParams != null) {
                 if (misDatos.getGastosIngresos() != null) {
-                    System.out.println("update");
                     misDatos.setGastosIngresos(gastosIngresosServiceJPA.update(misDatos.getGastosIngresos(), gastosIngresosParams));
                 } else {
-                    System.out.println("create");
                     GastosIngresos gastosIngresos = gastosIngresosServiceJPA.create(gastosIngresosParams);
                     misDatos.setGastosIngresos(gastosIngresos);
                 }
             }
-            System.out.println("dasdasd");
+
 
             Map<String, Object> transporteAutomovilParams = (Map<String, Object>) params.get("transporteAutomovil");
             if (misDatos.getLlevaAutomovil() && transporteAutomovilParams != null &&
