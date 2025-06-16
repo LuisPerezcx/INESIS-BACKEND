@@ -9,7 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -18,8 +17,6 @@ public class GastosFamiliaresController {
 
     @Autowired
     private GastosIngresosService gastosService;
-
-    // Recibe todo en JSON, no multipart/form-data
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {

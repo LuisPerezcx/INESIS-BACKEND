@@ -48,8 +48,8 @@ public class GastosIngresosService implements IGatosIngresoFamiliares {
     public GastosIngresosFamiliares create(Map<String, Object> params) throws Exception {
         GastosIngresosFamiliares ejemplo = new GastosIngresosFamiliares();
         try {
-            this.build(params, ejemplo);
             ejemplo.setCompleto(true);
+            this.build(params, ejemplo);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
@@ -90,12 +90,9 @@ public class GastosIngresosService implements IGatosIngresoFamiliares {
                 ingreso.setGastosIngresosFamiliares(gIngresosFamiliares);
                 ingresoFamiliarJPA.save(ingreso);
             }
-/* Map<String, Object> ingresoFamiliar = (Map<String, Object>) params.get("s");
-            IngresoFamiliarModel ingresoFamiliarModel = ingresoFamiliarJPA.create(ingresoFamiliar);
-            gIngresosFamiliares.setIngresoFamiliarModel(ingresoFamiliarModel);*/
             
-
-
+            if(gIngresosFamiliares.getIngresoFamiliarModel() == null  )
+            throw new IllegalArgumentException("Gastos ingresoa familiares no puede ser nulo");
 
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());

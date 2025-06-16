@@ -30,7 +30,7 @@ public class GastosIngresosFamiliares {
     @Column(name = "num_personas_dependen")
     private int numeroPersonasDependen;
 
-    @NotNull
+
     @ManyToOne
     @JoinColumn(name = "id_ingreso_familiar", referencedColumnName = "id_ingreso_familiar")
     IngresoFamiliarModel ingresoFamiliarModel;
