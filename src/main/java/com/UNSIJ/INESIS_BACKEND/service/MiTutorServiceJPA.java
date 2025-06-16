@@ -168,7 +168,7 @@ public class MiTutorServiceJPA implements IMiTutorService {
                         System.out.println("Desvinculando domicilio antiguo");
                         miTutor.setDomicilio(null);
                         this.save(miTutor);
-                        entityManager.flush(); // <-- Forzar sincronización con la base de datos
+                        entityManager.flush(); // Forzar sincronización con la base de datos
                         entityManager.clear();  // Limpia contexto para forzar que la próxima consulta lea desde BD
 
 
@@ -188,7 +188,21 @@ public class MiTutorServiceJPA implements IMiTutorService {
                 } else {
                     System.out.println("Usando domicilio existente");
                     Domicilio existente = domicilioServiceJPA.findById(idDomicilio);
-                    //domicilioServiceJPA.update(existente, domicilioParams); // En caso de que también se quiera actualizar
+                    // Si el domicilio existente es el mismo que el del alumno, elimina el anterior
+                    Domicilio domicilioAntiguo = miTutor.getDomicilio();
+                    if (domicilioAntiguo != null && !domicilioAntiguo.equals(existente)) {
+                        System.out.println("Desvinculando domicilio antiguo 2");
+                        miTutor.setDomicilio(null);
+                        this.save(miTutor);
+                        entityManager.flush();
+                        entityManager.clear();
+
+                        boolean enUso = domicilioServiceJPA.isDomicilioUsado(domicilioAntiguo.getId());
+                        if (!enUso) {
+                            System.out.println("Eliminando domicilio antiguo");
+                            domicilioServiceJPA.deleteById(domicilioAntiguo.getId());
+                        }
+                    }
                     miTutor.setDomicilio(existente);
                 }
             }
