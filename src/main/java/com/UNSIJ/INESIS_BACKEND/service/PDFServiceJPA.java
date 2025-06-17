@@ -53,6 +53,11 @@ public class PDFServiceJPA {
         String anioSeguro = (anio != null) ? anio.toString() : "";
         return String.join(" ", marcaSeguro, modeloSeguro, anioSeguro).trim();
     }
+    public static String telCorreo (String tel, String correo){
+        String telSeguro = (tel != null && !tel.trim().isEmpty()) ? tel.trim() : " ";
+        String correoSeguro = (correo != null && !correo.trim().isEmpty()) ? correo.trim() : " ";
+        return String.join(" ",telSeguro,correoSeguro).trim();
+    }
 
 
 
@@ -83,7 +88,7 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.dependeSi, depende != null && depende ? "X" : "", true);
             form.setField(PDF.ESE.dependeNo, depende != null && depende ? "X" : "", true);
 
-            form.setField(PDF.ESE.domicilioActualAlumno,domicilio(alumno.getMisDatos().getDomicilio().getCalle(), alumno.getMisDatos().getDomicilio().getNumero(),alumno.getMisDatos().getDomicilio().getColonia(), alumno.getMisDatos().getDomicilio().getColonia(),alumno.getMisDatos().getNombreCasaHuesped()), true);
+            form.setField(PDF.ESE.domicilioActualAlumno,domicilio(alumno.getMisDatos().getDomicilio().getCalle(), alumno.getMisDatos().getDomicilio().getNumero(),alumno.getMisDatos().getDomicilio().getColonia(), alumno.getMisDatos().getDomicilio().getLocalidad(),alumno.getMisDatos().getNombreCasaHuesped()), true);
 
             Boolean solicita = alumno.getMisDatos().getGastosIngresos().getSolicitaBecaAlimenticia();
             form.setField(PDF.ESE.becaAlimenticiaSi, solicita != null && solicita ? "X" : "", true);
@@ -93,7 +98,7 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.rentaCuarto, "X", true);
             form.setField(PDF.ESE.rentaCasa, "X", true);
             form.setField(PDF.ESE.viveFamiliares, "X", true);
-            form.setField(PDF.ESE.numPersonaComparte, "2", true);
+            form.setField(PDF.ESE.numPersonaComparte, " ", true);
             form.setField(PDF.ESE.rentaMensual, " ", true);
 
             Boolean familiarComunero = alumno.getMisDatos().getFamiliarComunero();
@@ -125,18 +130,39 @@ public class PDFServiceJPA {
 
 
             Boolean celular = alumno.getMisDatos().getUtilizaCelular();
-            form.setField(PDF.ESE.utilizaTelefonoSi, celular != null && celular ? "X" : "", true);
-            form.setField(PDF.ESE.utilizaTelefonoNo, celular != null && celular ? "X" : "", true);
+            if(celular != null && celular){
+                form.setField(PDF.ESE.utilizaTelefonoSi, "X", true);
+                form.setField(PDF.ESE.utilizaTelefonoNo, " " , true);
+            }else{
+                form.setField(PDF.ESE.utilizaTelefonoSi," ", true);
+                form.setField(PDF.ESE.utilizaTelefonoNo, "X", true);
+            }
+
 
             Boolean compu = alumno.getMisDatos().getTieneComputadora();
-            form.setField(PDF.ESE.tieneComputadoraSi, compu != null && compu ? "X" : "", true);
-            form.setField(PDF.ESE.tieneComputadoraNo, compu != null && compu ? "X" : "", true);
+            if(compu != null && compu){
+                form.setField(PDF.ESE.tieneComputadoraSi, "X", true);
+                form.setField(PDF.ESE.tieneComputadoraNo, " ", true);
+            }else{
+                form.setField(PDF.ESE.tieneComputadoraSi,  " " , true);
+                form.setField(PDF.ESE.tieneComputadoraNo, "X", true);
+            }
 
-            form.setField(PDF.ESE.nombreTutor, " ", true);
-            form.setField(PDF.ESE.parentesco, " ", true);
-            form.setField(PDF.ESE.telOCorreo, " ", true);
-            form.setField(PDF.ESE.trabajadorSuneo, " ", true);
-            form.setField(PDF.ESE.domicilioCompletoTutor, " ", true);
+            if(alumno.getMiTutor() != null ){
+                form.setField(PDF.ESE.nombreTutor, valorSeguro(alumno.getMiTutor().getNombreTutor()," "), true);
+                form.setField(PDF.ESE.parentesco, valorSeguro(alumno.getMiTutor().getParentesco().getNombreParentesco()," "), true);
+                form.setField(PDF.ESE.telOCorreo, telCorreo(alumno.getMiTutor().getTelefono(), alumno.getMiTutor().getCorreo()), true);
+
+                Boolean suneo = alumno.getMiTutor().getTrabajadorSuneo();
+                if (suneo != null && suneo){
+                    form.setField(PDF.ESE.trabajadorSuneo, "Si", true);
+                }else{
+                    form.setField(PDF.ESE.trabajadorSuneo, "No", true);
+                }
+                form.setField(PDF.ESE.domicilioCompletoTutor, " ", true);
+            }
+
+
             form.setField(PDF.ESE.nombreParentesco1," ",true);
             form.setField(PDF.ESE.nombreParentesco2," ",true);
             form.setField(PDF.ESE.nombreParentesco3," ",true);
@@ -182,7 +208,7 @@ public class PDFServiceJPA {
 
 
             form.setField(PDF.ESE.apellidoP, valorSeguro(alumno.getApellidoPaterno()," "), true);
-            form.setField(PDF.ESE.apellidoM, " ", true);
+            form.setField(PDF.ESE.apellidoM,valorSeguro(alumno.getApellidoMaterno(), " "), true);
             form.setField(PDF.ESE.nombreAlum, valorSeguro(alumno.getNombre()," "), true);
             form.setField(PDF.ESE.sexo, valorSeguro(alumno.getSexo().getNombreSexo()," "), true);
             form.setField(PDF.ESE.estadoCivil, valorSeguro(alumno.getMisDatos().getEstadoCivil().getNombreEstadoCivil()," "), true);
@@ -197,6 +223,7 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.estadoActualFamilia, " ", true);
             form.setField(PDF.ESE.telefonoActualFamilia, " ", true);
             form.setField(PDF.ESE.dependeEconomicamente, valorSeguro(alumno.getMisDatos().getGastosIngresos().getNombreQuienDependes()," "), true);
+
             if(alumno.getMisDatos().getGastosIngresos().getTrabajo() != null ){
                 form.setField(PDF.ESE.nombreEmpresa, valorSeguro(alumno.getMisDatos().getGastosIngresos().getTrabajo().getNombreTrabajo()," "), true);
                 form.setField(PDF.ESE.ingresoMensual,valorSeguro(String.valueOf(alumno.getMisDatos().getGastosIngresos().getTrabajo().getIngresoMensual())," "), true);
