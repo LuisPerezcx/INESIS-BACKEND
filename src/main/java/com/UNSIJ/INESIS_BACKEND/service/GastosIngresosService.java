@@ -1,5 +1,6 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -70,7 +71,7 @@ public class GastosIngresosService implements IGatosIngresoFamiliares {
     public GastosIngresosFamiliares build(Map<String, Object> params, GastosIngresosFamiliares gIngresosFamiliares) {
         try {
             gIngresosFamiliares.setNummeroPersonasAportan(JsonUtils.obtInteger(params, "personasAportan"));
-            gIngresosFamiliares.setIngresoTotal(JsonUtils.obtInteger(params, "ingresoTotal"));
+            gIngresosFamiliares.setIngresoTotal(JsonUtils.obtDouble(params, "ingresoTotal"));
             gIngresosFamiliares.setNumeroPersonasDependen(JsonUtils.obtInteger(params, "personasDependen"));
 
             Map<String, Object> gastos = (Map<String, Object>) params.get("gastos");
@@ -83,15 +84,19 @@ public class GastosIngresosService implements IGatosIngresoFamiliares {
 
             gIngresosFamiliares = gastosIngresosFamiliaresRepository.save(gIngresosFamiliares);
 
+            ArrayList<IngresoFamiliarModel> nIngresoFamiliarModels = new ArrayList<>();
             List<Map<String, Object>> personas = (List<Map<String, Object>>) params.get("personas");
             for (Map<String, Object> personaData : personas) {
                 IngresoFamiliarModel ingreso = new IngresoFamiliarModel();
                 ingresoFamiliarJPA.build(personaData, ingreso);
                 ingreso.setGastosIngresosFamiliares(gIngresosFamiliares);
                 ingresoFamiliarJPA.save(ingreso);
+                nIngresoFamiliarModels.add(ingreso);
             }
+            gIngresosFamiliares.setIngresosFamiliares(nIngresoFamiliarModels);
+
             
-            if(gIngresosFamiliares.getIngresoFamiliarModel() == null  )
+            if(gIngresosFamiliares.getIngresosFamiliares() == null  )
             throw new IllegalArgumentException("Gastos ingresoa familiares no puede ser nulo");
 
         } catch (IllegalArgumentException e) {

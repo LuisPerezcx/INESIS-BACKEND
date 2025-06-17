@@ -1,13 +1,16 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity
 @Table(name = "ingreso_familiar")
-public class IngresoFamiliarModel {
+public class IngresoFamiliarModel { 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_ingreso_familiar")
@@ -49,5 +52,7 @@ public class IngresoFamiliarModel {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "id_gastos_ingresos_familiares", referencedColumnName = "id_gastos_ingresos_familiares")
+    @ToString.Exclude
+    @JsonBackReference
     GastosIngresosFamiliares gastosIngresosFamiliares;
 }

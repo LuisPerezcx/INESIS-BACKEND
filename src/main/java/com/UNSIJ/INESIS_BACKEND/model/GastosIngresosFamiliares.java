@@ -1,5 +1,10 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -15,6 +20,7 @@ public class GastosIngresosFamiliares {
     private Long id;
 
     @NotNull
+    @JsonIgnore // Evita que Jackson serialice esta propiedad
     @Column(name = "completo")
     private Boolean completo;
 
@@ -31,9 +37,9 @@ public class GastosIngresosFamiliares {
     private int numeroPersonasDependen;
 
 
-    @ManyToOne
-    @JoinColumn(name = "id_ingreso_familiar", referencedColumnName = "id_ingreso_familiar")
-    IngresoFamiliarModel ingresoFamiliarModel;
+    @OneToMany(mappedBy = "gastosIngresosFamiliares")
+    @JsonManagedReference
+    private List<IngresoFamiliarModel> ingresosFamiliares;
 
     @NotNull
     @OneToOne
