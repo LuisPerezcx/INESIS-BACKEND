@@ -143,20 +143,42 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.domicilioActualAlumno,domicilio(alumno.getMisDatos().getDomicilio().getCalle(), alumno.getMisDatos().getDomicilio().getNumero(),alumno.getMisDatos().getDomicilio().getColonia(), alumno.getMisDatos().getDomicilio().getLocalidad(),alumno.getMisDatos().getNombreCasaHuesped()), true);
 
             Boolean solicita = alumno.getMisDatos().getGastosIngresos().getSolicitaBecaAlimenticia();
-            form.setField(PDF.ESE.becaAlimenticiaSi, solicita != null && solicita ? "X" : "", true);
-            form.setField(PDF.ESE.becaAlimenticiaNo, solicita != null && solicita ? "X" : "", true);
+            if (solicita != null && solicita){
+                form.setField(PDF.ESE.becaAlimenticiaSi, "X" , true);
+                form.setField(PDF.ESE.becaAlimenticiaNo,  "", true);
+            }else{
+                form.setField(PDF.ESE.becaAlimenticiaSi, "" , true);
+                form.setField(PDF.ESE.becaAlimenticiaNo,  "X", true);
+            }
+
 
             form.setField(PDF.ESE.gastoMensual, valorSeguro(String.valueOf(alumno.getMisDatos().getGastosIngresos().getGastoMensual())," "), true);
 
-            form.setField(PDF.ESE.rentaCuarto, "X", true);
-            form.setField(PDF.ESE.rentaCasa, "X", true);
-            form.setField(PDF.ESE.viveFamiliares, "X", true);
+            Long situacionId =alumno.getMisDatos().getSituacionVivienda().getId();
+            if (situacionId == 6L){
+                form.setField(PDF.ESE.rentaCuarto, "X", true);
+
+            } else if (situacionId == 7L) {
+                form.setField(PDF.ESE.rentaCasa, "X", true);
+            }else if (situacionId == 8L){
+                form.setField(PDF.ESE.viveFamiliares, "X", true);
+
+            }
+
+
+
             form.setField(PDF.ESE.numPersonaComparte, " ", true);
             form.setField(PDF.ESE.rentaMensual, " ", true);
 
             Boolean familiarComunero = alumno.getMisDatos().getFamiliarComunero();
-            form.setField(PDF.ESE.nietoComuneroSi, familiarComunero != null && familiarComunero ? "X" : "", true);
-            form.setField(PDF.ESE.nietoComuneroNo, familiarComunero != null && familiarComunero ? "X" : "", true);
+            if (familiarComunero != null && familiarComunero){
+                form.setField(PDF.ESE.nietoComuneroSi,  "X", true);
+                form.setField(PDF.ESE.nietoComuneroNo,  "", true);
+            }else{
+                form.setField(PDF.ESE.nietoComuneroSi,  "", true);
+                form.setField(PDF.ESE.nietoComuneroNo,  "X", true);
+            }
+
 
             Boolean llevaCarro = alumno.getMisDatos().getLlevaAutomovil();
             if (llevaCarro != null && llevaCarro){
@@ -333,12 +355,12 @@ public class PDFServiceJPA {
             //Tipo de ocupacion
             Long ocupacionSeleccionada = alumno.getMisDatos().getGastosIngresos().getOcupacion().getId();
             form.setField(PDF.ESE.comerciante, ocupacionSeleccionada == 1 ? "X" : "", true);
-            form.setField(PDF.ESE.empleadoGobierno, ocupacionSeleccionada == 2 ? "X" : "", true);
-            form.setField(PDF.ESE.empleadoPrivado, ocupacionSeleccionada == 3 ? "X" : "", true);
-            form.setField(PDF.ESE.negocioPropio, ocupacionSeleccionada == 4 ? "X" : "", true);
-            form.setField(PDF.ESE.jubilado, ocupacionSeleccionada == 5 ? "X" : "", true);
-            form.setField(PDF.ESE.laborCampo, ocupacionSeleccionada == 6 ? "X" : "", true);
-            form.setField(PDF.ESE.empleadoComunal, ocupacionSeleccionada == 7 ? "X" : "", true);
+            form.setField(PDF.ESE.empleadoGobierno, ocupacionSeleccionada == 3 ? "X" : "", true);
+            form.setField(PDF.ESE.empleadoPrivado, ocupacionSeleccionada == 5 ? "X" : "", true);
+            form.setField(PDF.ESE.negocioPropio, ocupacionSeleccionada == 7 ? "X" : "", true);
+            form.setField(PDF.ESE.jubilado, ocupacionSeleccionada == 2 ? "X" : "", true);
+            form.setField(PDF.ESE.laborCampo, ocupacionSeleccionada == 4 ? "X" : "", true);
+            form.setField(PDF.ESE.empleadoComunal, ocupacionSeleccionada == 6 ? "X" : "", true);
             form.setField(PDF.ESE.otroOcupacion, ocupacionSeleccionada == 8 ? "X" : "", true);
 
 
@@ -380,25 +402,25 @@ public class PDFServiceJPA {
                     .collect(Collectors.toList());
 
 
-            if (idsMediosSeleccionados.contains(1L)) {
+            if (idsMediosSeleccionados.contains(3L)) {
                 form.setField(PDF.ESE.autoAmigos, "X", true);
             }
             if (idsMediosSeleccionados.contains(2L)) {
                 form.setField(PDF.ESE.bicicleta, "X", true);
             }
-            if (idsMediosSeleccionados.contains(3L)) {
+            if (idsMediosSeleccionados.contains(7L)) {
                 form.setField(PDF.ESE.mototaxi, "X", true);
             }
-            if (idsMediosSeleccionados.contains(4L)) {
+            if (idsMediosSeleccionados.contains(5L)) {
                 form.setField(PDF.ESE.caminando, "X", true);
             }
-            if (idsMediosSeleccionados.contains(5L)) {
+            if (idsMediosSeleccionados.contains(6L)) {
                 form.setField(PDF.ESE.autoFamiliar, "X", true);
             }
-            if (idsMediosSeleccionados.contains(6L)) {
+            if (idsMediosSeleccionados.contains(1L)) {
                 form.setField(PDF.ESE.autoPropio, "X", true);
             }
-            if (idsMediosSeleccionados.contains(7L)) {
+            if (idsMediosSeleccionados.contains(4L)) {
                 form.setField(PDF.ESE.motocicleta, "X", true);
             }
 
