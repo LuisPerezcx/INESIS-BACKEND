@@ -78,4 +78,10 @@ public class Alumno {
     private MiFamilia miFamilia;
 
     private Boolean completo;
+
+    private Boolean estado;
+
+    @Column(name = "observaciones")
+    private String observaciones;
+
 }

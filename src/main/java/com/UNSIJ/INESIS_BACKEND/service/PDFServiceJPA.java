@@ -1,12 +1,17 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
+import com.UNSIJ.INESIS_BACKEND.controller.DomicilioController;
 import com.UNSIJ.INESIS_BACKEND.model.Alumno;
 import com.UNSIJ.INESIS_BACKEND.repository.AlumnoRepository;
 import com.UNSIJ.INESIS_BACKEND.utils.PDF;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itextpdf.text.pdf.AcroFields;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.PdfStamper;
+import jakarta.persistence.Transient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -20,6 +25,15 @@ public class PDFServiceJPA {
 
     @Autowired
     private AlumnoServiceJPA alumnoServiceJPA;
+    @Autowired
+    private DomicilioController domicilioController;
+
+    @Transient
+    private String estado;
+    @Transient
+    private String municipio;
+    @Transient
+    private Alumno alumno;
 
     public static String valorSeguro(String valor, String valorPorDefecto) {
         return (valor != null && !valor.trim().isEmpty()) ? valor : valorPorDefecto;
@@ -33,6 +47,7 @@ public class PDFServiceJPA {
         String casaHuspedSeguro = (casaHuesped != null && !casaHuesped.trim().isEmpty() ? casaHuesped.trim() : " ");
         return (calleSeguro + " " + numeroSeguro + " " + coloniaSeguro + " " + localidadSeguro + " " + casaHuspedSeguro).trim();
     }
+
 
     public static String nombreCompletoSeguro(String nombre, String apellidoP, String apellidoM) {
         String nombreSeguro = (nombre != null && !nombre.trim().isEmpty()) ? nombre.trim() : " ";
@@ -54,14 +69,50 @@ public class PDFServiceJPA {
         return String.join(" ", marcaSeguro, modeloSeguro, anioSeguro).trim();
     }
 
+    public static String telCorreo (String tel, String correo){
+        String telSeguro = (tel != null && !tel.trim().isEmpty()) ? tel.trim() : " ";
+        String correoSeguro = (correo != null && !correo.trim().isEmpty()) ? correo.trim() : " ";
+        return String.join(" ",telSeguro,correoSeguro).trim();
+    }
+
+    public  String domicilioTutor(String calle, String numero, String colonia, String localidad, String cp) {
+        String calleSeguro = (calle != null && !calle.trim().isEmpty() ? calle.trim() : " ");
+        String numeroSeguro = (numero != null && !numero.trim().isEmpty() ? numero.trim() : " ");
+        String coloniaSeguro = (colonia != null && !colonia.trim().isEmpty() ? colonia.trim() : " ");
+        String localidadSeguro = (localidad != null && !localidad.trim().isEmpty() ? localidad.trim() : " ");
+
+        String estado = "";
+        String municipio = "";
+
+        try {
+            ResponseEntity<String> response = domicilioController.obtenerColoniasPorCP(cp); // <- usas cp directamente
+            String respuestaJson = response.getBody(); // <- Extraes el JSON real
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode root = objectMapper.readTree(respuestaJson);
+
+            estado = root.path("codigo_postal").path("estado").asText();
+            municipio = root.path("codigo_postal").path("municipio").asText();
+
+            System.out.println("Estado: " + estado);
+            System.out.println("Municipio: " + municipio);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error al procesar el JSON del CP");
+        }
+
+        return calleSeguro + " " + numeroSeguro + ", " + coloniaSeguro + ", " + localidadSeguro + ", " + municipio + ", " + estado + ", " + cp;
+    }
+
+
 
 
     public String generarPdf(Long idAlumno){
         try {
-            Alumno alumno = alumnoServiceJPA.findById(idAlumno);
+            this.alumno = alumnoServiceJPA.findById(idAlumno);
 
             // Ruta del PDF base (con campos de formulario)
-            PdfReader reader = new PdfReader("estudioSocioEconomico.pdf");
+            PdfReader reader = new PdfReader("BECA-COLEGIATURA_final.pdf");
 
             // Archivo de salida
             //PdfStamper stamper = new PdfStamper(reader, new FileOutputStream("src/main/resources/pdfsGenerados/prueba.pdf"));
@@ -80,20 +131,27 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.semestreAlumno,valorSeguro(alumno.getSemestre().getNombreSemestre(), ""), true);
 
             Boolean depende = alumno.getMisDatos().getGastosIngresos().getDependeEconomicamente();
-            form.setField(PDF.ESE.dependeSi, depende != null && depende ? "X" : "", true);
-            form.setField(PDF.ESE.dependeNo, depende != null && depende ? "X" : "", true);
+            if (depende != null && depende){
+                form.setField(PDF.ESE.dependeSi,"X", true);
+                form.setField(PDF.ESE.dependeNo, "", true);
+            }else {
+                form.setField(PDF.ESE.dependeSi, "", true);
+                form.setField(PDF.ESE.dependeNo,  "X", true);
+            }
 
-            form.setField(PDF.ESE.domicilioActualAlumno,domicilio(alumno.getMisDatos().getDomicilio().getCalle(), alumno.getMisDatos().getDomicilio().getNumero(),alumno.getMisDatos().getDomicilio().getColonia(), alumno.getMisDatos().getDomicilio().getColonia(),alumno.getMisDatos().getNombreCasaHuesped()), true);
+
+            form.setField(PDF.ESE.domicilioActualAlumno,domicilio(alumno.getMisDatos().getDomicilio().getCalle(), alumno.getMisDatos().getDomicilio().getNumero(),alumno.getMisDatos().getDomicilio().getColonia(), alumno.getMisDatos().getDomicilio().getLocalidad(),alumno.getMisDatos().getNombreCasaHuesped()), true);
 
             Boolean solicita = alumno.getMisDatos().getGastosIngresos().getSolicitaBecaAlimenticia();
             form.setField(PDF.ESE.becaAlimenticiaSi, solicita != null && solicita ? "X" : "", true);
             form.setField(PDF.ESE.becaAlimenticiaNo, solicita != null && solicita ? "X" : "", true);
 
             form.setField(PDF.ESE.gastoMensual, valorSeguro(String.valueOf(alumno.getMisDatos().getGastosIngresos().getGastoMensual())," "), true);
+
             form.setField(PDF.ESE.rentaCuarto, "X", true);
             form.setField(PDF.ESE.rentaCasa, "X", true);
             form.setField(PDF.ESE.viveFamiliares, "X", true);
-            form.setField(PDF.ESE.numPersonaComparte, "2", true);
+            form.setField(PDF.ESE.numPersonaComparte, " ", true);
             form.setField(PDF.ESE.rentaMensual, " ", true);
 
             Boolean familiarComunero = alumno.getMisDatos().getFamiliarComunero();
@@ -125,18 +183,38 @@ public class PDFServiceJPA {
 
 
             Boolean celular = alumno.getMisDatos().getUtilizaCelular();
-            form.setField(PDF.ESE.utilizaTelefonoSi, celular != null && celular ? "X" : "", true);
-            form.setField(PDF.ESE.utilizaTelefonoNo, celular != null && celular ? "X" : "", true);
+            if(celular != null && celular){
+                form.setField(PDF.ESE.utilizaTelefonoSi, "X", true);
+                form.setField(PDF.ESE.utilizaTelefonoNo, " " , true);
+            }else{
+                form.setField(PDF.ESE.utilizaTelefonoSi," ", true);
+                form.setField(PDF.ESE.utilizaTelefonoNo, "X", true);
+            }
+
 
             Boolean compu = alumno.getMisDatos().getTieneComputadora();
-            form.setField(PDF.ESE.tieneComputadoraSi, compu != null && compu ? "X" : "", true);
-            form.setField(PDF.ESE.tieneComputadoraNo, compu != null && compu ? "X" : "", true);
+            if(compu != null && compu){
+                form.setField(PDF.ESE.tieneComputadoraSi, "X", true);
+                form.setField(PDF.ESE.tieneComputadoraNo, " ", true);
+            }else{
+                form.setField(PDF.ESE.tieneComputadoraSi,  " " , true);
+                form.setField(PDF.ESE.tieneComputadoraNo, "X", true);
+            }
 
-            form.setField(PDF.ESE.nombreTutor, " ", true);
-            form.setField(PDF.ESE.parentesco, " ", true);
-            form.setField(PDF.ESE.telOCorreo, " ", true);
-            form.setField(PDF.ESE.trabajadorSuneo, " ", true);
-            form.setField(PDF.ESE.domicilioCompletoTutor, " ", true);
+            if(alumno.getMiTutor() != null ){
+                form.setField(PDF.ESE.nombreTutor, valorSeguro(alumno.getMiTutor().getNombreTutor()," "), true);
+                form.setField(PDF.ESE.parentesco, valorSeguro(alumno.getMiTutor().getParentesco().getNombreParentesco()," "), true);
+                form.setField(PDF.ESE.telOCorreo, telCorreo(alumno.getMiTutor().getTelefono(), alumno.getMiTutor().getCorreo()), true);
+
+                Boolean suneo = alumno.getMiTutor().getTrabajadorSuneo();
+                if (suneo != null && suneo){
+                    form.setField(PDF.ESE.trabajadorSuneo, "Si", true);
+                }else{
+                    form.setField(PDF.ESE.trabajadorSuneo, "No", true);
+                }
+                form.setField(PDF.ESE.domicilioCompletoTutor, domicilioTutor(alumno.getMiTutor().getDomicilio().getCalle(),alumno.getMiTutor().getDomicilio().getNumero(),alumno.getMiTutor().getDomicilio().getColonia(),alumno.getMiTutor().getDomicilio().getLocalidad(),alumno.getMiTutor().getDomicilio().getCp()), true);
+            }
+
             form.setField(PDF.ESE.nombreParentesco1," ",true);
             form.setField(PDF.ESE.nombreParentesco2," ",true);
             form.setField(PDF.ESE.nombreParentesco3," ",true);
@@ -182,7 +260,7 @@ public class PDFServiceJPA {
 
 
             form.setField(PDF.ESE.apellidoP, valorSeguro(alumno.getApellidoPaterno()," "), true);
-            form.setField(PDF.ESE.apellidoM, " ", true);
+            form.setField(PDF.ESE.apellidoM,valorSeguro(alumno.getApellidoMaterno(), " "), true);
             form.setField(PDF.ESE.nombreAlum, valorSeguro(alumno.getNombre()," "), true);
             form.setField(PDF.ESE.sexo, valorSeguro(alumno.getSexo().getNombreSexo()," "), true);
             form.setField(PDF.ESE.estadoCivil, valorSeguro(alumno.getMisDatos().getEstadoCivil().getNombreEstadoCivil()," "), true);
@@ -197,6 +275,7 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.estadoActualFamilia, " ", true);
             form.setField(PDF.ESE.telefonoActualFamilia, " ", true);
             form.setField(PDF.ESE.dependeEconomicamente, valorSeguro(alumno.getMisDatos().getGastosIngresos().getNombreQuienDependes()," "), true);
+
             if(alumno.getMisDatos().getGastosIngresos().getTrabajo() != null ){
                 form.setField(PDF.ESE.nombreEmpresa, valorSeguro(alumno.getMisDatos().getGastosIngresos().getTrabajo().getNombreTrabajo()," "), true);
                 form.setField(PDF.ESE.ingresoMensual,valorSeguro(String.valueOf(alumno.getMisDatos().getGastosIngresos().getTrabajo().getIngresoMensual())," "), true);
@@ -287,8 +366,14 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.caluladora, "X", true);
 
             Boolean recursos = alumno.getMisDatos().getRecursosSuficientes();
-            form.setField(PDF.ESE.recursosSi, recursos != null && recursos ? "X" : "", true);
-            form.setField(PDF.ESE.recursosNo, recursos != null && recursos ? "X" : "", true);
+            if (recursos != null && recursos){
+                form.setField(PDF.ESE.recursosSi, "X", true);
+                form.setField(PDF.ESE.recursosNo,   "", true);
+            }else {
+                form.setField(PDF.ESE.recursosSi, "", true);
+                form.setField(PDF.ESE.recursosNo,   "X", true);
+            }
+
 
             List<Long> idsMediosSeleccionados = alumno.getMisDatos().getMediosTraslado().stream()
                     .map(medio -> medio.getCatMediosTransporte().getId())

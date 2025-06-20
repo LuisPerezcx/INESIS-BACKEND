@@ -85,4 +85,32 @@ public class AlumnoController {
 
         return ResponseEntity.ok(response);
     }
+
+    @PatchMapping("/{id}/revision")
+    public ResponseEntity<?> actualizarRevisionAlumno(
+            @PathVariable Long id,
+            @RequestBody Map<String, Object> datos) {
+
+        try {
+            String observaciones = datos.get("observaciones").toString();
+            Boolean estado = Boolean.parseBoolean(datos.get("estado").toString());
+
+            Alumno alumno = alumnoServiceJPA.findById(id);
+            // Actualizar campos
+            alumno.setObservaciones(observaciones);
+            alumno.setEstado(estado);
+
+            // Guardar cambios usando el servicio
+            alumnoServiceJPA.save(alumno);
+
+            return ResponseEntity.ok("Alumno actualizado correctamente");
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Alumno no encontrado");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error en los datos enviados: " + e.getMessage());
+        }
+    }
+
 }
