@@ -112,7 +112,7 @@ public class PDFServiceJPA {
             this.alumno = alumnoServiceJPA.findById(idAlumno);
 
             // Ruta del PDF base (con campos de formulario)
-            PdfReader reader = new PdfReader("estudioSocioEconomico.pdf");
+            PdfReader reader = new PdfReader("BECA-COLEGIATURA_final.pdf");
 
             // Archivo de salida
             //PdfStamper stamper = new PdfStamper(reader, new FileOutputStream("src/main/resources/pdfsGenerados/prueba.pdf"));
