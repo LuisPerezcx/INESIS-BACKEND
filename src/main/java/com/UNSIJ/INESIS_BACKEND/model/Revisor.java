@@ -36,6 +36,18 @@ public class Revisor {
     @Column(name = "departamento", nullable = false)
     private String departamento;
 
+    @NotNull
+    @Column(name = "curp", unique = true)
+    private String curp;
+
+    @NotNull
+    @Column(name = "correo")
+    private String correo;
+
+    @NotNull
+    @Column(name = "telefono")
+    private String telefono;
+
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
     @JsonBackReference

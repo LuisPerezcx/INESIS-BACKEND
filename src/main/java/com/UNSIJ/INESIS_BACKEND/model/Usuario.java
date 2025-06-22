@@ -30,4 +30,8 @@ public class Usuario {
     @OneToOne(mappedBy = "usuario")
     @JsonManagedReference
     private Alumno alumno;
+
+    @OneToOne(mappedBy = "usuario")
+    @JsonManagedReference
+    private Revisor revisor;
 }

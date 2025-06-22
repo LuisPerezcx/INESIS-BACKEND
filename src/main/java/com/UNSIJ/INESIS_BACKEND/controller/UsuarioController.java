@@ -82,6 +82,18 @@ public class UsuarioController {
         }
     }
 
+    @GetMapping("/byRevisor/{idRevisor}")
+    public ResponseEntity<?> obtenerUsuarioPorRevisor(@PathVariable Long idRevisor) {
+        try {
+            Usuario usuario = usuarioServiceJPA.findByRevisorId(idRevisor);
+            return ResponseEntity.ok(usuario);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
+        }
+    }
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
         try {

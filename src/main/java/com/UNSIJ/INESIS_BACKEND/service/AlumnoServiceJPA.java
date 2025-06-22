@@ -70,9 +70,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
     @Transactional
     public Alumno update(Alumno alumno, Map<String, Object> params) throws Exception {
         try {
-            // Construir los nuevos valores para el alumno y su usuario
             this.build(params, alumno);
-
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {

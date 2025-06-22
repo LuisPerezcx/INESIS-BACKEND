@@ -75,41 +75,52 @@ public class RevisorServiceJPA implements IRevisorService {
             revisor.setNombre(JsonUtils.obtString(params, "nombre"));
             revisor.setApellidoPaterno(JsonUtils.obtString(params, "apellidoPaterno"));
             revisor.setApellidoMaterno(JsonUtils.obtString(params, "apellidoMaterno"));
+            revisor.setCurp(JsonUtils.obtString(params, "curp"));
+            revisor.setCorreo(JsonUtils.obtString(params, "correo"));
+            revisor.setTelefono(JsonUtils.obtString(params, "telefono"));
             revisor.setMatricula(JsonUtils.obtString(params, "matricula"));
             revisor.setDepartamento(JsonUtils.obtString(params, "departamento"));
 
             // Guardar Revisor
             revisor = save(revisor);
 
-            // Crear o actualizar usuario asociado
-            Long idUsuario = JsonUtils.obtLong(params, "idUsuario");
-
-            if (idUsuario != null) {
+            if (revisor.getUsuario() != null) {
                 // Actualizar usuario
-                Usuario usuario = usuarioServiceJPA.findById(idUsuario);
+            
                 Map<String, Object> usuarioParams = new HashMap<>();
                 usuarioParams.put("usuario", JsonUtils.obtString(params, "usuario"));
                 usuarioParams.put("contrasenia", JsonUtils.obtString(params, "contrasenia"));
                 usuarioParams.put("estatus", params.getOrDefault("estatus", "Activo"));
-                usuarioServiceJPA.update(usuario, usuarioParams);
-            } else {
-                // Crear nuevo usuario
-                Map<String, Object> usuarioParams = new HashMap<>();
-                usuarioParams.put("usuario", JsonUtils.obtString(params, "usuario"));
-                usuarioParams.put("contrasenia", JsonUtils.obtString(params, "contrasenia"));
-                usuarioParams.put("estatus", params.getOrDefault("estatus", "Activo"));
-
-                Long idRol = params.get("idCatRol") != null ? Long.parseLong(params.get("idCatRol").toString()) : 2L; // Suponiendo
-                                                                                                                      // rol
-                                                                                                                      // 2
-                                                                                                                      // para
-                                                                                                                      // revisor
+                
+                Long idRol = params.get("idCatRol") != null ? Long.parseLong(params.get("idCatRol").toString()) : 1L;  // Valor predeterminado
                 Map<String, Object> rolMap = new HashMap<>();
                 rolMap.put("idCatRol", idRol);
                 usuarioParams.put("rol", rolMap);
 
-                Usuario nuevoUsuario = usuarioServiceJPA.create(usuarioParams);
-                revisor.setUsuario(nuevoUsuario);
+                // Actualizar el usuario existente
+                usuarioServiceJPA.update(revisor.getUsuario(), usuarioParams);
+
+            } else {
+                Map<String, Object> usuarioParams = new HashMap<>();
+                usuarioParams.put("usuario", JsonUtils.obtString(params, "usuario"));
+                usuarioParams.put("contrasenia", JsonUtils.obtString(params, "contrasenia"));
+                usuarioParams.put("estatus", params.getOrDefault("estatus", "Activo"));
+
+                Long idRol = params.get("idCatRol") != null ? Long.parseLong(params.get("idCatRol").toString()) : 1L;  // Valor predeterminado
+                Map<String, Object> rolMap = new HashMap<>();
+                rolMap.put("idCatRol", idRol);
+                usuarioParams.put("rol", rolMap);
+
+                Map<String, Object> revisorMap = new HashMap<>();
+                revisorMap.put("idRevisor", revisor.getId());
+                usuarioParams.put("revisor", revisorMap);
+
+                // Crear un nuevo usuario solo si no existe uno
+                Usuario usuario = usuarioServiceJPA.create(usuarioParams);
+
+                // Relación bidireccional explícita
+                usuario.setRevisor(revisor);
+                revisor.setUsuario(usuario);
             }
 
         } catch (IllegalArgumentException e) {

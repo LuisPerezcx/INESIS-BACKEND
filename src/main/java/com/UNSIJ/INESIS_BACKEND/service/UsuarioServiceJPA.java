@@ -129,6 +129,12 @@ public class UsuarioServiceJPA implements IUsuarioService {
                         "No se encontró un usuario para el alumno con ID: " + idAlumno));
     }
 
+    public Usuario findByRevisorId(Long idRevisor) {
+        return usuarioRepository.findByRevisorId(idRevisor)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Usuario no encontrado para el revisor con ID: " + idRevisor));
+    }
+
     public Usuario validarLogin(String usuario, String contrasenia) {
         Usuario user = usuarioRepository.findByUsuario(usuario)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
