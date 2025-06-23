@@ -129,6 +129,12 @@ public class UsuarioServiceJPA implements IUsuarioService {
                         "No se encontró un usuario para el alumno con ID: " + idAlumno));
     }
 
+    public Usuario findByRevisorId(Long idRevisor) {
+        return usuarioRepository.findByRevisorId(idRevisor)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Usuario no encontrado para el revisor con ID: " + idRevisor));
+    }
+
     public Usuario validarLogin(String usuario, String contrasenia) {
         Usuario user = usuarioRepository.findByUsuario(usuario)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
@@ -152,4 +158,15 @@ public class UsuarioServiceJPA implements IUsuarioService {
         }
         return passwordEncoder.matches(contrasena, user.getContrasenia());
     }
+
+    @Transactional
+    public void cambiarContrasena(String usuario, String nuevaContrasena) {
+        Usuario user = usuarioRepository.findByUsuario(usuario)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+        // Cifrar la nueva contraseña antes de guardarla
+        String nuevaContrasenaCifrada = passwordEncoder.encode(nuevaContrasena);
+        user.setContrasenia(nuevaContrasenaCifrada);
+        usuarioRepository.save(user);
+    }
+
 }
