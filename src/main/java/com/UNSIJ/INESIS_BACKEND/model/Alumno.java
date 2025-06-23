@@ -75,6 +75,9 @@ public class Alumno {
     private MiTutor miTutor;
 
     @OneToOne(mappedBy = "alumno")
+    private GastosIngresosFamiliares gastosIngresosFamiliares;
+
+    @OneToOne(mappedBy = "alumno")
     private MiFamilia miFamilia;
 
     private Boolean completo;
@@ -84,4 +87,7 @@ public class Alumno {
     @Column(name = "observaciones")
     private String observaciones;
 
+    public String getNombreCompleto() {
+        return apellidoPaterno + " " + apellidoMaterno + " " + nombre;
+    }
 }

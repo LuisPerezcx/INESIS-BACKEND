@@ -1,5 +1,6 @@
 package com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -13,7 +14,8 @@ public class BienesHogar {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "id_mi_familia")
+    @JoinColumn(name = "id_mi_familia", nullable = false)
+    @JsonIgnore
     private MiFamilia miFamilia;
 
     @ManyToOne

@@ -2,6 +2,7 @@ package com.UNSIJ.INESIS_BACKEND.service;
 
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatMediosEstudio;
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MediosEstudio;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MiFamilia;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.CatMediosEstudioRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.MediosEstudioRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IMediosEstudiosService;
@@ -19,7 +20,7 @@ public class MediosEstudiosServiceJPA implements IMediosEstudiosService {
     private MediosEstudioRepository repository;
 
     @Autowired
-    private CatMediosEstudioRepository catRepository;
+    private CatMediosEstudioServiceJPA catMediosEstudioServiceJPA;
 
     @Override
     public List<MediosEstudio> findAll() {
@@ -39,28 +40,28 @@ public class MediosEstudiosServiceJPA implements IMediosEstudiosService {
     }
 
     @Override
-    public MediosEstudio create(Map<String, Object> params) throws Exception {
-        MediosEstudio model = new MediosEstudio();
-        return this.save(this.build(params, model));
+    public MediosEstudio create(Long idCatMedios, MiFamilia miFamilia) throws Exception {
+        MediosEstudio mediosEstudio = new MediosEstudio();
+        try {
+            this.build(idCatMedios, mediosEstudio, miFamilia);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Error al construir el tramite");
+        }
+        return this.save(mediosEstudio);
     }
 
     @Override
-    public MediosEstudio update(MediosEstudio model, Map<String, Object> params) throws Exception {
-        return this.save(this.build(params, model));
-    }
-
-    @Override
-    public MediosEstudio build(Map<String, Object> params, MediosEstudio model) {
-        Long idCategoria = JsonUtils.obtLong(params, "id_cat_medios_estudios");
-
-        if (idCategoria == null) {
+    public MediosEstudio build(Long idCatMedios, MediosEstudio model, MiFamilia miFamilia) {
+        if (idCatMedios == null) {
             throw new IllegalArgumentException("El campo 'id_cat_medios_estudios' es obligatorio.");
         }
-
-        CatMediosEstudio categoria = catRepository.findById(idCategoria)
-                .orElseThrow(() -> new IllegalArgumentException("Categoría no encontrada con ID: " + idCategoria));
-
+        CatMediosEstudio categoria = catMediosEstudioServiceJPA.findById(idCatMedios);
         model.setCatMediosEstudio(categoria);
+        model.setMiFamilia(miFamilia);
+
         return model;
     }
 

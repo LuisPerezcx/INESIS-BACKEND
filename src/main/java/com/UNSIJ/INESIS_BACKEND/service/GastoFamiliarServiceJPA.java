@@ -11,6 +11,7 @@ import com.UNSIJ.INESIS_BACKEND.model.GastosIngresosFamiliares;
 import com.UNSIJ.INESIS_BACKEND.repository.GastoFamiliarRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IGastoFamiliar;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class GastoFamiliarServiceJPA implements IGastoFamiliar {
@@ -36,8 +37,9 @@ public class GastoFamiliarServiceJPA implements IGastoFamiliar {
     }
 
     @Override
+    @Transactional
     public GastoFamiliarModel create(Map<String, Object> params) throws Exception {
-         GastoFamiliarModel ejemplo = new GastoFamiliarModel();
+        GastoFamiliarModel ejemplo = new GastoFamiliarModel();
         try {
             this.build(params, ejemplo);
         } catch (IllegalArgumentException e) {
@@ -50,35 +52,52 @@ public class GastoFamiliarServiceJPA implements IGastoFamiliar {
     }
 
     @Override
+    @Transactional
     public GastoFamiliarModel update(GastoFamiliarModel GastoFamiliarModel, Map<String, Object> params)
             throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+        try {
+            this.build(params, GastoFamiliarModel);
+            return this.save(GastoFamiliarModel);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Error al actualizar GastoFamiliarModel");
+        }
     }
 
     @Override
-    public GastoFamiliarModel build(Map<String, Object> params, GastoFamiliarModel GastoFamiliarModel){
+    @Transactional
+    public GastoFamiliarModel build(Map<String, Object> params, GastoFamiliarModel GastoFamiliarModel) {
         try {
-            Double gastoAlimentacion = JsonUtils.obtDouble(params,"gastoAlimentacion");
-            Double gastoRenta = JsonUtils.obtDouble(params,"gastoRenta");
-            Double gastoServicios = JsonUtils.obtDouble(params,"gastoServicios");
-            Double gastoEscolares = JsonUtils.obtDouble(params,"gastoEscolares");
-            Double gastoRopa = JsonUtils.obtDouble(params,"gastoRopa");
-            Double gastoTransporte = JsonUtils.obtDouble(params,"gastoTransporte");
-            Double gastoOtros = JsonUtils.obtDouble(params,"gastoOtros");
-            Double totalGastos = JsonUtils.obtDouble(params,"totalGastos");
+            Double gastoAlimentacion = JsonUtils.obtDouble(params, "gastoAlimentacion");
+            Double gastoRenta = JsonUtils.obtDouble(params, "gastoRenta");
+            Double gastoServicios = JsonUtils.obtDouble(params, "gastoServicios");
+            Double gastoEscolares = JsonUtils.obtDouble(params, "gastoEscolares");
+            Double gastoRopa = JsonUtils.obtDouble(params, "gastoRopa");
+            Double gastoTransporte = JsonUtils.obtDouble(params, "gastoTransporte");
+            Double gastoOtros = JsonUtils.obtDouble(params, "gastoOtros");
+            Double totalGastos = JsonUtils.obtDouble(params, "totalGastos");
 
             //VERIFICACION DEL CAMPO NUMERO
-            if(gastoAlimentacion == null) throw new IllegalArgumentException("El campo gastoAlimentacion es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
-            if(gastoRenta == null) throw new IllegalArgumentException("El campo gastoRenta es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
-            if(gastoServicios == null) throw new IllegalArgumentException("El campo gastoServicios es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
-            if(gastoEscolares == null) throw new IllegalArgumentException("El campo gastoEscolares es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
-            if(gastoRopa == null) throw new IllegalArgumentException("El campo gastoRopa es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
-            if(gastoTransporte == null) throw new IllegalArgumentException("El campo gastoTransporte es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
-            if(gastoOtros == null) throw new IllegalArgumentException("El campo gastoOtros es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
-            if(totalGastos == null) throw new IllegalArgumentException("El campo totalGastos es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
-           
-           
+            if (gastoAlimentacion == null)
+                throw new IllegalArgumentException("El campo gastoAlimentacion es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            if (gastoRenta == null)
+                throw new IllegalArgumentException("El campo gastoRenta es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            if (gastoServicios == null)
+                throw new IllegalArgumentException("El campo gastoServicios es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            if (gastoEscolares == null)
+                throw new IllegalArgumentException("El campo gastoEscolares es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            if (gastoRopa == null)
+                throw new IllegalArgumentException("El campo gastoRopa es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            if (gastoTransporte == null)
+                throw new IllegalArgumentException("El campo gastoTransporte es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            if (gastoOtros == null)
+                throw new IllegalArgumentException("El campo gastoOtros es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            if (totalGastos == null)
+                throw new IllegalArgumentException("El campo totalGastos es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+
+
             GastoFamiliarModel.setGastoAlimentacion(gastoAlimentacion);
             GastoFamiliarModel.setGastoRenta(gastoRenta);
             GastoFamiliarModel.setGastoServicios(gastoServicios);

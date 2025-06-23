@@ -323,127 +323,127 @@ WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '1004' AND id_cat
 --Licenciatura en Administración Turistica
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '105', 6, 1 
+SELECT '105', 6, 1
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '105' AND id_cat_carrera = 6 AND id_cat_semestre = 1);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '205', 6, 2 
+SELECT '205', 6, 2
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '205' AND id_cat_carrera = 6 AND id_cat_semestre = 2);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '305', 6, 3 
+SELECT '305', 6, 3
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '305' AND id_cat_carrera = 6 AND id_cat_semestre = 3);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '405', 6, 4 
+SELECT '405', 6, 4
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '405' AND id_cat_carrera = 6 AND id_cat_semestre = 4);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '505', 6, 5 
+SELECT '505', 6, 5
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '505' AND id_cat_carrera = 6 AND id_cat_semestre = 5);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '605', 6, 6 
+SELECT '605', 6, 6
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '605' AND id_cat_carrera = 6 AND id_cat_semestre = 6);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '705', 6, 7 
+SELECT '705', 6, 7
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '705' AND id_cat_carrera = 6 AND id_cat_semestre = 7);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '805', 6, 8 
+SELECT '805', 6, 8
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '805' AND id_cat_carrera = 6 AND id_cat_semestre = 8);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '905', 6, 9 
+SELECT '905', 6, 9
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '905' AND id_cat_carrera = 6 AND id_cat_semestre = 9);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '1005', 6, 10 
+SELECT '1005', 6, 10
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '1005' AND id_cat_carrera = 6 AND id_cat_semestre = 10);
 
 --Maestria en ciencias de la conservacion
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '106', 7, 1 
+SELECT '106', 7, 1
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '106' AND id_cat_carrera = 7 AND id_cat_semestre = 1);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '206', 7, 2 
+SELECT '206', 7, 2
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '206' AND id_cat_carrera = 7 AND id_cat_semestre = 2);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '306', 7, 3 
+SELECT '306', 7, 3
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '306' AND id_cat_carrera = 7 AND id_cat_semestre = 3);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '406', 7, 4 
+SELECT '406', 7, 4
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '406' AND id_cat_carrera = 7 AND id_cat_semestre = 4);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '506', 7, 5 
+SELECT '506', 7, 5
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '506' AND id_cat_carrera = 7 AND id_cat_semestre = 5);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '606', 7, 6 
+SELECT '606', 7, 6
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '606' AND id_cat_carrera = 7 AND id_cat_semestre = 6);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '706', 7, 7 
+SELECT '706', 7, 7
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '706' AND id_cat_carrera = 7 AND id_cat_semestre = 7);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '806', 7, 8 
+SELECT '806', 7, 8
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '806' AND id_cat_carrera = 7 AND id_cat_semestre = 8);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '906', 7, 9 
+SELECT '906', 7, 9
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '906' AND id_cat_carrera = 7 AND id_cat_semestre = 9);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '1006', 7, 10 
+SELECT '1006', 7, 10
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '1006' AND id_cat_carrera = 7 AND id_cat_semestre = 10);
 
 --Maestria en ciencia de la gestión ambiental
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '107', 8, 1 
+SELECT '107', 8, 1
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '107' AND id_cat_carrera = 8 AND id_cat_semestre = 1);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '207', 8, 2 
+SELECT '207', 8, 2
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '207' AND id_cat_carrera = 8 AND id_cat_semestre = 2);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '307', 8, 3 
+SELECT '307', 8, 3
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '307' AND id_cat_carrera = 8 AND id_cat_semestre = 3);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '407', 8, 4 
+SELECT '407', 8, 4
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '407' AND id_cat_carrera = 8 AND id_cat_semestre = 4);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '507', 8, 5 
+SELECT '507', 8, 5
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '507' AND id_cat_carrera = 8 AND id_cat_semestre = 5);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '607', 8, 6 
+SELECT '607', 8, 6
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '607' AND id_cat_carrera = 8 AND id_cat_semestre = 6);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '707', 8, 7 
+SELECT '707', 8, 7
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '707' AND id_cat_carrera = 8 AND id_cat_semestre = 7);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '807', 8, 8 
+SELECT '807', 8, 8
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '807' AND id_cat_carrera = 8 AND id_cat_semestre = 8);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '907', 8, 9 
+SELECT '907', 8, 9
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '907' AND id_cat_carrera = 8 AND id_cat_semestre = 9);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
-SELECT '1007', 8, 10 
+SELECT '1007', 8, 10
 WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '1007' AND id_cat_carrera = 8 AND id_cat_semestre = 10);
 
 #------------------- REGISTROS DE CATSEXO -------------------
@@ -475,13 +475,13 @@ SELECT 1;
 
 INSERT INTO cat_tipo_transporte (nombre_tipo)
 SELECT 'Particular'
-WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_transporte WHERE nombre_tipo = 'Particular'); 
+WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_transporte WHERE nombre_tipo = 'Particular');
 
 INSERT INTO cat_tipo_transporte (nombre_tipo)
 SELECT 'Público'
 WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_transporte WHERE nombre_tipo = 'Público');
 
-INSERT INTO cat_tipo_transporte (nombre_tipo)       
+INSERT INTO cat_tipo_transporte (nombre_tipo)
 SELECT 'Privado'
 WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_transporte WHERE nombre_tipo = 'Privado');
 
@@ -788,7 +788,7 @@ SELECT 1;
 
 INSERT INTO cat_tipo_vivienda (nombre_tipo)
 SELECT 'Casa sola'
-WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_vivienda WHERE nombre_tipo = 'Casa');
+WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_vivienda WHERE nombre_tipo = 'Casa sola');
 
 INSERT INTO cat_tipo_vivienda (nombre_tipo)
 SELECT 'Departamento'
@@ -849,17 +849,9 @@ INSERT INTO cat_parentesco (nombre_parentesco)
 SELECT 'Abuela'
 WHERE NOT EXISTS (SELECT 1 FROM cat_parentesco WHERE nombre_parentesco = 'Abuela');
 
-
-
-
-
-
-
-
-
-
-
-
+INSERT INTO cat_parentesco (nombre_parentesco)
+SELECT 'Hermano/a'
+    WHERE NOT EXISTS (SELECT 1 FROM cat_parentesco WHERE nombre_parentesco = 'Hermano/a');
 
 -- -------------------------------
 -- REGISTROS PARA cat_servicio_otro
@@ -880,3 +872,138 @@ SELECT 'Telefono' WHERE NOT EXISTS (SELECT 1 FROM cat_servicio_otro WHERE nombre
 
 INSERT INTO cat_servicio_otro (nombre_servicio)
 SELECT 'Otro' WHERE NOT EXISTS (SELECT 1 FROM cat_servicio_otro WHERE nombre_servicio = 'Otro');
+
+-- ------------------------------- insertar Regiones
+INSERT INTO cat_region (nombre_region)
+SELECT 'Cañada' WHERE NOT EXISTS (SELECT 1 FROM cat_region WHERE nombre_region='Cañada');
+INSERT INTO cat_region (nombre_region)
+SELECT 'Costa' WHERE NOT EXISTS (SELECT 1 FROM cat_region WHERE nombre_region='Costa');
+INSERT INTO cat_region (nombre_region)
+SELECT 'Istmo' WHERE NOT EXISTS (SELECT 1 FROM cat_region WHERE nombre_region='Istmo');
+INSERT INTO cat_region (nombre_region)
+SELECT 'Mixteca' WHERE NOT EXISTS (SELECT 1 FROM cat_region WHERE nombre_region='Mixteca');
+INSERT INTO cat_region (nombre_region)
+SELECT 'Papaloapan' WHERE NOT EXISTS (SELECT 1 FROM cat_region WHERE nombre_region='Papaloapan');
+INSERT INTO cat_region (nombre_region)
+SELECT 'Sierra Sur' WHERE NOT EXISTS (SELECT 1 FROM cat_region WHERE nombre_region='Sierra Sur');
+INSERT INTO cat_region (nombre_region)
+SELECT 'Sierra Norte' WHERE NOT EXISTS (SELECT 1 FROM cat_region WHERE nombre_region='Sierra Norte');
+INSERT INTO cat_region (nombre_region)
+SELECT 'Valles Centrales' WHERE NOT EXISTS (SELECT 1 FROM cat_region WHERE nombre_region='Valles Centrales');
+INSERT INTO cat_region (nombre_region)
+SELECT 'Otro' WHERE NOT EXISTS (SELECT 1 FROM cat_region WHERE nombre_region = 'Otro');
+
+-- ---------------------------------------insertar distritos
+
+-- Cañada
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'San Felipe Jalapa de Díaz', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Cañada')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='San Felipe Jalapa de Díaz');
+
+-- Papaloapan
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'San Juan Bautista Tuxtepec', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Papaloapan')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='San Juan Bautista Tuxtepec');
+
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Loma Bonita', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Papaloapan')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Loma Bonita');
+
+-- Sierra Norte
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Teotitlán de Flores Magón', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Sierra Norte')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Teotitlán de Flores Magón');
+
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Ixtlán de Juárez', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Sierra Norte')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Ixtlán de Juárez');
+
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'San Pedro y San Pablo Ayutla', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Sierra Norte')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='San Pedro y San Pablo Ayutla');
+
+-- Mixteca
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Asunción Nochixtlán', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Mixteca')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Asunción Nochixtlán');
+
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Heroica Ciudad de Huajuapan de León', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Mixteca')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Heroica Ciudad de Huajuapan de León');
+
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Heroica Ciudad de Tlaxiaco', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Mixteca')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Heroica Ciudad de Tlaxiaco');
+
+-- Sierra Sur
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Putla Villa de Guerrero', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Sierra Sur')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Putla Villa de Guerrero');
+
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Miahuatlán de Porfirio Díaz', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Sierra Sur')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Miahuatlán de Porfirio Díaz');
+
+-- Istmo
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Santo Domingo Tehuantepec', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Istmo')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Santo Domingo Tehuantepec');
+
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Ciudad Ixtepec', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Istmo')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Ciudad Ixtepec');
+
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Juchitán de Zaragoza', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Istmo')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Juchitán de Zaragoza');
+
+-- Costa
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Matías Romero', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Costa')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Matías Romero');
+
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Santiago Pinotepa Nacional', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Costa')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Santiago Pinotepa Nacional');
+
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Puerto Escondido', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Costa')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Puerto Escondido');
+
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'San Pedro Pochutla', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Costa')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='San Pedro Pochutla');
+
+-- Valles Centrales
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Santa Lucia del Camino', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Valles Centrales')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Santa Lucia del Camino');
+
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Oaxaca de Juárez', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Valles Centrales')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Oaxaca de Juárez');
+
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Villa de Etla', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Valles Centrales')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Villa de Etla');
+
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Santa Cruz Xoxocotlán', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Valles Centrales')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Santa Cruz Xoxocotlán');
+
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Zimatlán de Álvarez', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Valles Centrales')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Zimatlán de Álvarez');
+
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Tlacolula de Matamoros', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Valles Centrales')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Tlacolula de Matamoros');
+
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Ocotlán de Morelos', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Valles Centrales')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Ocotlán de Morelos');
+
+-- OTRO
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Otro', (SELECT id_cat_region FROM cat_region WHERE nombre_region = 'Otro')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito = 'Otro');

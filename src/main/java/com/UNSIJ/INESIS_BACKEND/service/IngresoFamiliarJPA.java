@@ -14,13 +14,13 @@ import com.UNSIJ.INESIS_BACKEND.service.interfaces.IIngresoFamiliar;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 
 @Service
-public class IngresoFamiliarJPA implements IIngresoFamiliar{
+public class IngresoFamiliarJPA implements IIngresoFamiliar {
 
     @Autowired
     IngresoFamiliarRepository ingresoFamiliarRepository;
 
     @Autowired
-    CatParentescoRepository parentescoRepository;
+    CatParentescoServiceJPA parentescoServiceJPA;
 
     @Override
     public List<IngresoFamiliarModel> findAll() {
@@ -61,38 +61,37 @@ public class IngresoFamiliarJPA implements IIngresoFamiliar{
     }
 
     @Override
-    public IngresoFamiliarModel build(Map<String, Object> params, IngresoFamiliarModel IngresoFamiliarModel){
-            try {
-        String nombrePersona = JsonUtils.obtString(params, "name");
-        Double ingresoBruto = JsonUtils.obtDouble(params, "gross");
-        Double ingresoNeto = JsonUtils.obtDouble(params, "net");
-        String lugarTrabajo = JsonUtils.obtString(params, "company");
-        String puestoTrabajo = JsonUtils.obtString(params, "job");
-        Long idParentescoStr = JsonUtils.obtLong(params, "relationship");
+    public IngresoFamiliarModel build(Map<String, Object> params, IngresoFamiliarModel IngresoFamiliarModel) {
+        try {
+            String nombrePersona = JsonUtils.obtString(params, "name");
+            Double ingresoBruto = JsonUtils.obtDouble(params, "gross");
+            Double ingresoNeto = JsonUtils.obtDouble(params, "net");
+            String lugarTrabajo = JsonUtils.obtString(params, "company");
+            String puestoTrabajo = JsonUtils.obtString(params, "job");
+            Long idParentescoStr = JsonUtils.obtLong(params, "relationship");
 
-        if (nombrePersona == null) throw new IllegalArgumentException("El campo 'name' es obligatorio");
-        if (ingresoBruto == null) throw new IllegalArgumentException("El campo 'gross' es obligatorio");
-        if (ingresoNeto == null) throw new IllegalArgumentException("El campo 'net' es obligatorio");
-        if (idParentescoStr == null) throw new IllegalArgumentException("El campo 'relationship' es obligatorio");
+            if (nombrePersona == null) throw new IllegalArgumentException("El campo 'name' es obligatorio");
+            if (ingresoBruto == null) throw new IllegalArgumentException("El campo 'gross' es obligatorio");
+            if (ingresoNeto == null) throw new IllegalArgumentException("El campo 'net' es obligatorio");
+            if (idParentescoStr == null) throw new IllegalArgumentException("El campo 'relationship' es obligatorio");
 
-        IngresoFamiliarModel.setNombrePersona(nombrePersona);
-        IngresoFamiliarModel.setIngresoBruto(ingresoBruto);
-        IngresoFamiliarModel.setIngresoNeto(ingresoNeto);
-        IngresoFamiliarModel.setLugarTrabajo(lugarTrabajo);
-        IngresoFamiliarModel.setPuestoTrabajo(puestoTrabajo);
+            IngresoFamiliarModel.setNombrePersona(nombrePersona);
+            IngresoFamiliarModel.setIngresoBruto(ingresoBruto);
+            IngresoFamiliarModel.setIngresoNeto(ingresoNeto);
+            IngresoFamiliarModel.setLugarTrabajo(lugarTrabajo);
+            IngresoFamiliarModel.setPuestoTrabajo(puestoTrabajo);
 
-        CatParentesco parentescoModel = parentescoRepository.findById(idParentescoStr)
-        .orElseThrow(() -> new IllegalArgumentException("Parentesco no encontrado"));
-        IngresoFamiliarModel.setParentesco(parentescoModel);
+            CatParentesco parentescoModel = parentescoServiceJPA.findById(idParentescoStr);
+            IngresoFamiliarModel.setParentesco(parentescoModel);
 
 
-    } catch (IllegalArgumentException e) {
-        throw new IllegalArgumentException(e.getMessage());
-    } catch (Exception e) {
-        e.printStackTrace();
-        throw new IllegalArgumentException("Error al construir el ingreso familiar");
-    }
-    return IngresoFamiliarModel;
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Error al construir el ingreso familiar");
+        }
+        return IngresoFamiliarModel;
     }
 
     @Override
@@ -106,5 +105,5 @@ public class IngresoFamiliarJPA implements IIngresoFamiliar{
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'deleteById'");
     }
-    
+
 }

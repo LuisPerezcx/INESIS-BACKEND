@@ -20,7 +20,10 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
     @Autowired
     ReciboLuzRepository reciboLuzRepository;
 
-    @Value("${archivos.recibo.luz.carpeta}")
+    @Autowired
+    ArchivoServiceJPA archivoServiceJPA;
+
+    @Value("${app.upload.recibo-luz.dir}")
     private String rutaBase;
 
     @Override
@@ -55,41 +58,67 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
     }
 
     @Override
-    public ReciboLuz update(ReciboLuz ReciboLuzModel, Map<String, Object> params) throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    public ReciboLuz update(ReciboLuz reciboLuzModel, Map<String, Object> params) throws Exception {
+        try {
+            String rutaAnterior = reciboLuzModel.getRutaRecibo();
+            this.build(params, reciboLuzModel);
+            if (rutaAnterior != null && !rutaAnterior.equals(reciboLuzModel.getRutaRecibo())) {
+                archivoServiceJPA.eliminarArchivo(rutaAnterior);
+            }
+            return this.save(reciboLuzModel);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Error al actualizar Recibo de Luz");
+        }
     }
 
     @Override
-    public ReciboLuz build(Map<String, Object> params, ReciboLuz ReciboLuzModel){
-           try {
-            String titular = JsonUtils.obtString(params,"titular");
-            String periodoInicio = JsonUtils.obtString(params,"periodoInicio");
-            String periodoFin = JsonUtils.obtString(params,"periodoFin");
-            String nombreArchivo = JsonUtils.obtString(params,"nombreArchivo");
-            String nombreOriginal = JsonUtils.obtString(params,"nombreOriginal");
+    public ReciboLuz build(Map<String, Object> params, ReciboLuz ReciboLuzModel) {
+        try {
+            String titular = JsonUtils.obtString(params, "titular");
+            String periodoInicio = JsonUtils.obtString(params, "periodoInicio");
+            String periodoFin = JsonUtils.obtString(params, "periodoFin");
+            String nombreArchivo = JsonUtils.obtString(params, "nombreArchivo");
+            String nombreOriginal = JsonUtils.obtString(params, "nombreOriginal");
 
-            Double ultimoPago = JsonUtils.obtDouble(params,"ultimoPago");
-            Double promedioPago = JsonUtils.obtDouble(params,"promedioPago");
-            String observaciones = JsonUtils.obtString(params,"observaciones");
+            Double ultimoPago = JsonUtils.obtDouble(params, "ultimoPago");
+            Double promedioPago = JsonUtils.obtDouble(params, "promedioPago");
+            String observaciones = JsonUtils.obtString(params, "observaciones");
 
 
             String contenidoBase64 = JsonUtils.obtString(params, "contenidoBase64"); // Asegúrate que llegue este campo
 
 
             //VERIFICACION DEL CAMPO NUMERO
-            if(titular == null) throw new IllegalArgumentException("El campo titular es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
-            if(periodoInicio == null) throw new IllegalArgumentException("El campo periodoInicio es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
-            if(periodoFin == null) throw new IllegalArgumentException("El campo periodoFin es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
-            if(nombreArchivo == null) throw new IllegalArgumentException("El campo nombreArchivo es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
-            if(nombreOriginal == null) throw new IllegalArgumentException("El campo nombreOriginal es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
-            if(ultimoPago == null) throw new IllegalArgumentException("El campo ultimoPago es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
-            if(promedioPago == null) throw new IllegalArgumentException("El campo promedioPago es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
-            if(observaciones == null) throw new IllegalArgumentException("El campo observaciones es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
-           
-            String rutaRecibo = ArchivoUtil.guardarArchivoBase64(contenidoBase64, nombreArchivo, rutaBase);
+            if (titular == null)
+                throw new IllegalArgumentException("El campo titular es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            if (periodoInicio == null)
+                throw new IllegalArgumentException("El campo periodoInicio es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            if (periodoFin == null)
+                throw new IllegalArgumentException("El campo periodoFin es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            if (nombreArchivo == null)
+                throw new IllegalArgumentException("El campo nombreArchivo es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            if (nombreOriginal == null)
+                throw new IllegalArgumentException("El campo nombreOriginal es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            if (ultimoPago == null)
+                throw new IllegalArgumentException("El campo ultimoPago es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            if (promedioPago == null)
+                throw new IllegalArgumentException("El campo promedioPago es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            if (observaciones == null)
+                throw new IllegalArgumentException("El campo observaciones es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
 
-           
+            String nombreCarpeta = titular.replace(" ", "_");
+            String rutaRecibo = archivoServiceJPA.guardarArchivoBase64(
+                    contenidoBase64,
+                    nombreOriginal,
+                    "recibo-luz",
+                    nombreCarpeta
+            );
+
+
+
             ReciboLuzModel.setTitular(titular);
             ReciboLuzModel.setPeriodoInicio(periodoInicio);
             ReciboLuzModel.setPeriodoFin(periodoFin);
@@ -99,7 +128,7 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
             ReciboLuzModel.setUltimoPago(ultimoPago);
             ReciboLuzModel.setPromedioPago(promedioPago);
             ReciboLuzModel.setObservaciones(observaciones);
-           
+
 
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());

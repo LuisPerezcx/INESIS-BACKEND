@@ -1,8 +1,10 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
 @Entity
@@ -39,15 +41,10 @@ public class IngresoFamiliarModel {
     CatParentesco parentesco;
 
 
-    /* 
-    @NotNull
-    @ManyToOne
-    @JoinColumn(name = "id_cat_ocupacion", referencedColumnName = "id_cat_ocupacion")
-    OcupacionModel ocupacionModel;
-    */
-
     @NotNull
     @ManyToOne
     @JoinColumn(name = "id_gastos_ingresos_familiares", referencedColumnName = "id_gastos_ingresos_familiares")
+    @ToString.Exclude
+    @JsonIgnore
     GastosIngresosFamiliares gastosIngresosFamiliares;
 }
