@@ -80,9 +80,11 @@ public class Alumno {
     @OneToOne(mappedBy = "alumno")
     private MiFamilia miFamilia;
 
-    private Boolean completo;
+    @Column(name = "estudio_completo")
+    private Boolean estudioCompleto;
 
-    private Boolean estado;
+    @Column(name = "estado_revision")
+    private Boolean estadoRevision;
 
     @Column(name = "observaciones")
     private String observaciones;

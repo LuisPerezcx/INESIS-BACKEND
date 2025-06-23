@@ -28,7 +28,7 @@ public class MiTutor {
     @Column(name = "comparte_vivienda")
     private Boolean comparteVivienda;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "id_cat_tipo_trabajo")
     private CatTipoTrabajo catTipoTrabajo;
 
