@@ -5,6 +5,7 @@
 package com.UNSIJ.INESIS_BACKEND.service.interfaces;
 
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.BienesHogar;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MiFamilia;
 
 import java.util.List;
 import java.util.Map;
@@ -20,11 +21,9 @@ public interface IBienesHogarService {
 
     BienesHogar save(BienesHogar model) throws Exception;
 
-    BienesHogar create(Map<String, Object> params) throws Exception;
+    BienesHogar create(Long idBienes, MiFamilia miFamilia) throws Exception;
 
-    BienesHogar update(BienesHogar model, Map<String, Object> params) throws Exception;
-
-    BienesHogar build(Map<String, Object> params, BienesHogar model);
+    BienesHogar build(Long idBienes, BienesHogar model, MiFamilia miFamilia);
 
     BienesHogar updateInstance(BienesHogar instance) throws Exception;
 

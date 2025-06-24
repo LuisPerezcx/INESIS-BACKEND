@@ -5,6 +5,7 @@
 
 package com.UNSIJ.INESIS_BACKEND.service.interfaces;
 
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MiFamilia;
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.PersonasDependientes;
 
 import java.util.List;
@@ -20,11 +21,11 @@ public interface IPersonasDependientesService {
 
     PersonasDependientes save(PersonasDependientes model) throws Exception;
 
-    PersonasDependientes create(Map<String, Object> params) throws Exception;
+    PersonasDependientes create(Map<String, Object> params, MiFamilia miFamilia) throws Exception;
 
     PersonasDependientes update(PersonasDependientes model, Map<String, Object> params) throws Exception;
 
-    PersonasDependientes build(Map<String, Object> params, PersonasDependientes model);
+    PersonasDependientes build(Map<String, Object> params, PersonasDependientes model, MiFamilia miFamilia);
 
     void deleteById(Long id);
 }

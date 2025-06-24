@@ -37,7 +37,7 @@ public class ServiciosViviendaController {
         }
     }
 
-    @PostMapping
+/*    @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
             ServiciosVivienda model = service.create(params);
@@ -59,7 +59,7 @@ public class ServiciosViviendaController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
-    }
+    }*/
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {

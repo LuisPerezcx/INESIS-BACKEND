@@ -6,6 +6,7 @@ package com.UNSIJ.INESIS_BACKEND.service;
 
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.BienesHogar;
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatBienesHogar;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MediosEstudio;
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MiFamilia;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.BienesHogarRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.CatBienesHogarRepository;
@@ -29,10 +30,7 @@ public class BienesHogarServiceJPA implements IBienesHogarService {
     private BienesHogarRepository repository;
 
     @Autowired
-    private MiFamiliaRepository miFamiliaRepository;
-
-    @Autowired
-    private CatBienesHogarRepository catRepository;
+    private CatBienesHogarServiceJPA catBienesHogarServiceJPA;
 
     @Override
     public List<BienesHogar> findAll() {
@@ -52,33 +50,30 @@ public class BienesHogarServiceJPA implements IBienesHogarService {
     }
 
     @Override
-    public BienesHogar create(Map<String, Object> params) throws Exception {
-        BienesHogar model = new BienesHogar();
-        return this.save(this.build(params, model));
-    }
-
-    @Override
-    public BienesHogar update(BienesHogar model, Map<String, Object> params) throws Exception {
-        return this.save(this.build(params, model));
-    }
-
-    @Override
-    public BienesHogar build(Map<String, Object> params, BienesHogar model) {
-        Long idMiFamilia = JsonUtils.obtLong(params, "id_mi_familia");
-        Long idCatBien = JsonUtils.obtLong(params, "id_cat_bienes_hogar");
-
-        if (idMiFamilia == null || idCatBien == null) {
-            throw new IllegalArgumentException("Los campos 'id_mi_familia' y 'id_cat_bienes_hogar' son obligatorios.");
+    @Transactional
+    public BienesHogar create(Long idBienes, MiFamilia miFamilia) throws Exception {
+        BienesHogar bienesHogar = new BienesHogar();
+        try {
+            this.build(idBienes, bienesHogar, miFamilia);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Error al construir el tramite");
         }
+        return this.save(bienesHogar);
+    }
 
-        MiFamilia familia = miFamiliaRepository.findById(idMiFamilia)
-                .orElseThrow(() -> new IllegalArgumentException("Mi familia no encontrada con ID: " + idMiFamilia));
 
-        CatBienesHogar categoria = catRepository.findById(idCatBien)
-                .orElseThrow(() -> new IllegalArgumentException("Categoría de bien no encontrada con ID: " + idCatBien));
-
-        model.setMiFamilia(familia);
-        model.setCatBienHogar(categoria);
+    @Override
+    @Transactional
+    public BienesHogar build(Long idBienes, BienesHogar model, MiFamilia miFamilia) {
+        if (idBienes == null) {
+            throw new IllegalArgumentException("El campo 'id_cat_bienes_hogar' es obligatorio.");
+        }
+        CatBienesHogar bien = catBienesHogarServiceJPA.findById(idBienes);
+        model.setCatBienHogar(bien);
+        model.setMiFamilia(miFamilia);
 
         return model;
     }

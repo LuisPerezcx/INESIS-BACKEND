@@ -41,7 +41,7 @@ public class ViviendaFamiliarController {
         }
     }
 
-    @PostMapping
+/*    @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
             ViviendaFamiliar model = viviendaFamiliarService.create(params);
@@ -63,7 +63,7 @@ public class ViviendaFamiliarController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar Vivienda Familiar");
         }
-    }
+    }*/
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {

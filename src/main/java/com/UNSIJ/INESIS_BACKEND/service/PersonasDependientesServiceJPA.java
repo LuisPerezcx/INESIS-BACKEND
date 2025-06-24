@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -27,7 +28,10 @@ public class PersonasDependientesServiceJPA implements IPersonasDependientesServ
     private PersonasDependientesRepository repository;
 
     @Autowired
-    private MiFamiliaRepository miFamiliaRepository;
+    private CatParentescoServiceJPA catParentescoService;
+
+    @Autowired
+    ArchivoServiceJPA archivoService;
 
     @Override
     public List<PersonasDependientes> findAll() {
@@ -47,30 +51,121 @@ public class PersonasDependientesServiceJPA implements IPersonasDependientesServ
     }
 
     @Override
-    public PersonasDependientes create(Map<String, Object> params) throws Exception {
+    public PersonasDependientes create(Map<String, Object> params, MiFamilia miFamilia) throws Exception {
         PersonasDependientes model = new PersonasDependientes();
-        return this.save(this.build(params, model));
+        System.out.println("ENTRANDO A CREAR PERSONAS DEPENDIENTES");
+        try {
+            this.build(params, model, miFamilia);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Error al construir el tramite");
+        }
+        return this.save(model);
     }
 
     @Override
+    @Transactional
     public PersonasDependientes update(PersonasDependientes model, Map<String, Object> params) throws Exception {
-        return this.save(this.build(params, model));
-    }
+        String nuevoNombre = JsonUtils.obtString(params, "nombrePersona");
+        Integer nuevaEdad = JsonUtils.obtInteger(params, "edad");
+        Long nuevoParentescoId = JsonUtils.obtLong(params, "parentesco");
+        String nuevoNombreArchivo = JsonUtils.obtString(params, "archivo.name");
+        String nuevoArchivoBase64 = JsonUtils.obtString(params, "archivo.contenido");
 
-    @Override
-    public PersonasDependientes build(Map<String, Object> params, PersonasDependientes model) {
-        model.setNombrePersona(JsonUtils.obtString(params, "nombre_persona"));
-        model.setEdad(JsonUtils.obtInteger(params, "edad"));
-        model.setParentesco(JsonUtils.obtString(params, "parentesco"));
-        model.setNombreArchivo(JsonUtils.obtString(params, "nombre_archivo"));
-
-        Long idMiFamilia = JsonUtils.obtLong(params, "id_mi_familia");
-        if (idMiFamilia != null) {
-            MiFamilia miFamilia = miFamiliaRepository.findById(idMiFamilia)
-                    .orElseThrow(() -> new IllegalArgumentException("MiFamilia no encontrada con ID: " + idMiFamilia));
-            model.setMiFamilia(miFamilia);
+        // Solo actualiza si hay cambios reales
+        if (nuevoNombre != null && !nuevoNombre.equals(model.getNombrePersona())) {
+            model.setNombrePersona(nuevoNombre);
         }
 
+        if (nuevaEdad != null && !nuevaEdad.equals(model.getEdad())) {
+            model.setEdad(nuevaEdad);
+        }
+
+        if (nuevoParentescoId != null &&
+                (model.getParentesco() == null || !nuevoParentescoId.equals(model.getParentesco().getId()))) {
+            model.setParentesco(catParentescoService.findById(nuevoParentescoId));
+        }
+
+        if (nuevoNombreArchivo != null) {
+            model.setNombreArchivo(nuevoNombreArchivo);
+        }
+
+        // Manejo de archivo
+        if (nuevoArchivoBase64 != null && !nuevoArchivoBase64.isEmpty()) {
+            String rutaAnterior = model.getRutaArchivo();
+
+            // Guardar archivo nuevo
+            String nombreCarpeta = model.getMiFamilia() != null && model.getMiFamilia().getAlumno() != null ?
+                    model.getMiFamilia().getAlumno().getNombreCompleto().replace(" ", "_") :
+                    "alumno_" + (model.getMiFamilia() != null ? model.getMiFamilia().getId() : "desconocido");
+
+            String rutaNueva = archivoService.guardarArchivoBase64(
+                    nuevoArchivoBase64,
+                    nuevoNombreArchivo,
+                    "personas-dependientes",
+                    nombreCarpeta
+            );
+
+            // Solo elimina si el archivo es diferente
+            if (rutaAnterior != null && !rutaAnterior.equals(rutaNueva)) {
+                archivoService.eliminarArchivo(rutaAnterior);
+            }
+
+            model.setRutaArchivo(rutaNueva);
+        }
+
+        return repository.save(model);
+    }
+
+    @Override
+    @Transactional
+    public PersonasDependientes build(Map<String, Object> params, PersonasDependientes model, MiFamilia miFamilia) {
+        System.out.println("ENTRANDO A CONSTRUIR PERSONAS DEPENDIENTES");
+        model.setNombrePersona(JsonUtils.obtString(params, "nombrePersona"));
+        model.setEdad(JsonUtils.obtInteger(params, "edad"));
+        model.setParentesco(catParentescoService.findById(JsonUtils.obtLong(params, "parentesco")));
+        model.setNombreArchivo(JsonUtils.obtString(params, "archivo.name"));
+
+        String archivoBase64 = JsonUtils.obtString(params, "archivo.contenido");
+        if (archivoBase64 != null && !archivoBase64.isEmpty()) {
+            String nuevoNombre = JsonUtils.obtString(params, "archivo.name");
+            String nuevoArchivoBase64 = JsonUtils.obtString(params, "archivo.contenido");
+
+            String nombreArchivoAnterior = model.getRutaArchivo();
+
+            if (nuevoArchivoBase64 != null && !nuevoArchivoBase64.isEmpty()) {
+                // Si el nombre del archivo es igual al anterior, asumimos que no cambió
+                if (nombreArchivoAnterior != null && nombreArchivoAnterior.contains(nuevoNombre)) {
+                    System.out.println("Archivo ya existente, no se reemplaza.");
+                } else {
+                    try {
+                        String nombreCarpeta = miFamilia.getAlumno() != null ?
+                                miFamilia.getAlumno().getNombreCompleto().replace(" ", "_") :
+                                "alumno_" + miFamilia.getId();
+
+                        // Guardar archivo nuevo
+                        String rutaRelativa = archivoService.guardarArchivoBase64(
+                                nuevoArchivoBase64,
+                                nuevoNombre,
+                                "personas-dependientes",
+                                nombreCarpeta
+                        );
+
+                        if (nombreArchivoAnterior != null) {
+                            archivoService.eliminarArchivo(nombreArchivoAnterior);
+                        }
+
+                        model.setRutaArchivo(rutaRelativa);
+                    } catch (IOException e) {
+                        throw new IllegalArgumentException("Error al guardar archivo: " + e.getMessage());
+                    }
+                }
+            }
+        }
+        System.out.println("SALIENDO DEL IF DE BASE64(O NO)");
+        model.setMiFamilia(miFamilia);
         return model;
     }
 
