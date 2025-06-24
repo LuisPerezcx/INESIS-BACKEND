@@ -16,10 +16,10 @@ import lombok.Data;
  *
  * @author Alumnos
  */
-public class CatServiciosOtro {
+public class CatServiciosVivienda {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_servicio_otro")
+    @Column(name = "id_servicios_vivienda")
     private Long id;
 
     @Column(name = "nombre_servicio", nullable = false, unique = true)

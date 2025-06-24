@@ -1,8 +1,13 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.ToString;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Data
@@ -14,9 +19,8 @@ public class GastosIngresosFamiliares {
     @Column(name = "id_gastos_ingresos_familiares")
     private Long id;
 
-    @NotNull
-    @Column(name = "completo")
-    private Boolean completo;
+    @Column(name = "modulo_completo")
+    private Boolean moduloCompleto;
 
     @NotNull
     @Column(name = "num_personas_aportan")
@@ -31,11 +35,6 @@ public class GastosIngresosFamiliares {
     private int numeroPersonasDependen;
 
     @NotNull
-    @ManyToOne
-    @JoinColumn(name = "id_ingreso_familiar", referencedColumnName = "id_ingreso_familiar")
-    IngresoFamiliarModel ingresoFamiliarModel;
-
-    @NotNull
     @OneToOne
     @JoinColumn(name = "id_gasto_familiar", referencedColumnName = "id_gasto_familiar")
     GastoFamiliarModel gastoFamiliarModel;
@@ -44,4 +43,14 @@ public class GastosIngresosFamiliares {
     @OneToOne
     @JoinColumn(name = "id_recibo_luz", referencedColumnName = "id_recibo_luz")
     ReciboLuz reciboLuzModel;
+
+    @OneToMany(mappedBy = "gastosIngresosFamiliares", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<IngresoFamiliarModel> ingresosFamiliar = new ArrayList<>();
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_alumno", referencedColumnName = "id_alumno")
+    @JsonIgnore
+    @ToString.Exclude
+    private Alumno alumno;
+
 }

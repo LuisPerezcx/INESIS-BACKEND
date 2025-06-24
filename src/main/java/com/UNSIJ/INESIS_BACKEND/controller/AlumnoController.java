@@ -86,6 +86,24 @@ public class AlumnoController {
         return ResponseEntity.ok(response);
     }
 
+    @PatchMapping("/completarEstudio/{id}")
+    public ResponseEntity<?> estudioCompleto(@PathVariable Long id){
+        try {
+            Alumno alumno = alumnoServiceJPA.findById(id);
+            // Actualizar el campo estudioCompleto a true
+            alumno.setEstudioCompleto(true);
+            // Guardar cambios usando el servicio
+            alumnoServiceJPA.save(alumno);
+            return ResponseEntity.ok("Estudio completo actualizado correctamente");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Alumno no encontrado");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al actualizar el estado de estudio completo: " + e.getMessage());
+        }
+    }
+
+
     @PatchMapping("/{id}/revision")
     public ResponseEntity<?> actualizarRevisionAlumno(
             @PathVariable Long id,
@@ -98,7 +116,7 @@ public class AlumnoController {
             Alumno alumno = alumnoServiceJPA.findById(id);
             // Actualizar campos
             alumno.setObservaciones(observaciones);
-            alumno.setEstado(estado);
+            alumno.setEstadoRevision(estado);
 
             // Guardar cambios usando el servicio
             alumnoServiceJPA.save(alumno);

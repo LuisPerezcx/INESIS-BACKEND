@@ -48,7 +48,7 @@ public class PersonasDependientesController {
         }
     }
 
-    @PostMapping
+/*    @PostMapping
     public ResponseEntity<?> create(@RequestBody Map<String, Object> params) {
         try {
             PersonasDependientes createHermanos = service.create(params);
@@ -70,7 +70,7 @@ public class PersonasDependientesController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
-    }
+    }*/
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable Long id) {

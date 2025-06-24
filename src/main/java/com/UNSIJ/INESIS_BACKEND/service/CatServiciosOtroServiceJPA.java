@@ -5,7 +5,7 @@
 
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatServiciosOtro;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatServiciosVivienda;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.CatServiciosOtroRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.ICatServiciosOtroService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +23,12 @@ public class CatServiciosOtroServiceJPA implements ICatServiciosOtroService {
     private CatServiciosOtroRepository repository;
 
     @Override
-    public List<CatServiciosOtro> findAll() {
+    public List<CatServiciosVivienda> findAll() {
         return repository.findAll();
     }
 
     @Override
-    public CatServiciosOtro findById(Long id) {
+    public CatServiciosVivienda findById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Servicio Otro no encontrado con ID: " + id));
     }
