@@ -605,24 +605,16 @@ WHERE NOT EXISTS (SELECT 1 FROM cat_bienes_hogar WHERE nombre_bien = 'Espacio pr
 SELECT 1;
 
 INSERT INTO cat_escolaridad (nombre_escolaridad)
-SELECT 'Sin escolaridad'
+SELECT 'Sin estudios'
 WHERE NOT EXISTS (SELECT 1 FROM cat_escolaridad WHERE nombre_escolaridad = 'Sin escolaridad');
 
 INSERT INTO cat_escolaridad (nombre_escolaridad)
-SELECT 'Primaria incompleta'
-WHERE NOT EXISTS (SELECT 1 FROM cat_escolaridad WHERE nombre_escolaridad = 'Primaria incompleta');
+SELECT 'Primaria'
+WHERE NOT EXISTS (SELECT 1 FROM cat_escolaridad WHERE nombre_escolaridad = 'Primaria');
 
 INSERT INTO cat_escolaridad (nombre_escolaridad)
-SELECT 'Primaria completa'
-WHERE NOT EXISTS (SELECT 1 FROM cat_escolaridad WHERE nombre_escolaridad = 'Primaria completa');
-
-INSERT INTO cat_escolaridad (nombre_escolaridad)
-SELECT 'Secundaria incompleta'
-WHERE NOT EXISTS (SELECT 1 FROM cat_escolaridad WHERE nombre_escolaridad = 'Secundaria incompleta');
-
-INSERT INTO cat_escolaridad (nombre_escolaridad)
-SELECT 'Secundaria completa'
-WHERE NOT EXISTS (SELECT 1 FROM cat_escolaridad WHERE nombre_escolaridad = 'Secundaria completa');
+SELECT 'Secundaria'
+WHERE NOT EXISTS (SELECT 1 FROM cat_escolaridad WHERE nombre_escolaridad = 'Secundaria');
 
 INSERT INTO cat_escolaridad (nombre_escolaridad)
 SELECT 'Bachillerato'
@@ -675,20 +667,12 @@ WHERE NOT EXISTS (SELECT 1 FROM cat_internet WHERE nombre_internet = 'Otra');
 SELECT 1;
 
 INSERT INTO cat_material_vivienda (nombre_material)
-SELECT 'Ladrillo'
-WHERE NOT EXISTS (SELECT 1 FROM cat_material_vivienda WHERE nombre_material = 'Ladrillo');
+SELECT 'Mamposteria'
+WHERE NOT EXISTS (SELECT 1 FROM cat_material_vivienda WHERE nombre_material = 'Mamposteria');
 
 INSERT INTO cat_material_vivienda (nombre_material)
 SELECT 'Madera'
 WHERE NOT EXISTS (SELECT 1 FROM cat_material_vivienda WHERE nombre_material = 'Madera');
-
-INSERT INTO cat_material_vivienda (nombre_material)
-SELECT 'Adobe'
-WHERE NOT EXISTS (SELECT 1 FROM cat_material_vivienda WHERE nombre_material = 'Adobe');
-
-INSERT INTO cat_material_vivienda (nombre_material)
-SELECT 'Cartón'
-WHERE NOT EXISTS (SELECT 1 FROM cat_material_vivienda WHERE nombre_material = 'Cartón');
 
 INSERT INTO cat_material_vivienda (nombre_material)
 SELECT 'Lámina'
@@ -751,20 +735,8 @@ SELECT 'Propia'
 WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Propia');
 
 INSERT INTO cat_situacion_vivienda (nombre_situacion)
-SELECT 'Rentada'
-WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Rentada');
-
-INSERT INTO cat_situacion_vivienda (nombre_situacion)
-SELECT 'Prestada'
-WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Prestada');
-
-INSERT INTO cat_situacion_vivienda (nombre_situacion)
 SELECT 'Alquilada'
 WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Alquilada');
-
-INSERT INTO cat_situacion_vivienda (nombre_situacion)
-SELECT 'Vivienda institucional'
-WHERE NOT EXISTS (SELECT 1 FROM cat_situacion_vivienda WHERE nombre_situacion = 'Vivienda institucional');
 
 INSERT INTO cat_situacion_vivienda (nombre_situacion)
 SELECT 'Rento cuarto'
@@ -791,29 +763,16 @@ SELECT 'Casa sola'
 WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_vivienda WHERE nombre_tipo = 'Casa sola');
 
 INSERT INTO cat_tipo_vivienda (nombre_tipo)
-SELECT 'Departamento'
-WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_vivienda WHERE nombre_tipo = 'Departamento');
-
-INSERT INTO cat_tipo_vivienda (nombre_tipo)
-SELECT 'Cuarto en vecindad'
-WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_vivienda WHERE nombre_tipo = 'Cuarto en vecindad');
-
-INSERT INTO cat_tipo_vivienda (nombre_tipo)
-SELECT 'Vivienda improvisada'
-WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_vivienda WHERE nombre_tipo = 'Vivienda improvisada');
-
-INSERT INTO cat_tipo_vivienda (nombre_tipo)
-SELECT 'Casa de interés social'
-WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_vivienda WHERE nombre_tipo = 'Casa de interés social');
-
-INSERT INTO cat_tipo_vivienda (nombre_tipo)
 SELECT 'Condominio'
 WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_vivienda WHERE nombre_tipo = 'Condominio');
 
 INSERT INTO cat_tipo_vivienda (nombre_tipo)
-SELECT 'Otro'
-WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_vivienda WHERE nombre_tipo = 'Otro');
+SELECT 'Vecindad'
+WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_vivienda WHERE nombre_tipo = 'Vecindad');  
 
+INSERT INTO cat_tipo_vivienda (nombre_tipo)
+SELECT 'Departamento'
+WHERE NOT EXISTS (SELECT 1 FROM cat_tipo_vivienda WHERE nombre_tipo = 'Departamento');
 
 
 # ----------------------------------- REGISTROS DE CAT_TIPO_TRABAJO ----------------------------------------
