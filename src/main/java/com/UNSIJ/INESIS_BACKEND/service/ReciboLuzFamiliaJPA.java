@@ -110,6 +110,11 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
                 throw new IllegalArgumentException("El campo observaciones es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
 
             String nombreCarpeta = titular.replace(" ", "_");
+
+            if(contenidoBase64 == null || contenidoBase64.isEmpty()) {
+                throw new IllegalArgumentException("El archivo de recibo de luz es obligatorio");
+            }
+
             String rutaRecibo = archivoServiceJPA.guardarArchivoBase64(
                     contenidoBase64,
                     nombreOriginal,

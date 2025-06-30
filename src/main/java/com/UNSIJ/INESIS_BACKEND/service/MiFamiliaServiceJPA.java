@@ -56,6 +56,9 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
     @Autowired
     private ViviendaFamiliarServiceJPA viviendaFamiliarServiceJPA;
 
+    @Autowired
+    private FechasRegistradasServiceJPA fechasRegistradasServiceJPA;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -73,6 +76,10 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
     @Override
     @Transactional
     public MiFamilia save(MiFamilia model) throws Exception {
+        Alumno alumno = model.getAlumno();
+        if (!fechasRegistradasServiceJPA.permitirRegistro(alumno.getCarrera().getId()))
+            throw new IllegalArgumentException("No es posible registrar tus datos en este momento. " +
+                    "El periodo de registro para tu carrera no está activo actualmente.");
         return repository.save(model);
     }
 
@@ -171,20 +178,32 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
                         Long.valueOf(domicilioParams.get("idDomicilioAlumno").toString()) : null;
 
                 if (domicilioAlumnoID == null) {
-                    // desvincular el domicilio anterior (si lo hay)
-                    miFamilia.setDomicilio(null);
-                    this.save(miFamilia); // aquí JPA elimina el domicilio anterior automáticamente
-
+                    Domicilio domicilioAntiguo = miFamilia.getDomicilio();
+                    if (domicilioAntiguo != null) {
+                        // Si no hay ID, pero ya hay un domicilio asociado, lo desvinculamos
+                        System.out.println("Desvinculando domicilio antiguo: " + domicilioAntiguo);
+                        miFamilia.setDomicilio(null);
+                        this.save(miFamilia); // aquí JPA elimina el domicilio anterior automáticamente
+                        if (!domicilioServiceJPA.isDomicilioUsado(domicilioAntiguo.getId())) {
+                            //eliminar domicilio antiguo
+                            System.out.println("Eliminando domicilio antiguo: " + domicilioAntiguo);
+                            domicilioServiceJPA.deleteById(domicilioAntiguo.getId());
+                        }
+                    }
                     // agregar el nuevo domicilio
                     Domicilio nuevo = domicilioServiceJPA.create(domicilioParams);
                     miFamilia.setDomicilio(nuevo);
                 } else {
                     Domicilio existente = domicilioServiceJPA.findById(domicilioAlumnoID);
-
                     Domicilio domicilioAntiguo = miFamilia.getDomicilio();
                     if (domicilioAntiguo != null && !domicilioAntiguo.equals(existente)) {
                         miFamilia.setDomicilio(null);
                         this.save(miFamilia); // también aquí, JPA elimina el anterior automáticamente
+                        boolean enUso = domicilioServiceJPA.isDomicilioUsado(domicilioAntiguo.getId());
+                        if (!enUso) {
+                            System.out.println("Eliminando domicilio antiguo");
+                            domicilioServiceJPA.deleteById(domicilioAntiguo.getId());
+                        }
                     }
 
                     miFamilia.setDomicilio(existente); // setea el nuevo

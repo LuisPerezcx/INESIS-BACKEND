@@ -34,15 +34,30 @@ public class AlumnoServiceJPA implements IAlumnoService {
     @Autowired
     private UsuarioServiceJPA usuarioServiceJPA;
 
+    @Autowired
+    FechasRegistradasServiceJPA fechasRegistradasServiceJPA;
+
     @Override
     public List<Alumno> findAll() {
-        return alumnoRepository.findAll();
+        List<Alumno> alumnos = alumnoRepository.findAll();
+        for (Alumno alumno : alumnos) {
+            if (alumno.getCarrera() != null) {
+                try {
+                    alumno.setFechaRegistrada(fechasRegistradasServiceJPA.findByCarreraId(alumno.getCarrera().getId()));
+                } catch (Exception e) {}
+            }
+        }
+        return alumnos;
     }
 
     @Override
     public Alumno findById(Long id) {
-        return alumnoRepository.findById(id)
+        Alumno alumno = alumnoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Alumno no encontrado con el ID: " + id));
+        try {
+            alumno.setFechaRegistrada(fechasRegistradasServiceJPA.findByCarreraId(alumno.getCarrera().getId()));
+        } catch (Exception e) { }
+        return alumno;
     }
 
     @Override

@@ -89,6 +89,9 @@ public class Alumno {
     @Column(name = "observaciones")
     private String observaciones;
 
+    @Transient
+    private FechasRegistradas fechaRegistrada;
+
     public String getNombreCompleto() {
         return apellidoPaterno + " " + apellidoMaterno + " " + nombre;
     }

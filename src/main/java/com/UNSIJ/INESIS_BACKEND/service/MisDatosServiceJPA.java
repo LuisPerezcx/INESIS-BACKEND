@@ -20,10 +20,7 @@ public class MisDatosServiceJPA implements IMisDatosService {
     private MisDatosRepository misDatosRepository;
 
     @Autowired
-    private CatCarreraRepository catCarreraRepository;
-
-    @Autowired
-    private CatSemestreRepository catSemestreRepository;
+    private FechasRegistradasServiceJPA fechasRegistradasServiceJPA;
 
     @Autowired
     private CatSexoRepository catSexoRepository;
@@ -73,6 +70,10 @@ public class MisDatosServiceJPA implements IMisDatosService {
     @Override
     @Transactional
     public MisDatos save(MisDatos misDatos) throws Exception {
+        Alumno alumno = misDatos.getAlumno();
+        if(!fechasRegistradasServiceJPA.permitirRegistro(alumno.getCarrera().getId()))
+            throw new IllegalArgumentException("No es posible registrar tus datos en este momento. " +
+                    "El periodo de registro para tu carrera no está activo actualmente.");
         return misDatosRepository.save(misDatos);
     }
 
