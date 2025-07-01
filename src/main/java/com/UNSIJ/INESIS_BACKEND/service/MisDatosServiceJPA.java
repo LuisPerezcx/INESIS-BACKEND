@@ -122,8 +122,12 @@ public class MisDatosServiceJPA implements IMisDatosService {
             if (idAlumno != null) {
                 Alumno alumno = alumnoService.findById(idAlumno);
                 Long idSemestre = JsonUtils.obtLong(params, "semestre");
+                String correo = JsonUtils.obtString(params, "correo");
+                String telefono = JsonUtils.obtString(params, "telefono");
                 CatSemestre semestre = semestreService.findById(idSemestre);
                 alumno.setSemestre(semestre);
+                alumno.setTelefono(telefono);
+                alumno.setCorreo(correo);
                 alumnoService.save(alumno);
             }
 
