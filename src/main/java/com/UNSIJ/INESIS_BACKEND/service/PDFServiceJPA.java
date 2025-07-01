@@ -155,12 +155,12 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.gastoMensual, valorSeguro(String.valueOf(alumno.getMisDatos().getGastosIngresos().getGastoMensual())," "), true);
 
             Long situacionId =alumno.getMisDatos().getSituacionVivienda().getId();
-            if (situacionId == 6L){
+            if (situacionId == 3L){
                 form.setField(PDF.ESE.rentaCuarto, "X", true);
 
-            } else if (situacionId == 7L) {
+            } else if (situacionId == 4L) {
                 form.setField(PDF.ESE.rentaCasa, "X", true);
-            }else if (situacionId == 8L){
+            }else if (situacionId == 5L){
                 form.setField(PDF.ESE.viveFamiliares, "X", true);
 
             }
@@ -290,6 +290,7 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.telefonoAlumno, valorSeguro(alumno.getTelefono()," "), true);
             form.setField(PDF.ESE.emailAlumno, valorSeguro(alumno.getCorreo()," "), true);
             form.setField(PDF.ESE.lenguajeDialecto, valorSeguro(alumno.getMisDatos().getIdioma()," "), true);
+
             form.setField(PDF.ESE.regionActualFamilia, " ", true);
             form.setField(PDF.ESE.distritoActualFamilia, " ", true);
             form.setField(PDF.ESE.municipioActualFamilia, " ", true);
@@ -305,36 +306,62 @@ public class PDFServiceJPA {
 
             }
 
-            form.setField(PDF.ESE.aportanGasto, " ", true);
-            form.setField(PDF.ESE.ingresoMensualPromedio, " ", true);
-            form.setField(PDF.ESE.numDependeMencionado, " ", true);
+            form.setField(PDF.ESE.aportanGasto, valorSeguro(String.valueOf(alumno.getGastosIngresosFamiliares().getNummeroPersonasAportan())," "), true);
+            form.setField(PDF.ESE.ingresoMensualPromedio, valorSeguro(String.valueOf(alumno.getGastosIngresosFamiliares().getIngresoTotal())," "), true);
+            form.setField(PDF.ESE.numDependeMencionado, valorSeguro(String.valueOf(alumno.getGastosIngresosFamiliares().getNumeroPersonasDependen())," "), true);
             form.setField(PDF.ESE.promedioMensual," ",true);
-            form.setField(PDF.ESE.alimentacion, "0", true);
-            form.setField(PDF.ESE.renta, "0", true);
-            form.setField(PDF.ESE.servicios, "0", true);
-            form.setField(PDF.ESE.gastoEscolar, "0", true);
-            form.setField(PDF.ESE.ropa, "0", true);
-            form.setField(PDF.ESE.transporte, "0", true);
-            form.setField(PDF.ESE.otros, "0", true);
-            form.setField(PDF.ESE.total, "0", true);
-            form.setField(PDF.ESE.propia, "X", true);
-            form.setField(PDF.ESE.alquilada, "X", true);
-            form.setField(PDF.ESE.otra, "X", true);
-            form.setField(PDF.ESE.casaSola, "X", true);
-            form.setField(PDF.ESE.condominio, "X", true);
-            form.setField(PDF.ESE.vecindad, "X", true);
-            form.setField(PDF.ESE.departamento, "X", true);
-            form.setField(PDF.ESE.mamposteria, "X", true);
-            form.setField(PDF.ESE.madera, "X", true);
-            form.setField(PDF.ESE.lamina, "X", true);
-            form.setField(PDF.ESE.concreto, "X", true);
-            form.setField(PDF.ESE.otrosMaterial, "X", true);
+
+            form.setField(PDF.ESE.alimentacion, valorSeguro(String.valueOf(alumno.getGastosIngresosFamiliares().getGastoFamiliarModel().getGastoAlimentacion()),"0"), true);
+            form.setField(PDF.ESE.renta, valorSeguro(String.valueOf(alumno.getGastosIngresosFamiliares().getGastoFamiliarModel().getGastoRenta()),"0"), true);
+            form.setField(PDF.ESE.servicios, valorSeguro(String.valueOf(alumno.getGastosIngresosFamiliares().getGastoFamiliarModel().getGastoServicios()),"0"), true);
+            form.setField(PDF.ESE.gastoEscolar, valorSeguro(String.valueOf(alumno.getGastosIngresosFamiliares().getGastoFamiliarModel().getGastoEscolares()),"0"), true);
+            form.setField(PDF.ESE.ropa, valorSeguro(String.valueOf(alumno.getGastosIngresosFamiliares().getGastoFamiliarModel().getGastoRopa()),"0"), true);
+            form.setField(PDF.ESE.transporte, valorSeguro(String.valueOf(alumno.getGastosIngresosFamiliares().getGastoFamiliarModel().getGastoTransporte()),"0"), true);
+            form.setField(PDF.ESE.otros, valorSeguro(String.valueOf(alumno.getGastosIngresosFamiliares().getGastoFamiliarModel().getGastoOtros()),"0"), true);
+            form.setField(PDF.ESE.total, valorSeguro(String.valueOf(alumno.getGastosIngresosFamiliares().getGastoFamiliarModel().getTotalGastos()),"0"), true);
+
+            Long situacionViviendaId =alumno.getMiFamilia().getViviendaFamiliar().getSituacionVivienda().getId();
+            if (situacionViviendaId == 1L){
+                form.setField(PDF.ESE.propia, "X", true);
+
+            } else if (situacionViviendaId == 2L) {
+                form.setField(PDF.ESE.alquilada, "X", true);
+            }else if (situacionViviendaId == 6L){
+                form.setField(PDF.ESE.otra, "X", true);
+
+            }
+
+            Long tipoViviendaId =alumno.getMiFamilia().getViviendaFamiliar().getTipoVivienda().getId();
+            if (tipoViviendaId == 1L){
+                form.setField(PDF.ESE.casaSola, "X", true);
+            } else if (tipoViviendaId == 2L) {
+                form.setField(PDF.ESE.condominio, "X", true);
+            }else if (tipoViviendaId == 3L){
+                form.setField(PDF.ESE.vecindad, "X", true);
+            }else if (tipoViviendaId == 4L){
+                form.setField(PDF.ESE.departamento, "X", true);
+            }
+
+            Long materialViviendaId =alumno.getMiFamilia().getViviendaFamiliar().getMaterialVivienda().getId();
+            if (tipoViviendaId == 1L){
+                form.setField(PDF.ESE.mamposteria, "X", true);
+            } else if (tipoViviendaId == 2L) {
+                form.setField(PDF.ESE.madera, "X", true);
+            }else if (tipoViviendaId == 3L){
+                form.setField(PDF.ESE.lamina, "X", true);
+            }else if (tipoViviendaId == 4L){
+                form.setField(PDF.ESE.concreto, "X", true);
+            }else if (tipoViviendaId == 5L){
+                form.setField(PDF.ESE.otrosMaterial, "X", true);
+            }
+
             form.setField(PDF.ESE.agua, "X", true);
             form.setField(PDF.ESE.luz, "X", true);
             form.setField(PDF.ESE.drenaje, "X", true);
             form.setField(PDF.ESE.telefono, "X", true);
             form.setField(PDF.ESE.otrosServicios, " ", true);
-            form.setField(PDF.ESE.numHabitan, " ", true);
+
+            form.setField(PDF.ESE.numHabitan, valorSeguro(String.valueOf(alumno.getMiFamilia().getViviendaFamiliar().getNumPersonasHabitan())," "), true);
             form.setField(PDF.ESE.sinEstudiosM, "X", true);
             form.setField(PDF.ESE.primariaM, "X", true);
             form.setField(PDF.ESE.secundariaM, "X", true);
@@ -364,10 +391,10 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.otroOcupacion, ocupacionSeleccionada == 8 ? "X" : "", true);
 
 
-            form.setField(PDF.ESE.numHermanos, " ", true);
-            form.setField(PDF.ESE.numHermanosEstudiando, " ", true);
-            form.setField(PDF.ESE.numHermanosNoEstudian, " ", true);
-            form.setField(PDF.ESE.numHermanosLicenciatura, " ", true);
+            form.setField(PDF.ESE.numHermanos, valorSeguro(String.valueOf(alumno.getMiFamilia().getNumHermanos())," "), true);
+            form.setField(PDF.ESE.numHermanosEstudiando, valorSeguro(String.valueOf(alumno.getMiFamilia().getNumHermanosEstudiando())," "), true);
+            form.setField(PDF.ESE.numHermanosNoEstudian, valorSeguro(String.valueOf(alumno.getMiFamilia().getNumHermanosNoEstudiando())," "), true);
+            form.setField(PDF.ESE.numHermanosLicenciatura, valorSeguro(String.valueOf(alumno.getMiFamilia().getNumHermanosLicenciatura())," "), true);
 
 
             form.setField(PDF.ESE.aguaCaliente, "X", true);
