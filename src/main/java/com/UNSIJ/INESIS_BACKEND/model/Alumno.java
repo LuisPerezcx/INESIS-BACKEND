@@ -24,7 +24,6 @@ public class Alumno {
     @Column(name = "apellido_paterno")
     private String apellidoPaterno;
 
-    @NotNull
     @Column(name = "apellido_materno")
     private String apellidoMaterno;
 
@@ -68,16 +67,16 @@ public class Alumno {
     @JsonBackReference
     private Usuario usuario;
 
-    @OneToOne(mappedBy = "alumno")
+    @OneToOne(mappedBy = "alumno", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private MisDatos misDatos;
 
-    @OneToOne(mappedBy = "alumno")
+    @OneToOne(mappedBy = "alumno", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private MiTutor miTutor;
 
-    @OneToOne(mappedBy = "alumno")
+    @OneToOne(mappedBy = "alumno", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private GastosIngresosFamiliares gastosIngresosFamiliares;
 
-    @OneToOne(mappedBy = "alumno")
+    @OneToOne(mappedBy = "alumno", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private MiFamilia miFamilia;
 
     @Column(name = "estudio_completo")
