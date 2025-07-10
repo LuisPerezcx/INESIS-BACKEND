@@ -606,7 +606,7 @@ SELECT 1;
 
 INSERT INTO cat_escolaridad (nombre_escolaridad)
 SELECT 'Sin estudios'
-WHERE NOT EXISTS (SELECT 1 FROM cat_escolaridad WHERE nombre_escolaridad = 'Sin escolaridad');
+WHERE NOT EXISTS (SELECT 1 FROM cat_escolaridad WHERE nombre_escolaridad = 'Sin estudios');
 
 INSERT INTO cat_escolaridad (nombre_escolaridad)
 SELECT 'Primaria'
