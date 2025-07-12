@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -128,6 +129,34 @@ public class AlumnoController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error en los datos enviados: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/importar")
+    public ResponseEntity<?> importarDesdeExcel(@RequestParam("file") MultipartFile file) {
+        try {
+            if (file.isEmpty()) {
+                return ResponseEntity.badRequest().body("Por favor seleccione un archivo");
+            }
+
+            if (!file.getOriginalFilename().endsWith(".xlsx") && !file.getOriginalFilename().endsWith(".xls")) {
+                return ResponseEntity.badRequest().body("Por favor suba un archivo Excel válido");
+            }
+
+            // Procesar el archivo y crear alumnos
+            List<Alumno> alumnosImportados = alumnoServiceJPA.importarDesdeExcel(file);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
+                    "message", "Alumnos importados correctamente",
+                    "cantidad", alumnosImportados.size(),
+                    "alumnos", alumnosImportados
+            ));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al importar alumnos: " + e.getMessage());
         }
     }
 

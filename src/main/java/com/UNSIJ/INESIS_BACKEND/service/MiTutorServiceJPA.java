@@ -36,6 +36,9 @@ public class MiTutorServiceJPA implements IMiTutorService {
     @Autowired
     AlumnoServiceJPA alumnoServiceJPA;
 
+    @Autowired
+    FechasRegistradasServiceJPA fechasRegistradasServiceJPA;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -53,6 +56,10 @@ public class MiTutorServiceJPA implements IMiTutorService {
     @Override
     @Transactional //SIEMPRE TRANSACTIONAL AQUI
     public MiTutor save(MiTutor miTutor) throws Exception {
+        Alumno alumno = miTutor.getAlumno();
+        if(!fechasRegistradasServiceJPA.permitirRegistro(alumno.getCarrera().getId()))
+            throw new IllegalArgumentException("No es posible registrar tus datos en este momento. " +
+                    "El periodo de registro para tu carrera no está activo actualmente.");
         return miTutorRepository.save(miTutor);
     }
 

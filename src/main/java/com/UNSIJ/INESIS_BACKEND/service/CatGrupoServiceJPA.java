@@ -44,6 +44,40 @@ public class CatGrupoServiceJPA implements ICatGrupoService {
         return catGrupoRepository.save(catGrupo);
     }
 
+    public Long findIdByNombreGrupo(String nombreGrupo) {
+        List<CatGrupo> grupos = catGrupoRepository.findAllByNombreGrupo(nombreGrupo);
+        if (grupos.isEmpty()) {
+            throw new IllegalArgumentException("Grupo no encontrado con el nombre: " + nombreGrupo);
+        }
+        if(grupos.size()>1){
+            return grupos.get(1).getId();
+        }
+        return grupos.get(0).getId();
+    }
+
+    public Long findIdCarreraByGrupo(String nombreGrupo) {
+        List<CatGrupo> grupos = catGrupoRepository.findAllByNombreGrupo(nombreGrupo);
+        if (grupos.isEmpty()) {
+            throw new IllegalArgumentException("Grupo no encontrado con el nombre: " + nombreGrupo);
+        }
+        if(grupos.size()>1){
+            return grupos.get(1).getCatCarrera().getId();
+        }
+        return grupos.get(0).getCatCarrera().getId();
+    }
+
+    public Long findIdSemestreByGrupo(String nombreGrupo) {
+        List<CatGrupo> grupos = catGrupoRepository.findAllByNombreGrupo(nombreGrupo);
+        if (grupos.isEmpty()) {
+            throw new IllegalArgumentException("Grupo no encontrado con el nombre: " + nombreGrupo);
+        }
+        if(grupos.size()>1){
+            return grupos.get(1).getCatSemestre().getId();
+        }
+        return grupos.get(0).getCatSemestre().getId();
+    }
+
+
     @Override
     public CatGrupo create(Map<String, Object> params) throws Exception {
         CatGrupo catGrupo = new CatGrupo();
