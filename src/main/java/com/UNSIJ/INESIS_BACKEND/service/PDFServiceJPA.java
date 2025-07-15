@@ -75,6 +75,11 @@ public class PDFServiceJPA {
         return String.join(" ",telSeguro,correoSeguro).trim();
     }
 
+    public static String periodoReportado (String inicio, String fin){
+        String inicioSeguro = (inicio != null && !inicio.trim().isEmpty()) ? inicio.trim() : " ";
+        String finSeguro = (fin != null && !fin.trim().isEmpty()) ? fin.trim() : " ";
+        return String.join("-",inicioSeguro,finSeguro).trim();
+    }
     public  String domicilioTutor(String calle, String numero, String colonia, String localidad, String cp) {
         String calleSeguro = (calle != null && !calle.trim().isEmpty() ? calle.trim() : " ");
         String numeroSeguro = (numero != null && !numero.trim().isEmpty() ? numero.trim() : " ");
@@ -254,10 +259,13 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.neto2," ",true);
             form.setField(PDF.ESE.neto3," ",true);
             form.setField(PDF.ESE.netoTotal," ",true);
-            form.setField(PDF.ESE.reciboTitular," ",true);
+            //datos del recibo de luz
+            form.setField(PDF.ESE.reciboTitular,valorSeguro(alumno.getGastosIngresosFamiliares().getReciboLuzModel().getTitular()," "),true);
             form.setField(PDF.ESE.reciboDomicilio," ",true);
-            form.setField(PDF.ESE.periodoReportado," ",true);
-            form.setField(PDF.ESE.promedioMes," ",true);
+            form.setField(PDF.ESE.periodoReportado,periodoReportado(alumno.getGastosIngresosFamiliares().getReciboLuzModel().getPeriodoInicio(),alumno.getGastosIngresosFamiliares().getReciboLuzModel().getPeriodoFin()),true);
+            form.setField(PDF.ESE.promedioMes,valorSeguro(String.valueOf(alumno.getGastosIngresosFamiliares().getReciboLuzModel().getPromedioPago())," "),true);
+            //datos del recibo de luz
+
             form.setField(PDF.ESE.dependiente1," ",true);
             form.setField(PDF.ESE.dependiente2," ",true);
             form.setField(PDF.ESE.dependiente3," ",true);
@@ -280,7 +288,7 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.tipoComprobante5," ",true);
             form.setField(PDF.ESE.observaciones, " ", true);
 
-
+            //datos del alumno
             form.setField(PDF.ESE.apellidoP, valorSeguro(alumno.getApellidoPaterno()," "), true);
             form.setField(PDF.ESE.apellidoM,valorSeguro(alumno.getApellidoMaterno(), " "), true);
             form.setField(PDF.ESE.nombreAlum, valorSeguro(alumno.getNombre()," "), true);
@@ -290,6 +298,7 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.telefonoAlumno, valorSeguro(alumno.getTelefono()," "), true);
             form.setField(PDF.ESE.emailAlumno, valorSeguro(alumno.getCorreo()," "), true);
             form.setField(PDF.ESE.lenguajeDialecto, valorSeguro(alumno.getMisDatos().getIdioma()," "), true);
+            //datos del alumno
 
             form.setField(PDF.ESE.regionActualFamilia, " ", true);
             form.setField(PDF.ESE.distritoActualFamilia, " ", true);
@@ -343,15 +352,15 @@ public class PDFServiceJPA {
             }
 
             Long materialViviendaId =alumno.getMiFamilia().getViviendaFamiliar().getMaterialVivienda().getId();
-            if (tipoViviendaId == 1L){
+            if (materialViviendaId == 1L){
                 form.setField(PDF.ESE.mamposteria, "X", true);
-            } else if (tipoViviendaId == 2L) {
+            } else if (materialViviendaId == 2L) {
                 form.setField(PDF.ESE.madera, "X", true);
-            }else if (tipoViviendaId == 3L){
+            }else if (materialViviendaId == 3L){
                 form.setField(PDF.ESE.lamina, "X", true);
-            }else if (tipoViviendaId == 4L){
+            }else if (materialViviendaId == 4L){
                 form.setField(PDF.ESE.concreto, "X", true);
-            }else if (tipoViviendaId == 5L){
+            }else if (materialViviendaId == 5L){
                 form.setField(PDF.ESE.otrosMaterial, "X", true);
             }
 
@@ -362,22 +371,53 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.otrosServicios, " ", true);
 
             form.setField(PDF.ESE.numHabitan, valorSeguro(String.valueOf(alumno.getMiFamilia().getViviendaFamiliar().getNumPersonasHabitan())," "), true);
-            form.setField(PDF.ESE.sinEstudiosM, "X", true);
-            form.setField(PDF.ESE.primariaM, "X", true);
-            form.setField(PDF.ESE.secundariaM, "X", true);
-            form.setField(PDF.ESE.bachilleratoM, "X", true);
-            form.setField(PDF.ESE.tecnicoM, "X", true);
-            form.setField(PDF.ESE.licenciaturaM, "X", true);
-            form.setField(PDF.ESE.posgradoM, "X", true);
-            form.setField(PDF.ESE.sinEstudiosP, "X", true);
-            form.setField(PDF.ESE.primariaP, "X", true);
-            form.setField(PDF.ESE.secundariaP, "X", true);
-            form.setField(PDF.ESE.bachilleratoP, "X", true);
-            form.setField(PDF.ESE.tecnicoP, "X", true);
-            form.setField(PDF.ESE.licenciaturaP, "X", true);
-            form.setField(PDF.ESE.posgradoP, "X", true);
-            form.setField(PDF.ESE.temporal, "X", true);
-            form.setField(PDF.ESE.permanente, "X", true);
+           // estudios madre
+            Long escolaidarMadre = alumno.getMiFamilia().getEscolaridadMadre().getId();
+            if (escolaidarMadre == 1L){
+                form.setField(PDF.ESE.sinEstudiosM, "X", true);
+            } else if (escolaidarMadre == 2L) {
+                form.setField(PDF.ESE.primariaM, "X", true);
+            }else if (escolaidarMadre == 3L) {
+                form.setField(PDF.ESE.secundariaM, "X", true);
+            }else if (escolaidarMadre == 4L) {
+                form.setField(PDF.ESE.bachilleratoM, "X", true);
+            }else if (escolaidarMadre == 5L) {
+                form.setField(PDF.ESE.tecnicoM, "X", true);
+            }else if (escolaidarMadre == 6L) {
+                form.setField(PDF.ESE.licenciaturaM, "X", true);
+            }else if (escolaidarMadre == 7L) {
+                form.setField(PDF.ESE.posgradoM, "X", true);
+            }
+            // estudios madre
+
+            //estudios padre
+            Long escolaridadPadre = alumno.getMiFamilia().getEscolaridadPadre().getId();
+            if (escolaridadPadre == 1L){
+                form.setField(PDF.ESE.sinEstudiosP, "X", true);
+            }else if (escolaridadPadre == 2L){
+                form.setField(PDF.ESE.primariaP, "X", true);
+            }else if (escolaridadPadre == 3L){
+                form.setField(PDF.ESE.secundariaP, "X", true);
+            }else if (escolaridadPadre == 4L){
+                form.setField(PDF.ESE.bachilleratoP, "X", true);
+            }else if (escolaridadPadre == 5L){
+                form.setField(PDF.ESE.tecnicoP, "X", true);
+            }else if (escolaridadPadre == 6L){
+                form.setField(PDF.ESE.licenciaturaP, "X", true);
+            }else if (escolaridadPadre == 7L){
+                form.setField(PDF.ESE.posgradoP, "X", true);
+            }
+            //estudios padre
+
+            // temporal o permanente
+            Long temporalPermanente = alumno.getMiTutor().getCatTipoTrabajo().getId();
+            if (temporalPermanente == 1L){
+                form.setField(PDF.ESE.temporal, "X", true);
+            }else if (temporalPermanente == 2L){
+                form.setField(PDF.ESE.permanente, "X", true);
+            }
+            // temporal o permanente
+
 
             //Tipo de ocupacion
             Long ocupacionSeleccionada = alumno.getMisDatos().getGastosIngresos().getOcupacion().getId();
