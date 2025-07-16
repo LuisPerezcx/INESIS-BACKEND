@@ -3,6 +3,7 @@ package com.UNSIJ.INESIS_BACKEND.service;
 import com.UNSIJ.INESIS_BACKEND.controller.DomicilioController;
 import com.UNSIJ.INESIS_BACKEND.model.Alumno;
 import com.UNSIJ.INESIS_BACKEND.model.IngresoFamiliarModel;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MediosEstudio;
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.PersonasDependientes;
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.ServiciosVivienda;
 import com.UNSIJ.INESIS_BACKEND.repository.AlumnoRepository;
@@ -520,33 +521,24 @@ public class PDFServiceJPA {
                 form.setField(PDF.ESE.otrosMaterial, "X", true);
             }
 
-            // Suponiendo que tienes esta lista con los servicios seleccionados
-            List<ServiciosVivienda> serviciosSeleccionados = alumno.getMiFamilia().getViviendaFamiliar().getServiciosVivienda();
+            // servicios de mi familia
+            final Long ID_AGUA = 1L, ID_LUZ = 2L, ID_DRENAJE = 3L,ID_OTRO = 4L, ID_TELEFONO = 5L;
 
-            // Lista de nombres disponibles
-                        String[] tiposServicios = {"Agua", "Luz", "Drenaje", "Telefono", "Otro"};
+            Set<Long> idsServiciosVivienda = alumno.getMiFamilia()
+                    .getViviendaFamiliar()
+                    .getServiciosVivienda()
+                    .stream()
+                    .map(sv -> sv.getCatServiciosVivienda().getId())
+                    .collect(Collectors.toSet());
 
-            // Inicializamos un mapa para marcar "X" o dejar vacío
-                        Map<String, String> serviciosMarcados = new HashMap<>();
+            form.setField(PDF.ESE.agua, idsServiciosVivienda.contains(ID_AGUA) ? "X" : "", true);
+            form.setField(PDF.ESE.luz, idsServiciosVivienda.contains(ID_LUZ) ? "X" : "", true);
+            form.setField(PDF.ESE.drenaje, idsServiciosVivienda.contains(ID_DRENAJE) ? "X" : "", true);
+            form.setField(PDF.ESE.telefono, idsServiciosVivienda.contains(ID_TELEFONO) ? "X" : "", true);
+            form.setField(PDF.ESE.otrosServicios, idsServiciosVivienda.contains(ID_OTRO) ? "X" : "", true);
 
-                        for (String tipo : tiposServicios) {
-                            serviciosMarcados.put(tipo, " "); // por defecto, vacío
-                        }
 
-            // Llenamos con "X" si está seleccionado
-                        for (ServiciosVivienda sv : serviciosSeleccionados) {
-                            String nombreServicio = sv.getCatServiciosVivienda().getNombreServicio().toLowerCase();
-
-                            if (serviciosMarcados.containsKey(nombreServicio)) {
-                                serviciosMarcados.put(nombreServicio, "X");
-                            }
-                        }
-
-            form.setField(PDF.ESE.agua, serviciosMarcados.get("Agua"), true);
-            form.setField(PDF.ESE.luz, serviciosMarcados.get("Luz"), true);
-            form.setField(PDF.ESE.drenaje, serviciosMarcados.get("Drenaje"), true);
-            form.setField(PDF.ESE.telefono, serviciosMarcados.get("Telefono"), true);
-            form.setField(PDF.ESE.otrosServicios, serviciosMarcados.get("Otro"), true);
+            // servicios de mi familia
 
 
             form.setField(PDF.ESE.numHabitan, valorSeguro(String.valueOf(alumno.getMiFamilia().getViviendaFamiliar().getNumPersonasHabitan())," "), true);
@@ -616,23 +608,37 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.numHermanosLicenciatura, valorSeguro(String.valueOf(alumno.getMiFamilia().getNumHermanosLicenciatura())," "), true);
 
 
-            form.setField(PDF.ESE.aguaCaliente, "X", true);
-            form.setField(PDF.ESE.refrigerador, "X", true);
-            form.setField(PDF.ESE.estufa, "X", true);
-            form.setField(PDF.ESE.televisor, "X", true);
-            form.setField(PDF.ESE.lavadora, "X", true);
-            form.setField(PDF.ESE.aireAcondicionado, "X", true);
-            form.setField(PDF.ESE.automovilPropio, "X", true);
-            form.setField(PDF.ESE.microondas, "X", true);
-            form.setField(PDF.ESE.espacioEstudio, "X", true);
+            final Long ID_REFRI = 1L, ID_ESTUFA = 2L, ID_AGUACALIENTE = 3L,ID_AIRE = 4L, ID_AUTO = 5L, ID_HORNO = 6L,ID_TELE = 7L,ID_LAVADORA = 8L,ID_ESPACIO = 9L;
 
-            form.setField(PDF.ESE.computadora, "X", true);
-            form.setField(PDF.ESE.impresora, "X", true);
-            form.setField(PDF.ESE.librero, "X", true);
-            form.setField(PDF.ESE.mesa, "X", true);
-            form.setField(PDF.ESE.libros, "X", true);
-            form.setField(PDF.ESE.diccionario, "X", true);
-            form.setField(PDF.ESE.caluladora, "X", true);
+            Set<Long> idsBienesHogar = alumno.getMiFamilia().getBienesHogar()
+                    .stream()
+                    .map(sv -> sv.getCatBienHogar().getId())
+                    .collect(Collectors.toSet());
+
+            form.setField(PDF.ESE.aguaCaliente, idsBienesHogar.contains(ID_AGUACALIENTE) ? "X": " ", true);
+            form.setField(PDF.ESE.refrigerador, idsBienesHogar.contains(ID_REFRI) ? "X": " ", true);
+            form.setField(PDF.ESE.estufa, idsBienesHogar.contains(ID_ESTUFA) ? "X" : " ", true);
+            form.setField(PDF.ESE.televisor,idsBienesHogar.contains(ID_TELE)? "X":  " ", true);
+            form.setField(PDF.ESE.lavadora, idsBienesHogar.contains(ID_LAVADORA)? "X": " ", true);
+            form.setField(PDF.ESE.aireAcondicionado,idsBienesHogar.contains(ID_AIRE)? "X" : " ", true);
+            form.setField(PDF.ESE.automovilPropio,idsBienesHogar.contains(ID_AUTO)? "X": " ", true);
+            form.setField(PDF.ESE.microondas,idsBienesHogar.contains(ID_HORNO)? "X": " ", true);
+            form.setField(PDF.ESE.espacioEstudio,idsBienesHogar.contains(ID_ESPACIO)? "X": " ", true);
+
+
+            final Long ID_COMPUTADORA = 7L, ID_IMPRESORA = 1L, ID_LIBRERO = 2L, ID_MESA = 3L, ID_LIBROS = 5L, ID_DICCIONARIO = 8L, ID_CALCULADORA = 4L;
+            Set<Long> idsMediosEstudio = alumno.getMiFamilia().getMediosEstudio()
+                    .stream()
+                    .map(sv -> sv.getCatMediosEstudio().getId())
+                    .collect(Collectors.toSet());
+
+            form.setField(PDF.ESE.computadora, idsMediosEstudio.contains(ID_COMPUTADORA)? "X": " ", true);
+            form.setField(PDF.ESE.impresora,idsMediosEstudio.contains(ID_IMPRESORA)? "X" : " ", true);
+            form.setField(PDF.ESE.librero,idsMediosEstudio.contains(ID_LIBRERO)? "X": " ", true);
+            form.setField(PDF.ESE.mesa,idsMediosEstudio.contains(ID_MESA)? "X": " ", true);
+            form.setField(PDF.ESE.libros,idsMediosEstudio.contains(ID_LIBROS)? "X": " ", true);
+            form.setField(PDF.ESE.diccionario,idsMediosEstudio.contains(ID_DICCIONARIO)? "X": " ", true);
+            form.setField(PDF.ESE.caluladora, idsMediosEstudio.contains(ID_CALCULADORA)?"X": " ", true);
 
             Boolean recursos = alumno.getMisDatos().getRecursosSuficientes();
             if (recursos != null && recursos){
