@@ -2,6 +2,7 @@ package com.UNSIJ.INESIS_BACKEND.service;
 
 import com.UNSIJ.INESIS_BACKEND.controller.DomicilioController;
 import com.UNSIJ.INESIS_BACKEND.model.Alumno;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.ServiciosVivienda;
 import com.UNSIJ.INESIS_BACKEND.repository.AlumnoRepository;
 import com.UNSIJ.INESIS_BACKEND.utils.PDF;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -16,7 +17,9 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -108,6 +111,43 @@ public class PDFServiceJPA {
 
         return calleSeguro + " " + numeroSeguro + ", " + coloniaSeguro + ", " + localidadSeguro + ", " + municipio + ", " + estado + ", " + cp;
     }
+
+    public String estadoFamiliaActual(String cp){
+        String estado = "";
+        try {
+            ResponseEntity<String> response = domicilioController.obtenerColoniasPorCP(cp); // <- usas cp directamente
+            String respuestaJson = response.getBody(); // <- Extraes el JSON real
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode root = objectMapper.readTree(respuestaJson);
+
+            estado = root.path("codigo_postal").path("estado").asText();
+            System.out.println("Estado: " + estado);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error al procesar el JSON del CP");
+        }
+        return estado;
+    }
+
+    public String municipioFamiliaActual(String cp){
+        String municipio = "";
+        try {
+            ResponseEntity<String> response = domicilioController.obtenerColoniasPorCP(cp); // <- usas cp directamente
+            String respuestaJson = response.getBody(); // <- Extraes el JSON real
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            JsonNode root = objectMapper.readTree(respuestaJson);
+
+            municipio = root.path("codigo_postal").path("municipio").asText();
+            System.out.println("Municipio: " + municipio);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error al procesar el JSON del CP");
+        }
+        return municipio;
+    }
+
 
 
 
@@ -259,6 +299,7 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.neto2," ",true);
             form.setField(PDF.ESE.neto3," ",true);
             form.setField(PDF.ESE.netoTotal," ",true);
+
             //datos del recibo de luz
             form.setField(PDF.ESE.reciboTitular,valorSeguro(alumno.getGastosIngresosFamiliares().getReciboLuzModel().getTitular()," "),true);
             form.setField(PDF.ESE.reciboDomicilio," ",true);
@@ -266,6 +307,7 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.promedioMes,valorSeguro(String.valueOf(alumno.getGastosIngresosFamiliares().getReciboLuzModel().getPromedioPago())," "),true);
             //datos del recibo de luz
 
+            // personas dependientes
             form.setField(PDF.ESE.dependiente1," ",true);
             form.setField(PDF.ESE.dependiente2," ",true);
             form.setField(PDF.ESE.dependiente3," ",true);
@@ -286,7 +328,9 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.tipoComprobante3," ",true);
             form.setField(PDF.ESE.tipoComprobante4," ",true);
             form.setField(PDF.ESE.tipoComprobante5," ",true);
-            form.setField(PDF.ESE.observaciones, " ", true);
+            // personas dependientes
+
+            form.setField(PDF.ESE.observaciones,valorSeguro(alumno.getGastosIngresosFamiliares().getReciboLuzModel().getObservaciones()," "), true);
 
             //datos del alumno
             form.setField(PDF.ESE.apellidoP, valorSeguro(alumno.getApellidoPaterno()," "), true);
@@ -300,12 +344,15 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.lenguajeDialecto, valorSeguro(alumno.getMisDatos().getIdioma()," "), true);
             //datos del alumno
 
-            form.setField(PDF.ESE.regionActualFamilia, " ", true);
-            form.setField(PDF.ESE.distritoActualFamilia, " ", true);
-            form.setField(PDF.ESE.municipioActualFamilia, " ", true);
-            form.setField(PDF.ESE.localidadActualFamilia, " ", true);
-            form.setField(PDF.ESE.estadoActualFamilia, " ", true);
-            form.setField(PDF.ESE.telefonoActualFamilia, " ", true);
+            // datos de domicio actual de la familia falta distrito y region
+            form.setField(PDF.ESE.regionActualFamilia, valorSeguro(alumno.getMiFamilia().getViviendaFamiliar().getRegion()," "), true);
+            form.setField(PDF.ESE.distritoActualFamilia,valorSeguro(alumno.getMiFamilia().getViviendaFamiliar().getDistrito()," "), true);
+            form.setField(PDF.ESE.municipioActualFamilia, municipioFamiliaActual(alumno.getMiFamilia().getDomicilio().getCp()), true);
+            form.setField(PDF.ESE.localidadActualFamilia,valorSeguro(alumno.getMiFamilia().getDomicilio().getLocalidad()," "), true);
+            form.setField(PDF.ESE.estadoActualFamilia, estadoFamiliaActual(alumno.getMiFamilia().getDomicilio().getCp()), true);
+            form.setField(PDF.ESE.telefonoActualFamilia, valorSeguro(alumno.getMiFamilia().getTelefono()," "), true);
+            // datos de domicio actual de la familia
+
             form.setField(PDF.ESE.dependeEconomicamente, valorSeguro(alumno.getMisDatos().getGastosIngresos().getNombreQuienDependes()," "), true);
 
             if(alumno.getMisDatos().getGastosIngresos().getTrabajo() != null ){
@@ -364,11 +411,34 @@ public class PDFServiceJPA {
                 form.setField(PDF.ESE.otrosMaterial, "X", true);
             }
 
-            form.setField(PDF.ESE.agua, "X", true);
-            form.setField(PDF.ESE.luz, "X", true);
-            form.setField(PDF.ESE.drenaje, "X", true);
-            form.setField(PDF.ESE.telefono, "X", true);
-            form.setField(PDF.ESE.otrosServicios, " ", true);
+            // Suponiendo que tienes esta lista con los servicios seleccionados
+            List<ServiciosVivienda> serviciosSeleccionados = alumno.getMiFamilia().getViviendaFamiliar().getServiciosVivienda();
+
+            // Lista de nombres disponibles
+                        String[] tiposServicios = {"Agua", "Luz", "Drenaje", "Telefono", "Otro"};
+
+            // Inicializamos un mapa para marcar "X" o dejar vacío
+                        Map<String, String> serviciosMarcados = new HashMap<>();
+
+                        for (String tipo : tiposServicios) {
+                            serviciosMarcados.put(tipo, " "); // por defecto, vacío
+                        }
+
+            // Llenamos con "X" si está seleccionado
+                        for (ServiciosVivienda sv : serviciosSeleccionados) {
+                            String nombreServicio = sv.getCatServiciosVivienda().getNombreServicio().toLowerCase();
+
+                            if (serviciosMarcados.containsKey(nombreServicio)) {
+                                serviciosMarcados.put(nombreServicio, "X");
+                            }
+                        }
+
+            form.setField(PDF.ESE.agua, serviciosMarcados.get("Agua"), true);
+            form.setField(PDF.ESE.luz, serviciosMarcados.get("Luz"), true);
+            form.setField(PDF.ESE.drenaje, serviciosMarcados.get("Drenaje"), true);
+            form.setField(PDF.ESE.telefono, serviciosMarcados.get("Telefono"), true);
+            form.setField(PDF.ESE.otrosServicios, serviciosMarcados.get("Otro"), true);
+
 
             form.setField(PDF.ESE.numHabitan, valorSeguro(String.valueOf(alumno.getMiFamilia().getViviendaFamiliar().getNumPersonasHabitan())," "), true);
            // estudios madre
@@ -446,6 +516,7 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.automovilPropio, "X", true);
             form.setField(PDF.ESE.microondas, "X", true);
             form.setField(PDF.ESE.espacioEstudio, "X", true);
+
             form.setField(PDF.ESE.computadora, "X", true);
             form.setField(PDF.ESE.impresora, "X", true);
             form.setField(PDF.ESE.librero, "X", true);
