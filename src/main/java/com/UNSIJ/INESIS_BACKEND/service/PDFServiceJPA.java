@@ -2,6 +2,8 @@ package com.UNSIJ.INESIS_BACKEND.service;
 
 import com.UNSIJ.INESIS_BACKEND.controller.DomicilioController;
 import com.UNSIJ.INESIS_BACKEND.model.Alumno;
+import com.UNSIJ.INESIS_BACKEND.model.IngresoFamiliarModel;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.PersonasDependientes;
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.ServiciosVivienda;
 import com.UNSIJ.INESIS_BACKEND.repository.AlumnoRepository;
 import com.UNSIJ.INESIS_BACKEND.utils.PDF;
@@ -16,10 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -282,22 +281,67 @@ public class PDFServiceJPA {
                 form.setField(PDF.ESE.domicilioCompletoTutor, domicilioTutor(alumno.getMiTutor().getDomicilio().getCalle(),alumno.getMiTutor().getDomicilio().getNumero(),alumno.getMiTutor().getDomicilio().getColonia(),alumno.getMiTutor().getDomicilio().getLocalidad(),alumno.getMiTutor().getDomicilio().getCp()), true);
             }
 
-            form.setField(PDF.ESE.nombreParentesco1," ",true);
-            form.setField(PDF.ESE.nombreParentesco2," ",true);
-            form.setField(PDF.ESE.nombreParentesco3," ",true);
-            form.setField(PDF.ESE.empresaLugar1," ",true);
-            form.setField(PDF.ESE.empresaLugar2," ",true);
-            form.setField(PDF.ESE.empresaLugar3," ",true);
-            form.setField(PDF.ESE.puestoTipo1," ",true);
-            form.setField(PDF.ESE.puestoTipo2," ",true);
-            form.setField(PDF.ESE.puestoTipo3," ",true);
-            form.setField(PDF.ESE.bruto1," ",true);
-            form.setField(PDF.ESE.bruto2," ",true);
-            form.setField(PDF.ESE.bruto3," ",true);
+            //Reporte ingreso mensual
+            List<IngresoFamiliarModel> ingresosFamiliar = alumno.getGastosIngresosFamiliares().getIngresosFamiliar();
+            for (int i = 0; i < 3; i++) {
+                if (i < ingresosFamiliar.size()) {
+                    IngresoFamiliarModel in = ingresosFamiliar.get(i);
+
+                    switch (i){
+                        case 0 :
+                            form.setField(PDF.ESE.nombreParentesco1,in.getNombrePersona(),true);
+                            form.setField(PDF.ESE.empresaLugar1,in.getLugarTrabajo(),true);
+                            form.setField(PDF.ESE.puestoTipo1,in.getPuestoTrabajo(),true);
+                            form.setField(PDF.ESE.bruto1,String.valueOf(in.getIngresoBruto()),true);
+                            form.setField(PDF.ESE.neto1,String.valueOf(in.getIngresoNeto()),true);
+                            break;
+                        case 1 :
+                            form.setField(PDF.ESE.nombreParentesco2,in.getNombrePersona(),true);
+                            form.setField(PDF.ESE.empresaLugar2,in.getLugarTrabajo(),true);
+                            form.setField(PDF.ESE.puestoTipo2,in.getPuestoTrabajo(),true);
+                            form.setField(PDF.ESE.bruto2,String.valueOf(in.getIngresoBruto()),true);
+                            form.setField(PDF.ESE.neto2,String.valueOf(in.getIngresoNeto()),true);
+                            break;
+                        case 2 :
+                            form.setField(PDF.ESE.nombreParentesco3,in.getNombrePersona(),true);
+                            form.setField(PDF.ESE.empresaLugar3,in.getLugarTrabajo(),true);
+                            form.setField(PDF.ESE.puestoTipo3,in.getPuestoTrabajo(),true);
+                            form.setField(PDF.ESE.bruto3,String.valueOf(in.getIngresoBruto()),true);
+                            form.setField(PDF.ESE.neto3,String.valueOf(in.getIngresoNeto()),true);
+                            break;
+                    }
+                }else {
+                    switch (i){
+                        case 0 :
+                            form.setField(PDF.ESE.nombreParentesco1," ",true);
+                            form.setField(PDF.ESE.empresaLugar1," ",true);
+                            form.setField(PDF.ESE.puestoTipo1," ",true);
+                            form.setField(PDF.ESE.bruto1," ",true);
+                            form.setField(PDF.ESE.neto1," ",true);
+                            break;
+                        case 1 :
+                            form.setField(PDF.ESE.nombreParentesco2," ",true);
+                            form.setField(PDF.ESE.empresaLugar2," ",true);
+                            form.setField(PDF.ESE.puestoTipo2," ",true);
+                            form.setField(PDF.ESE.bruto2," ",true);
+                            form.setField(PDF.ESE.neto2," ",true);
+                            break;
+                        case 2 :
+                            form.setField(PDF.ESE.nombreParentesco3," ",true);
+                            form.setField(PDF.ESE.empresaLugar3," ",true);
+                            form.setField(PDF.ESE.puestoTipo3," ",true);
+                            form.setField(PDF.ESE.bruto3," ",true);
+                            form.setField(PDF.ESE.neto3," ",true);
+                            break;
+
+                    }
+                }
+            }
+
+            //Reporte ingreso mensual
+
+
             form.setField(PDF.ESE.brutoTotal," ",true);
-            form.setField(PDF.ESE.neto1," ",true);
-            form.setField(PDF.ESE.neto2," ",true);
-            form.setField(PDF.ESE.neto3," ",true);
             form.setField(PDF.ESE.netoTotal," ",true);
 
             //datos del recibo de luz
@@ -307,27 +351,92 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.promedioMes,valorSeguro(String.valueOf(alumno.getGastosIngresosFamiliares().getReciboLuzModel().getPromedioPago())," "),true);
             //datos del recibo de luz
 
+
             // personas dependientes
-            form.setField(PDF.ESE.dependiente1," ",true);
-            form.setField(PDF.ESE.dependiente2," ",true);
-            form.setField(PDF.ESE.dependiente3," ",true);
-            form.setField(PDF.ESE.dependiente4," ",true);
-            form.setField(PDF.ESE.dependiente5," ",true);
-            form.setField(PDF.ESE.edad1," ",true);
-            form.setField(PDF.ESE.edad2," ",true);
-            form.setField(PDF.ESE.edad3," ",true);
-            form.setField(PDF.ESE.edad4," ",true);
-            form.setField(PDF.ESE.edad5," ",true);
-            form.setField(PDF.ESE.parentescoDependiente1," ",true);
-            form.setField(PDF.ESE.parentescoDependiente2," ",true);
-            form.setField(PDF.ESE.parentescoDependiente3," ",true);
-            form.setField(PDF.ESE.parentescoDependiente4," ",true);
-            form.setField(PDF.ESE.parentescoDependiente5," ",true);
-            form.setField(PDF.ESE.tipoComprobante1," ",true);
-            form.setField(PDF.ESE.tipoComprobante2," ",true);
-            form.setField(PDF.ESE.tipoComprobante3," ",true);
-            form.setField(PDF.ESE.tipoComprobante4," ",true);
-            form.setField(PDF.ESE.tipoComprobante5," ",true);
+            List<PersonasDependientes> personasDependientes = alumno.getMiFamilia().getPersonasDependientes();
+
+            for (int i = 0; i < 5; i++) {
+
+                if (i < personasDependientes.size()) {
+                    PersonasDependientes p = personasDependientes.get(i);
+
+                    switch (i) {
+                        case 0:
+                            form.setField(PDF.ESE.dependiente1, p.getNombrePersona(), true);
+                            form.setField(PDF.ESE.edad1, String.valueOf(p.getEdad()), true);
+                            form.setField(PDF.ESE.parentescoDependiente1, p.getParentesco().getNombreParentesco(), true);
+                            form.setField(PDF.ESE.tipoComprobante1, p.getNombreArchivo(), true);
+                            break;
+
+                        case 1:
+                            form.setField(PDF.ESE.dependiente2, p.getNombrePersona(), true);
+                            form.setField(PDF.ESE.edad2, String.valueOf(p.getEdad()), true);
+                            form.setField(PDF.ESE.parentescoDependiente2, p.getParentesco().getNombreParentesco(), true);
+                            form.setField(PDF.ESE.tipoComprobante2, p.getNombreArchivo(), true);
+                            break;
+
+                        case 2:
+                            form.setField(PDF.ESE.dependiente3, p.getNombrePersona(), true);
+                            form.setField(PDF.ESE.edad3, String.valueOf(p.getEdad()), true);
+                            form.setField(PDF.ESE.parentescoDependiente3, p.getParentesco().getNombreParentesco(), true);
+                            form.setField(PDF.ESE.tipoComprobante3, p.getNombreArchivo(), true);
+                            break;
+
+                        case 3:
+                            form.setField(PDF.ESE.dependiente4, p.getNombrePersona(), true);
+                            form.setField(PDF.ESE.edad4, String.valueOf(p.getEdad()), true);
+                            form.setField(PDF.ESE.parentescoDependiente4, p.getParentesco().getNombreParentesco(), true);
+                            form.setField(PDF.ESE.tipoComprobante4, p.getNombreArchivo(), true);
+                            break;
+
+                        case 4:
+                            form.setField(PDF.ESE.dependiente5, p.getNombrePersona(), true);
+                            form.setField(PDF.ESE.edad5, String.valueOf(p.getEdad()), true);
+                            form.setField(PDF.ESE.parentescoDependiente5, p.getParentesco().getNombreParentesco(), true);
+                            form.setField(PDF.ESE.tipoComprobante5, p.getNombreArchivo(), true);
+                            break;
+                    }
+                } else {
+                    // Si no hay persona en esa posición, deja los campos vacíos
+                    switch (i) {
+                        case 0:
+                            form.setField(PDF.ESE.dependiente1, " ", true);
+                            form.setField(PDF.ESE.edad1, " ", true);
+                            form.setField(PDF.ESE.parentescoDependiente1, " ", true);
+                            form.setField(PDF.ESE.tipoComprobante1, " ", true);
+                            break;
+
+                        case 1:
+                            form.setField(PDF.ESE.dependiente2, " ", true);
+                            form.setField(PDF.ESE.edad2, " ", true);
+                            form.setField(PDF.ESE.parentescoDependiente2, " ", true);
+                            form.setField(PDF.ESE.tipoComprobante2, " ", true);
+                            break;
+
+                        case 2:
+                            form.setField(PDF.ESE.dependiente3, " ", true);
+                            form.setField(PDF.ESE.edad3, " ", true);
+                            form.setField(PDF.ESE.parentescoDependiente3, " ", true);
+                            form.setField(PDF.ESE.tipoComprobante3, " ", true);
+                            break;
+
+                        case 3:
+                            form.setField(PDF.ESE.dependiente4, " ", true);
+                            form.setField(PDF.ESE.edad4, " ", true);
+                            form.setField(PDF.ESE.parentescoDependiente4, " ", true);
+                            form.setField(PDF.ESE.tipoComprobante4, " ", true);
+                            break;
+
+                        case 4:
+                            form.setField(PDF.ESE.dependiente5, " ", true);
+                            form.setField(PDF.ESE.edad5, " ", true);
+                            form.setField(PDF.ESE.parentescoDependiente5, " ", true);
+                            form.setField(PDF.ESE.tipoComprobante5, " ", true);
+                            break;
+                    }
+                }
+            }
+
             // personas dependientes
 
             form.setField(PDF.ESE.observaciones,valorSeguro(alumno.getGastosIngresosFamiliares().getReciboLuzModel().getObservaciones()," "), true);
