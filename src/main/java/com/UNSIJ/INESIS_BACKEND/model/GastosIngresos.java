@@ -21,6 +21,12 @@ public class GastosIngresos {
     @Column(name = "depende_economicamente")
     private Boolean dependeEconomicamente;
 
+    @Column(name = "personas_comparteCosto")
+    private Double personasComparteRenta;
+
+    @Column(name = "pago_renta_mensual")
+    private Double pagoRentaMensual;
+
     @Column(name = "nombre_quien_dependes")
     private String nombreQuienDependes;
 
