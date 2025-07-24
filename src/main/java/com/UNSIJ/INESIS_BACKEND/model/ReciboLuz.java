@@ -27,7 +27,7 @@ public class ReciboLuz {
 
     @NotNull
     @Column(name = "nombre_archivo")
-    private String nombreArchivo;
+    private String nombreArchivo; 
 
     @NotNull
     @Column(name = "nombre_original")
@@ -40,6 +40,10 @@ public class ReciboLuz {
     @NotNull
     @Column(name = "pago_bimestral")
     private Double ultimoPago; // Puedes usar BigDecimal si vas a operar con montos
+
+    @NotNull
+    @Column(name = "domicilio")
+    private String domicilio;
 
     @NotNull
     @Column(name = "pago_promedio_mes")

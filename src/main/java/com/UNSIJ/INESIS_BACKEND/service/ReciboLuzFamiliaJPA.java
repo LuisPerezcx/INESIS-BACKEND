@@ -68,6 +68,8 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
             String periodoFin = JsonUtils.obtString(params,"periodoFin");
             String nombreArchivo = JsonUtils.obtString(params,"nombreArchivo");
             String nombreOriginal = JsonUtils.obtString(params,"nombreOriginal");
+            String domicilio = JsonUtils.obtString(params, "domicilio");
+
 
             Double ultimoPago = JsonUtils.obtDouble(params,"ultimoPago");
             Double promedioPago = JsonUtils.obtDouble(params,"promedioPago");
@@ -99,7 +101,8 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
             ReciboLuzModel.setUltimoPago(ultimoPago);
             ReciboLuzModel.setPromedioPago(promedioPago);
             ReciboLuzModel.setObservaciones(observaciones);
-           
+            ReciboLuzModel.setDomicilio(domicilio);
+
 
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());

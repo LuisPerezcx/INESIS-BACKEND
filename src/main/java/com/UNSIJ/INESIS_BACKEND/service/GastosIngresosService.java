@@ -72,6 +72,7 @@ public class GastosIngresosService implements IGatosIngresoFamiliares {
         try {
             gIngresosFamiliares.setNummeroPersonasAportan(JsonUtils.obtInteger(params, "personasAportan"));
             gIngresosFamiliares.setIngresoTotal(JsonUtils.obtDouble(params, "ingresoTotal"));
+            gIngresosFamiliares.setIngresoBrutoTotal(JsonUtils.obtDouble(params, "ingresoBrutoTotal"));
             gIngresosFamiliares.setNumeroPersonasDependen(JsonUtils.obtInteger(params, "personasDependen"));
 
             Map<String, Object> gastos = (Map<String, Object>) params.get("gastos");
