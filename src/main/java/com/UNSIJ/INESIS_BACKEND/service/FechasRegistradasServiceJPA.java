@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class FechasRegistradasServiceJPA implements IFechasRegistradasService {
@@ -174,6 +175,26 @@ public class FechasRegistradasServiceJPA implements IFechasRegistradasService {
         return fechasRegistradasRepository.findByCarrera_Id(idCarrera)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "No se encontró fecha registrada para la carrera con id: " + idCarrera));
+    }
+
+    public boolean estaEnRangoFechasRegistradas(Long idCarrera, Date fechaPeticion) {
+        try {
+            Optional<FechasRegistradas> fechasOpt = fechasRegistradasRepository.findByCarrera_Id(idCarrera);
+            // Si no hay fechas registradas o no está activo, retornamos false
+            if (fechasOpt.isEmpty() || !fechasOpt.get().isActive()) {
+                return false;
+            }
+            FechasRegistradas fechas = fechasOpt.get();
+            // Comprobamos si la fecha de petición está dentro del rango (inclusivo)
+            return !fechaPeticion.before(fechas.getFechaInicio()) && !fechaPeticion.after(fechas.getFechaFin());
+        } catch (Exception e) {
+            // Si ocurre algún error, asumimos que no está en rango
+            return false;
+        }
+    }
+
+    public boolean permitirRegistro(Long idCarrera) {
+        return estaEnRangoFechasRegistradas(idCarrera, new Date());
     }
 
 }

@@ -32,6 +32,9 @@ public class GastosIngresosService implements IGatosIngresoFamiliares {
     @Autowired
     AlumnoServiceJPA alumnoService;
 
+    @Autowired
+    FechasRegistradasServiceJPA fechasRegistradasServiceJPA;
+
     @Override
     public List<GastosIngresosFamiliares> findAll() {
         return gastosIngresosFamiliaresRepository.findAll();
@@ -45,6 +48,10 @@ public class GastosIngresosService implements IGatosIngresoFamiliares {
 
     @Override
     public GastosIngresosFamiliares save(GastosIngresosFamiliares GastosIngresosFamiliares) throws Exception {
+        Alumno alumno = GastosIngresosFamiliares.getAlumno();
+        if(!fechasRegistradasServiceJPA.permitirRegistro(alumno.getCarrera().getId()))
+            throw new IllegalArgumentException("No es posible registrar tus datos en este momento. " +
+                    "El periodo de registro para tu carrera no está activo actualmente.");
         return gastosIngresosFamiliaresRepository.save(GastosIngresosFamiliares);
     }
 
