@@ -172,7 +172,23 @@ public class PDFServiceJPA {
 
             // Rellenar campos
             form.setField(PDF.ESE.nombreAlumno, nombreCompletoSeguro(alumno.getNombre(), alumno.getApellidoPaterno(), alumno.getApellidoMaterno()), true);
-            form.setField(PDF.ESE.carreraAlumno, valorSeguro(alumno.getCarrera().getNombreCarrera(), " "), true);
+            // Obtén el nombre completo de la carrera
+            String nombreCompletoCarrera = alumno.getCarrera().getNombreCarrera();
+
+            // Crea una variable para el nombre abreviado
+            String nombreAbreviado = nombreCompletoCarrera;
+
+            // Si el nombre de la carrera incluye "Licenciatura", lo reemplazamos
+            if (nombreAbreviado.toLowerCase().contains("licenciatura")) {
+                nombreAbreviado = nombreAbreviado.replace("Licenciatura", "Lic.");
+            }
+
+            // Si el nombre de la carrera incluye "Maestría", lo reemplazamos por "Mtr."
+            if (nombreAbreviado.toLowerCase().contains("maestría")) {
+                nombreAbreviado = nombreAbreviado.replace("Maestría", "Mtr.");
+            }
+            // Ahora usas la variable abreviada para el setField
+            form.setField(PDF.ESE.carreraAlumno, valorSeguro(nombreAbreviado, " "), true);
             form.setField(PDF.ESE.semestreAlumno,valorSeguro(alumno.getSemestre().getNombreSemestre(), ""), true);
 
             Boolean depende = alumno.getMisDatos().getGastosIngresos().getDependeEconomicamente();
@@ -212,8 +228,8 @@ public class PDFServiceJPA {
 
 
 
-            form.setField(PDF.ESE.numPersonaComparte, " ", true);
-            form.setField(PDF.ESE.rentaMensual, " ", true);
+            form.setField(PDF.ESE.numPersonaComparte, valorSeguro(String.valueOf(alumno.getMisDatos().getGastosIngresos().getPersonasComparteRenta())," "), true);
+            form.setField(PDF.ESE.rentaMensual, valorSeguro(String.valueOf(alumno.getMisDatos().getGastosIngresos().getPagoRentaMensual()), " "), true);
 
             Boolean familiarComunero = alumno.getMisDatos().getFamiliarComunero();
             if (familiarComunero != null && familiarComunero){
