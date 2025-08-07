@@ -711,20 +711,12 @@ SELECT 'Libros especializados'
 WHERE NOT EXISTS (SELECT 1 FROM cat_medios_estudio WHERE nombre_medios = 'Libros especializados');
 
 INSERT INTO cat_medios_estudio (nombre_medios)
-SELECT 'Teléfono móvil'
-WHERE NOT EXISTS (SELECT 1 FROM cat_medios_estudio WHERE nombre_medios = 'Teléfono móvil');
-
-INSERT INTO cat_medios_estudio (nombre_medios)
 SELECT 'Computadora'
 WHERE NOT EXISTS (SELECT 1 FROM cat_medios_estudio WHERE nombre_medios = 'Computadora');
 
 INSERT INTO cat_medios_estudio (nombre_medios)
 SELECT 'Diccionario'
 WHERE NOT EXISTS (SELECT 1 FROM cat_medios_estudio WHERE nombre_medios = 'Diccionario');
-
-INSERT INTO cat_medios_estudio (nombre_medios)
-SELECT 'Otro'
-WHERE NOT EXISTS (SELECT 1 FROM cat_medios_estudio WHERE nombre_medios = 'Otro');
 
 #------------------- REGISTROS DE CAT_SITUACION_VIVIENDA -------------------
 -- Inicio registros
