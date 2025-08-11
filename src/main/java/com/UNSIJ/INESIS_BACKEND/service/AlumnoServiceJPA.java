@@ -48,7 +48,8 @@ public class AlumnoServiceJPA implements IAlumnoService {
             if (alumno.getCarrera() != null) {
                 try {
                     alumno.setFechaRegistrada(fechasRegistradasServiceJPA.findByCarreraId(alumno.getCarrera().getId()));
-                } catch (Exception e) {}
+                } catch (Exception e) {
+                }
             }
         }
         return alumnos;
@@ -60,7 +61,8 @@ public class AlumnoServiceJPA implements IAlumnoService {
                 .orElseThrow(() -> new IllegalArgumentException("Alumno no encontrado con el ID: " + id));
         try {
             alumno.setFechaRegistrada(fechasRegistradasServiceJPA.findByCarreraId(alumno.getCarrera().getId()));
-        } catch (Exception e) { }
+        } catch (Exception e) {
+        }
         return alumno;
     }
 
@@ -97,9 +99,8 @@ public class AlumnoServiceJPA implements IAlumnoService {
             e.printStackTrace();
             throw new IllegalArgumentException("Error al actualizar el alumno");
         }
-        return save(alumno);  // Guardar los cambios en el alumno
+        return save(alumno); // Guardar los cambios en el alumno
     }
-
 
     @Transactional
     @Override
@@ -137,7 +138,8 @@ public class AlumnoServiceJPA implements IAlumnoService {
                 usuarioParams.put("contrasenia", JsonUtils.obtString(params, "contrasenia"));
                 usuarioParams.put("estatus", params.getOrDefault("estatus", "Activo"));
 
-                Long idRol = params.get("idCatRol") != null ? Long.parseLong(params.get("idCatRol").toString()) : 1L;  // Valor predeterminado
+                Long idRol = params.get("idCatRol") != null ? Long.parseLong(params.get("idCatRol").toString()) : 1L; // Valor
+                                                                                                                      // predeterminado
                 Map<String, Object> rolMap = new HashMap<>();
                 rolMap.put("idCatRol", idRol);
                 usuarioParams.put("rol", rolMap);
@@ -158,6 +160,15 @@ public class AlumnoServiceJPA implements IAlumnoService {
             throw new IllegalArgumentException("Error al construir el alumno");
         }
         return alumno;
+    }
+
+    @Transactional
+    public void cambiarPasswordAlumno(Long idAlumno, String rawPassword) throws Exception {
+        Alumno alumno = findById(idAlumno);
+        if (alumno.getUsuario() == null) {
+            throw new IllegalArgumentException("El alumno no tiene usuario asignado");
+        }
+        usuarioServiceJPA.actualizarPassword(alumno.getUsuario().getId(), rawPassword);
     }
 
     @Override
@@ -194,7 +205,8 @@ public class AlumnoServiceJPA implements IAlumnoService {
                 Row row = rowIterator.next();
 
                 // Validar que la fila no esté vacía
-                if (ArchivoUtil.isEmptyRow(row)) continue;
+                if (ArchivoUtil.isEmptyRow(row))
+                    continue;
 
                 try {
                     // Crear un mapa con los datos de la fila
@@ -205,17 +217,17 @@ public class AlumnoServiceJPA implements IAlumnoService {
                     alumnoData.put("apellidoPaterno", ArchivoUtil.getCellValueAsString(row.getCell(1)));
                     alumnoData.put("curp", ArchivoUtil.getCellValueAsString(row.getCell(3)));
                     String sexoTexto = ArchivoUtil.getCellValueAsString(row.getCell(4));
-                    //buscar id grupo
+                    // buscar id grupo
                     String nombreGrupo = ArchivoUtil.getCellValueAsString(row.getCell(5));
                     Long idGrupo = grupoServiceJPA.findIdByNombreGrupo(nombreGrupo);
                     alumnoData.put("grupo", idGrupo);
                     // Buscar id carrera
                     Long idCarrera = grupoServiceJPA.findIdCarreraByGrupo(nombreGrupo);
                     alumnoData.put("carrera", idCarrera);
-                    //extraer sexo
-                    if(sexoTexto.equals("F") || sexoTexto.equals("f") ){
+                    // extraer sexo
+                    if (sexoTexto.equals("F") || sexoTexto.equals("f")) {
                         alumnoData.put("sexo", 2); // Femenino
-                    } else if(sexoTexto.equals("M") || sexoTexto.equals("m") ){
+                    } else if (sexoTexto.equals("M") || sexoTexto.equals("m")) {
                         alumnoData.put("sexo", 1); // Masculino
                     } else {
                         throw new IllegalArgumentException("Sexo no válido en la fila " + row.getRowNum());
@@ -227,9 +239,9 @@ public class AlumnoServiceJPA implements IAlumnoService {
                     // CAMPOS OPCIONALES
                     alumnoData.put("apellidoMaterno", ArchivoUtil.getCellValueAsString(row.getCell(2)));
 
-                    //campos not null no incluidos
-                    alumnoData.put("correo"," ");
-                    alumnoData.put("telefono"," ");
+                    // campos not null no incluidos
+                    alumnoData.put("correo", " ");
+                    alumnoData.put("telefono", " ");
 
                     // Crear el alumno
                     Alumno alumno = create(alumnoData);
@@ -240,7 +252,8 @@ public class AlumnoServiceJPA implements IAlumnoService {
                     throw new IllegalArgumentException("Error en la fila " + row.getRowNum() + ": " + e.getMessage());
                 } catch (Exception e) {
                     e.printStackTrace(); // Esto es opcional, sirve para depuración si ocurre algún error inesperado
-                    throw new IllegalArgumentException("Error al importar el alumno en la fila " + row.getRowNum() + ": " + e.getMessage());
+                    throw new IllegalArgumentException(
+                            "Error al importar el alumno en la fila " + row.getRowNum() + ": " + e.getMessage());
                 }
             }
         }

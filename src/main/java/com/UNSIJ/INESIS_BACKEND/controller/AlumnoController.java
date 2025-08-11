@@ -61,6 +61,22 @@ public class AlumnoController {
         }
     }
 
+    @PatchMapping("/{id}/password")
+    public ResponseEntity<?> cambiarPassword(
+            @PathVariable Long id,
+            @RequestBody Map<String, Object> datos) {
+        try {
+            String rawPassword = datos.get("rawPassword").toString();
+            alumnoServiceJPA.cambiarPasswordAlumno(id, rawPassword);
+            return ResponseEntity.ok("Contraseña actualizada correctamente");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al actualizar la contraseña: " + e.getMessage());
+        }
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> remove(@PathVariable Long id) {
         try {
@@ -88,7 +104,7 @@ public class AlumnoController {
     }
 
     @PatchMapping("/completarEstudio/{id}")
-    public ResponseEntity<?> estudioCompleto(@PathVariable Long id){
+    public ResponseEntity<?> estudioCompleto(@PathVariable Long id) {
         try {
             Alumno alumno = alumnoServiceJPA.findById(id);
             // Actualizar el campo estudioCompleto a true
@@ -103,7 +119,6 @@ public class AlumnoController {
                     .body("Error al actualizar el estado de estudio completo: " + e.getMessage());
         }
     }
-
 
     @PatchMapping("/{id}/revision")
     public ResponseEntity<?> actualizarRevisionAlumno(
@@ -149,8 +164,7 @@ public class AlumnoController {
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
                     "message", "Alumnos importados correctamente",
                     "cantidad", alumnosImportados.size(),
-                    "alumnos", alumnosImportados
-            ));
+                    "alumnos", alumnosImportados));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
