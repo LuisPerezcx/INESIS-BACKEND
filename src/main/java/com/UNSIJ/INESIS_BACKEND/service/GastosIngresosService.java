@@ -104,14 +104,17 @@ public class GastosIngresosService implements IGatosIngresoFamiliares {
             Integer personasAportan = JsonUtils.obtInteger(params, "personasAportan");
             Integer ingresoTotal = JsonUtils.obtInteger(params, "ingresoTotal");
             Integer personasDependen = JsonUtils.obtInteger(params, "personasDependen");
+            Double ingresoBrutoTotal = JsonUtils.obtDouble(params, "ingresoBrutoTotal");
 
-            if (personasAportan == null || ingresoTotal == null || personasDependen == null) {
+            if (personasAportan == null || ingresoTotal == null || personasDependen == null || ingresoBrutoTotal == null) {
                 throw new IllegalArgumentException("Campos obligatorios faltantes");
             }
 
             gIngresosFamiliares.setNummeroPersonasAportan(personasAportan);
             gIngresosFamiliares.setIngresoTotal(ingresoTotal);
             gIngresosFamiliares.setNumeroPersonasDependen(personasDependen);
+            gIngresosFamiliares.setIngresoBrutoTotal(ingresoBrutoTotal);
+
 
             // GASTOS FAMILIARES
             Map<String, Object> gastos = (Map<String, Object>) params.get("gastos");
