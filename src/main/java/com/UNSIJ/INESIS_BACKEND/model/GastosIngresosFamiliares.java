@@ -31,6 +31,10 @@ public class GastosIngresosFamiliares {
     private double ingresoTotal;
 
     @NotNull
+    @Column(name = "ingreso_total_bruto")
+    private double ingresoBrutoTotal;
+
+    @NotNull
     @Column(name = "num_personas_dependen")
     private int numeroPersonasDependen;
 

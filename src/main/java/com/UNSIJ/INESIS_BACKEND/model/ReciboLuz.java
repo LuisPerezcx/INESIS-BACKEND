@@ -26,6 +26,10 @@ public class ReciboLuz {
     private String periodoFin;
 
     @NotNull
+    @Column(name = "domicilio_recibo")
+    private String domicilio;
+
+    @NotNull
     @Column(name = "nombre_archivo")
     private String nombreArchivo;
 

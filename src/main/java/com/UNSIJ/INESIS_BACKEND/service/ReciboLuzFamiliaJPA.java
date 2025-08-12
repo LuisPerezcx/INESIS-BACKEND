@@ -86,6 +86,8 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
             Double ultimoPago = JsonUtils.obtDouble(params, "ultimoPago");
             Double promedioPago = JsonUtils.obtDouble(params, "promedioPago");
             String observaciones = JsonUtils.obtString(params, "observaciones");
+            String domicilio = JsonUtils.obtString(params, "domicilio");
+
 
 
             String contenidoBase64 = JsonUtils.obtString(params, "contenidoBase64"); // Asegúrate que llegue este campo
@@ -108,6 +110,8 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
                 throw new IllegalArgumentException("El campo promedioPago es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
             if (observaciones == null)
                 throw new IllegalArgumentException("El campo observaciones es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            if (domicilio == null)
+                throw new IllegalArgumentException("El campo domicilio es obligatorio");
 
             String nombreCarpeta = titular.replace(" ", "_");
 
@@ -132,6 +136,7 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
             ReciboLuzModel.setRutaRecibo(rutaRecibo);
             ReciboLuzModel.setUltimoPago(ultimoPago);
             ReciboLuzModel.setPromedioPago(promedioPago);
+            ReciboLuzModel.setDomicilio(domicilio);
             ReciboLuzModel.setObservaciones(observaciones);
 
 
