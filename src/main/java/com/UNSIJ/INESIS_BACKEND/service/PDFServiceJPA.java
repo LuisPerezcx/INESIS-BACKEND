@@ -358,8 +358,8 @@ public class PDFServiceJPA {
             //Reporte ingreso mensual
 
 
-            form.setField(PDF.ESE.brutoTotal," ",true);
-            form.setField(PDF.ESE.netoTotal," ",true);
+            form.setField(PDF.ESE.brutoTotal,valorSeguro(String.valueOf(alumno.getGastosIngresosFamiliares().getIngresoBrutoTotal())," "),true);
+            form.setField(PDF.ESE.netoTotal,valorSeguro(String.valueOf(alumno.getGastosIngresosFamiliares().getIngresoTotal())," "),true);
 
             //datos del recibo de luz
             form.setField(PDF.ESE.reciboTitular,valorSeguro(alumno.getGastosIngresosFamiliares().getReciboLuzModel().getTitular()," "),true);
@@ -696,10 +696,10 @@ public class PDFServiceJPA {
 
             form.setField(PDF.ESE.firmaAlumno,nombreCompletoSeguro(alumno.getNombre(), alumno.getApellidoPaterno(),alumno.getApellidoMaterno()),true);
 
-/*            //imprime los campos encontrados en el pdf
+            //imprime los campos encontrados en el pdf
             for (String campo : form.getFields().keySet()) {
                 System.out.println("Campo encontrado: " + campo);
-            }*/
+            }
 
             // Opcional: hacer los campos no editables
             stamper.setFormFlattening(true);
