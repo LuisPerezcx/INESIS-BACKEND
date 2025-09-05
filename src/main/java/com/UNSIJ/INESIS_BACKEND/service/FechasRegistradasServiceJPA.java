@@ -10,10 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class FechasRegistradasServiceJPA implements IFechasRegistradasService {
@@ -169,6 +166,14 @@ public class FechasRegistradasServiceJPA implements IFechasRegistradasService {
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
             return sdf.format(date); // Convertimos la fecha a String con el formato deseado
         }
+    }
+
+    public Optional<FechasRegistradas> findOptionalByCarreraId(Long idCarrera) {
+        return fechasRegistradasRepository.findByCarrera_Id(idCarrera);
+    }
+
+    public List<FechasRegistradas> findByCarreraIds(Set<Long> ids) {
+        return fechasRegistradasRepository.findByCarrera_IdIn(ids);
     }
 
     public FechasRegistradas findByCarreraId(Long idCarrera) {

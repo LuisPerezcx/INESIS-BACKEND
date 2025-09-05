@@ -2,6 +2,7 @@ package com.UNSIJ.INESIS_BACKEND.controller;
 
 import com.UNSIJ.INESIS_BACKEND.model.Alumno;
 import com.UNSIJ.INESIS_BACKEND.service.AlumnoServiceJPA;
+import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,27 +56,15 @@ public class AlumnoController {
             Alumno alumnoUpdated = alumnoServiceJPA.update(alumnoServiceJPA.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(alumnoUpdated);
         } catch (IllegalArgumentException e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
     }
 
-    @PatchMapping("/{id}/password")
-    public ResponseEntity<?> cambiarPassword(
-            @PathVariable Long id,
-            @RequestBody Map<String, Object> datos) {
-        try {
-            String rawPassword = datos.get("rawPassword").toString();
-            alumnoServiceJPA.cambiarPasswordAlumno(id, rawPassword);
-            return ResponseEntity.ok("Contraseña actualizada correctamente");
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al actualizar la contraseña: " + e.getMessage());
-        }
-    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> remove(@PathVariable Long id) {
@@ -126,8 +115,8 @@ public class AlumnoController {
             @RequestBody Map<String, Object> datos) {
 
         try {
-            String observaciones = datos.get("observaciones").toString();
-            Boolean estado = Boolean.parseBoolean(datos.get("estado").toString());
+            String observaciones = JsonUtils.obtString(datos, "observaciones");
+            Integer estado = JsonUtils.obtInteger(datos, "estado");
 
             Alumno alumno = alumnoServiceJPA.findById(id);
             // Actualizar campos

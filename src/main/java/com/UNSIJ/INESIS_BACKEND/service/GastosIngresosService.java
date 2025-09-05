@@ -64,7 +64,7 @@ public class GastosIngresosService implements IGatosIngresoFamiliares {
             if (idAlumno == null) throw new IllegalArgumentException("El campo idAlumno es obligatorio");
             Alumno alumno = alumnoService.findById(idAlumno);
             ejemplo.setAlumno(alumno);
-            this.build(params, ejemplo);
+            this.build(params, ejemplo, alumno);
             ejemplo.setModuloCompleto(true);
             ejemplo = this.save(ejemplo);
             alumno.setGastosIngresosFamiliares(ejemplo);
@@ -83,7 +83,7 @@ public class GastosIngresosService implements IGatosIngresoFamiliares {
                                            Map<String, Object> params) throws Exception {
         try {
             // Reconstruir el objeto con los datos nuevos
-            this.build(params, gIngresosFamiliares);
+            this.build(params, gIngresosFamiliares, gIngresosFamiliares.getAlumno());
             gIngresosFamiliares.setModuloCompleto(true);
 
             // Guardar y retornar
@@ -98,7 +98,7 @@ public class GastosIngresosService implements IGatosIngresoFamiliares {
 
     @Override
     @Transactional
-    public GastosIngresosFamiliares build(Map<String, Object> params, GastosIngresosFamiliares gIngresosFamiliares) {
+    public GastosIngresosFamiliares build(Map<String, Object> params, GastosIngresosFamiliares gIngresosFamiliares, Alumno alumno) {
         try {
             // VALIDACIONES Y CAMPOS BÁSICOS
             Integer personasAportan = JsonUtils.obtInteger(params, "personasAportan");
@@ -129,7 +129,7 @@ public class GastosIngresosService implements IGatosIngresoFamiliares {
             if (gIngresosFamiliares.getReciboLuzModel() != null) {
                 reciboLuzFamiliaJPA.update(gIngresosFamiliares.getReciboLuzModel(), reciboLuz);
             } else {
-                gIngresosFamiliares.setReciboLuzModel(reciboLuzFamiliaJPA.create(reciboLuz));
+                gIngresosFamiliares.setReciboLuzModel(reciboLuzFamiliaJPA.create(reciboLuz, alumno));
             }
 
             gIngresosFamiliares = gastosIngresosFamiliaresRepository.save(gIngresosFamiliares);

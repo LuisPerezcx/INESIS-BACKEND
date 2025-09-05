@@ -1,6 +1,7 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
 import com.UNSIJ.INESIS_BACKEND.model.Alumno;
+import com.UNSIJ.INESIS_BACKEND.model.FechasRegistradas;
 import com.UNSIJ.INESIS_BACKEND.model.Usuario;
 import com.UNSIJ.INESIS_BACKEND.repository.AlumnoRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IAlumnoService;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class AlumnoServiceJPA implements IAlumnoService {
@@ -44,24 +46,35 @@ public class AlumnoServiceJPA implements IAlumnoService {
     @Override
     public List<Alumno> findAll() {
         List<Alumno> alumnos = alumnoRepository.findAll();
-        for (Alumno alumno : alumnos) {
-            if (alumno.getCarrera() != null) {
-                try {
-                    alumno.setFechaRegistrada(fechasRegistradasServiceJPA.findByCarreraId(alumno.getCarrera().getId()));
-                } catch (Exception e) {
+
+        Set<Long> carreraIds = alumnos.stream()
+                .map(a -> a.getCarrera() != null ? a.getCarrera().getId() : null)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
+
+        if (!carreraIds.isEmpty()) {
+            List<FechasRegistradas> fechas = fechasRegistradasServiceJPA.findByCarreraIds(carreraIds);
+            Map<Long, FechasRegistradas> mapaFechas = fechas.stream()
+                    .collect(Collectors.toMap(f -> f.getCarrera().getId(), f -> f));
+            alumnos.forEach(a -> {
+                if (a.getCarrera() != null) {
+                    a.setFechaRegistrada(mapaFechas.get(a.getCarrera().getId()));
                 }
-            }
+            });
         }
+
         return alumnos;
     }
 
     @Override
     public Alumno findById(Long id) {
-        Alumno alumno = alumnoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Alumno no encontrado con el ID: " + id));
+        Alumno alumno = null;
         try {
-            alumno.setFechaRegistrada(fechasRegistradasServiceJPA.findByCarreraId(alumno.getCarrera().getId()));
+            alumno = alumnoRepository.findById(id)
+                    .orElseThrow(() -> new IllegalArgumentException("Alumno no encontrado con el ID: " + id));
+            verificarFechas(alumno);
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return alumno;
     }
@@ -77,6 +90,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
     public Alumno create(Map<String, Object> params) throws Exception {
         System.out.println("Creando alumno con los siguientes parámetros: " + params);
         Alumno alumno = new Alumno();
+        alumno.setEstadoRevision(0);
         try {
             this.build(params, alumno);
         } catch (IllegalArgumentException e) {
@@ -133,19 +147,24 @@ public class AlumnoServiceJPA implements IAlumnoService {
             // Verificar si el alumno ya tiene un usuario
             if (alumno.getUsuario() != null) {
                 // Si ya existe un usuario, actualizamos su información
-                Map<String, Object> usuarioParams = new HashMap<>();
-                usuarioParams.put("usuario", JsonUtils.obtString(params, "usuario"));
-                usuarioParams.put("contrasenia", JsonUtils.obtString(params, "contrasenia"));
-                usuarioParams.put("estatus", params.getOrDefault("estatus", "Activo"));
+                String usuario = JsonUtils.obtString(params, "usuario");
+                String contrasena = JsonUtils.obtString(params, "contrasenia");
+                System.out.println("usuario: " + usuario + ", contrasena: " + contrasena);
+                if(usuario != null && contrasena != null) {
+                    Map<String, Object> usuarioParams = new HashMap<>();
+                    usuarioParams.put("usuario", usuario);
+                    usuarioParams.put("contrasenia", contrasena);
+                    usuarioParams.put("estatus", params.getOrDefault("estatus", "Activo"));
 
-                Long idRol = params.get("idCatRol") != null ? Long.parseLong(params.get("idCatRol").toString()) : 1L; // Valor
-                                                                                                                      // predeterminado
-                Map<String, Object> rolMap = new HashMap<>();
-                rolMap.put("idCatRol", idRol);
-                usuarioParams.put("rol", rolMap);
+                    Long idRol = params.get("idCatRol") != null ? Long.parseLong(params.get("idCatRol").toString()) : 1L; // Valor
+                                                                                                                          // predeterminado
+                    Map<String, Object> rolMap = new HashMap<>();
+                    rolMap.put("idCatRol", idRol);
+                    usuarioParams.put("rol", rolMap);
 
-                // Actualizar el usuario existente
-                usuarioServiceJPA.update(alumno.getUsuario(), usuarioParams);
+                    // Actualizar el usuario existente
+                    usuarioServiceJPA.update(alumno.getUsuario(), usuarioParams);
+                }
 
             } else {
                 // Si no existe un usuario, creamos uno nuevo
@@ -154,6 +173,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
             }
 
         } catch (IllegalArgumentException e) {
+            e.printStackTrace();
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
@@ -162,20 +182,23 @@ public class AlumnoServiceJPA implements IAlumnoService {
         return alumno;
     }
 
-    @Transactional
-    public void cambiarPasswordAlumno(Long idAlumno, String rawPassword) throws Exception {
-        Alumno alumno = findById(idAlumno);
-        if (alumno.getUsuario() == null) {
-            throw new IllegalArgumentException("El alumno no tiene usuario asignado");
-        }
-        usuarioServiceJPA.actualizarPassword(alumno.getUsuario().getId(), rawPassword);
-    }
+
 
     @Override
     public void deleteById(Long id) {
         Alumno alumno = this.findById(id);
         if (alumno != null) {
             alumnoRepository.deleteById(id);
+        }
+    }
+
+    private void verificarFechas(Alumno alumno) {
+        if (alumno.getCarrera() == null) return;
+        try {
+            Optional<FechasRegistradas> opt = fechasRegistradasServiceJPA.findOptionalByCarreraId(alumno.getCarrera().getId());
+            opt.ifPresent(alumno::setFechaRegistrada);
+        } catch (Exception e) {
+            //logger.error("Error al obtener fechas registradas para carrera {}: {}", alumno.getCarrera().getId(), e.getMessage(), e);
         }
     }
 

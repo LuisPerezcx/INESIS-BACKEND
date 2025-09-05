@@ -62,6 +62,7 @@ public class UsuarioServiceJPA implements IUsuarioService {
         try {
             this.build(params, usuarioModel);
         } catch (IllegalArgumentException e) {
+            e.printStackTrace();
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
@@ -80,10 +81,9 @@ public class UsuarioServiceJPA implements IUsuarioService {
             usuarioModel.setUsuario(usuario);
 
             String contrasenia = JsonUtils.obtString(params, "contrasenia");
-            /*
-             * if (contrasenia == null)
-             * throw new IllegalArgumentException("El campo contraseña es obligatorio");
-             */
+
+             if (contrasenia == null) throw new IllegalArgumentException("El campo contraseña es obligatorio");
+
             // Cifrar aquí
             usuarioModel.setContrasenia(passwordEncoder.encode(contrasenia));
 

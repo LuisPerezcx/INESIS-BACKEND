@@ -471,8 +471,8 @@ public class PDFServiceJPA {
             //datos del alumno
 
             // datos de domicio actual de la familia falta distrito y region
-            form.setField(PDF.ESE.regionActualFamilia, valorSeguro(alumno.getMiFamilia().getViviendaFamiliar().getRegion()," "), true);
-            form.setField(PDF.ESE.distritoActualFamilia,valorSeguro(alumno.getMiFamilia().getViviendaFamiliar().getDistrito()," "), true);
+            form.setField(PDF.ESE.regionActualFamilia, valorSeguro(alumno.getMiFamilia().getViviendaFamiliar().getRegion().getNombreRegion()," "), true);
+            form.setField(PDF.ESE.distritoActualFamilia,valorSeguro(alumno.getMiFamilia().getViviendaFamiliar().getDistrito().getNombreDistrito()," "), true);
             form.setField(PDF.ESE.municipioActualFamilia, municipioFamiliaActual(alumno.getMiFamilia().getDomicilio().getCp()), true);
             form.setField(PDF.ESE.localidadActualFamilia,valorSeguro(alumno.getMiFamilia().getDomicilio().getLocalidad()," "), true);
             form.setField(PDF.ESE.estadoActualFamilia, estadoFamiliaActual(alumno.getMiFamilia().getDomicilio().getCp()), true);
@@ -607,7 +607,7 @@ public class PDFServiceJPA {
 
 
             //Tipo de ocupacion
-            Long ocupacionSeleccionada = alumno.getMisDatos().getGastosIngresos().getOcupacion().getId();
+            Long ocupacionSeleccionada = alumno.getMiTutor().getOcupacion().getId();
             form.setField(PDF.ESE.comerciante, ocupacionSeleccionada == 1 ? "X" : "", true);
             form.setField(PDF.ESE.empleadoGobierno, ocupacionSeleccionada == 3 ? "X" : "", true);
             form.setField(PDF.ESE.empleadoPrivado, ocupacionSeleccionada == 5 ? "X" : "", true);
@@ -696,10 +696,10 @@ public class PDFServiceJPA {
 
             form.setField(PDF.ESE.firmaAlumno,nombreCompletoSeguro(alumno.getNombre(), alumno.getApellidoPaterno(),alumno.getApellidoMaterno()),true);
 
-            //imprime los campos encontrados en el pdf
+/*            //imprime los campos encontrados en el pdf
             for (String campo : form.getFields().keySet()) {
                 System.out.println("Campo encontrado: " + campo);
-            }
+            }*/
 
             // Opcional: hacer los campos no editables
             stamper.setFormFlattening(true);
@@ -712,7 +712,6 @@ public class PDFServiceJPA {
             String base64Pdf = Base64.getEncoder().encodeToString(pdfBytes);
 
             // Imprimir el Base64 (puedes devolverlo en una API REST, por ejemplo)
-            System.out.println(base64Pdf);
 
             System.out.println("PDF generado con éxito.");
             return base64Pdf;

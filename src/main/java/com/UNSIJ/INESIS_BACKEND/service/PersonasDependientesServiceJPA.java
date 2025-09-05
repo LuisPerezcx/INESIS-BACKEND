@@ -53,7 +53,6 @@ public class PersonasDependientesServiceJPA implements IPersonasDependientesServ
     @Override
     public PersonasDependientes create(Map<String, Object> params, MiFamilia miFamilia) throws Exception {
         PersonasDependientes model = new PersonasDependientes();
-        System.out.println("ENTRANDO A CREAR PERSONAS DEPENDIENTES");
         try {
             this.build(params, model, miFamilia);
         } catch (IllegalArgumentException e) {
@@ -96,6 +95,11 @@ public class PersonasDependientesServiceJPA implements IPersonasDependientesServ
         if (nuevoArchivoBase64 != null && !nuevoArchivoBase64.isEmpty()) {
             String rutaAnterior = model.getRutaArchivo();
 
+            String nombreCarpeta1 = (model.getMiFamilia() != null && model.getMiFamilia().getAlumno() != null) ?
+                    "alumno_" + model.getMiFamilia().getAlumno().getId() :
+                    "alumno_" + (model.getMiFamilia() != null ? model.getMiFamilia().getId() : "desconocido");
+
+            System.out.println("Carpeta para guardar archivo: " + nombreCarpeta1);
             // Guardar archivo nuevo
             String nombreCarpeta = model.getMiFamilia() != null && model.getMiFamilia().getAlumno() != null ?
                     model.getMiFamilia().getAlumno().getNombreCompleto().replace(" ", "_") :
@@ -105,7 +109,8 @@ public class PersonasDependientesServiceJPA implements IPersonasDependientesServ
                     nuevoArchivoBase64,
                     nuevoNombreArchivo,
                     "personas-dependientes",
-                    nombreCarpeta
+                    nombreCarpeta,
+                    false
             );
 
             // Solo elimina si el archivo es diferente
@@ -122,7 +127,6 @@ public class PersonasDependientesServiceJPA implements IPersonasDependientesServ
     @Override
     @Transactional
     public PersonasDependientes build(Map<String, Object> params, PersonasDependientes model, MiFamilia miFamilia) {
-        System.out.println("ENTRANDO A CONSTRUIR PERSONAS DEPENDIENTES");
         model.setNombrePersona(JsonUtils.obtString(params, "nombrePersona"));
         model.setEdad(JsonUtils.obtInteger(params, "edad"));
         model.setParentesco(catParentescoService.findById(JsonUtils.obtLong(params, "parentesco")));
@@ -141,16 +145,18 @@ public class PersonasDependientesServiceJPA implements IPersonasDependientesServ
                     System.out.println("Archivo ya existente, no se reemplaza.");
                 } else {
                     try {
+                        System.out.println("Guardando nuevo archivo para persona dependiente: " + "alumno_" + miFamilia.getAlumno().getId());
                         String nombreCarpeta = miFamilia.getAlumno() != null ?
-                                miFamilia.getAlumno().getNombreCompleto().replace(" ", "_") :
-                                "alumno_" + miFamilia.getId();
+                                "alumno_" + miFamilia.getAlumno().getId() :
+                                "alumno_Fam_" + miFamilia.getId();
 
                         // Guardar archivo nuevo
                         String rutaRelativa = archivoService.guardarArchivoBase64(
                                 nuevoArchivoBase64,
                                 nuevoNombre,
                                 "personas-dependientes",
-                                nombreCarpeta
+                                nombreCarpeta,
+                                false
                         );
 
                         if (nombreArchivoAnterior != null) {
@@ -164,7 +170,6 @@ public class PersonasDependientesServiceJPA implements IPersonasDependientesServ
                 }
             }
         }
-        System.out.println("SALIENDO DEL IF DE BASE64(O NO)");
         model.setMiFamilia(miFamilia);
         return model;
     }
