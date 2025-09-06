@@ -363,7 +363,7 @@ public class PDFServiceJPA {
 
             //datos del recibo de luz
             form.setField(PDF.ESE.reciboTitular,valorSeguro(alumno.getGastosIngresosFamiliares().getReciboLuzModel().getTitular()," "),true);
-            form.setField(PDF.ESE.reciboDomicilio," ",true);
+            form.setField(PDF.ESE.reciboDomicilio,valorSeguro(alumno.getGastosIngresosFamiliares().getReciboLuzModel().getDomicilio(),""),true);
             form.setField(PDF.ESE.periodoReportado,periodoReportado(alumno.getGastosIngresosFamiliares().getReciboLuzModel().getPeriodoInicio(),alumno.getGastosIngresosFamiliares().getReciboLuzModel().getPeriodoFin()),true);
             form.setField(PDF.ESE.promedioMes,valorSeguro(String.valueOf(alumno.getGastosIngresosFamiliares().getReciboLuzModel().getPromedioPago())," "),true);
             //datos del recibo de luz
