@@ -696,10 +696,11 @@ public class PDFServiceJPA {
 
             form.setField(PDF.ESE.firmaAlumno,nombreCompletoSeguro(alumno.getNombre(), alumno.getApellidoPaterno(),alumno.getApellidoMaterno()),true);
 
+
             //imprime los campos encontrados en el pdf
-            for (String campo : form.getFields().keySet()) {
+           /* for (String campo : form.getFields().keySet()) {
                 System.out.println("Campo encontrado: " + campo);
-            }
+            }*/
 
             // Opcional: hacer los campos no editables
             stamper.setFormFlattening(true);

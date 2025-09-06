@@ -178,5 +178,11 @@ public class PDF {
         public static String autoFamiliar = "autoFamiliar";
         public static String autoAmigos = "autoAmigos";
         public static String firmaAlumno = "firmaAlumno";
+        public static String firmaAlumno1 = "firmaAlumno1";
+        public static String firmaTutor = "firmaTutor";
+        public static String fechaPdf = "fechaPdf";
+
+
+
     }
 }
