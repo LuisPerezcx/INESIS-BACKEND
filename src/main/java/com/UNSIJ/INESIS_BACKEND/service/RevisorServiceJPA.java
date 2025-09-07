@@ -75,9 +75,6 @@ public class RevisorServiceJPA implements IRevisorService {
             revisor.setNombre(JsonUtils.obtString(params, "nombre"));
             revisor.setApellidoPaterno(JsonUtils.obtString(params, "apellidoPaterno"));
             revisor.setApellidoMaterno(JsonUtils.obtString(params, "apellidoMaterno"));
-            revisor.setCurp(JsonUtils.obtString(params, "curp"));
-            revisor.setCorreo(JsonUtils.obtString(params, "correo"));
-            revisor.setTelefono(JsonUtils.obtString(params, "telefono"));
             revisor.setMatricula(JsonUtils.obtString(params, "matricula"));
             revisor.setDepartamento(JsonUtils.obtString(params, "departamento"));
 

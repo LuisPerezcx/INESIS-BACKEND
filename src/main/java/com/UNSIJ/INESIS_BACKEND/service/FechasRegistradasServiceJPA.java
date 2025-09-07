@@ -1,11 +1,13 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
+import com.UNSIJ.INESIS_BACKEND.model.Alumno;
 import com.UNSIJ.INESIS_BACKEND.model.CatCarrera;
 import com.UNSIJ.INESIS_BACKEND.model.FechasRegistradas;
 import com.UNSIJ.INESIS_BACKEND.repository.FechasRegistradasRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IFechasRegistradasService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,10 @@ public class FechasRegistradasServiceJPA implements IFechasRegistradasService {
 
     @Autowired
     private CatCarreraServiceJPA carreraServiceJPA;
+
+    @Autowired
+    @Lazy
+    private AlumnoServiceJPA alumnoServiceJPA;
 
     @Override
     public List<FechasRegistradas> findAll() {
@@ -81,6 +87,7 @@ public class FechasRegistradasServiceJPA implements IFechasRegistradasService {
             throws Exception {
         try {
             this.build(params, fechasRegistradas);
+            alumnoServiceJPA.reiniciarProceso(fechasRegistradas);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {

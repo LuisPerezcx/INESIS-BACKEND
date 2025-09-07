@@ -96,6 +96,10 @@ public class AlumnoController {
     public ResponseEntity<?> estudioCompleto(@PathVariable Long id) {
         try {
             Alumno alumno = alumnoServiceJPA.findById(id);
+            //cambiar a pendiente
+            alumno.setEstadoRevision(1);
+            //cambiar de con correccion a corregido
+            if(alumno.getEstadoRevision() == 2) alumno.setEstadoRevision(3);
             // Actualizar el campo estudioCompleto a true
             alumno.setEstudioCompleto(true);
             // Guardar cambios usando el servicio
@@ -115,17 +119,9 @@ public class AlumnoController {
             @RequestBody Map<String, Object> datos) {
 
         try {
-            String observaciones = JsonUtils.obtString(datos, "observaciones");
-            Integer estado = JsonUtils.obtInteger(datos, "estado");
-
-            Alumno alumno = alumnoServiceJPA.findById(id);
-            // Actualizar campos
-            alumno.setObservaciones(observaciones);
-            alumno.setEstadoRevision(estado);
-
-            // Guardar cambios usando el servicio
-            alumnoServiceJPA.save(alumno);
-
+            /* 0.- sin revisar(no se ocupa), 1.-pendiente, 2.-con correcciones
+            * 3.- corregido, 4.- finalizado  */
+            alumnoServiceJPA.cambiarEstadoRevision(alumnoServiceJPA.findById(id), datos);
             return ResponseEntity.ok("Alumno actualizado correctamente");
 
         } catch (IllegalArgumentException e) {
@@ -163,4 +159,20 @@ public class AlumnoController {
         }
     }
 
+    @PatchMapping("/{id}/editarMatricula")
+    public ResponseEntity<?> matriculaModificada(@PathVariable Long id, @RequestBody String matricula) {
+        try {
+            if(matricula == null || matricula.trim().isEmpty()){
+                return ResponseEntity.badRequest().body("La nueva matrícula no puede estar vacía");
+            }
+            alumnoServiceJPA.actualizarMatricula(id, matricula);
+            return ResponseEntity.ok("Alumno actualizado correctamente");
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error en los datos enviados: " + e.getMessage());
+        }
+    }
 }

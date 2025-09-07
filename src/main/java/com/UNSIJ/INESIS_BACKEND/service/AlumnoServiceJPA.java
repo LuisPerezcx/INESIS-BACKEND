@@ -1,6 +1,7 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
 import com.UNSIJ.INESIS_BACKEND.model.Alumno;
+import com.UNSIJ.INESIS_BACKEND.model.CatCarrera;
 import com.UNSIJ.INESIS_BACKEND.model.FechasRegistradas;
 import com.UNSIJ.INESIS_BACKEND.model.Usuario;
 import com.UNSIJ.INESIS_BACKEND.repository.AlumnoRepository;
@@ -192,6 +193,11 @@ public class AlumnoServiceJPA implements IAlumnoService {
         }
     }
 
+    @Transactional
+    public List<Alumno> saveAll(List<Alumno> alumnos) {
+        return alumnoRepository.saveAll(alumnos);
+    }
+
     private void verificarFechas(Alumno alumno) {
         if (alumno.getCarrera() == null) return;
         try {
@@ -282,5 +288,74 @@ public class AlumnoServiceJPA implements IAlumnoService {
         }
 
         return alumnosImportados;
+    }
+
+    @Transactional
+    public void actualizarMatricula(Long id, String nuevaMatricula) throws Exception {
+        try {
+            if (alumnoRepository.existsByMatricula(nuevaMatricula)) {
+                throw new IllegalArgumentException("La matrícula ya está en uso: " + nuevaMatricula);
+            }
+
+            String matriculaTrim = nuevaMatricula.replaceAll("\\D", "");
+            System.out.println("Validando matrícula: " + matriculaTrim);
+            if (!matriculaTrim.matches("\\d{10}")) {
+                throw new IllegalArgumentException("La matricula debe tener exactamente 10 dígitos numéricos");
+            }
+            Alumno alumno = this.findById(id);
+            alumno.setMatricula(matriculaTrim);
+            alumno.setMatriculaEditada(true);
+            this.save(alumno);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Error al actualizar el alumno");
+        }
+    }
+
+    public List<Alumno> findByCarreraId(Long id) {
+        return alumnoRepository.findByCarrera_Id(id);
+    }
+
+    public void cambiarEstadoRevision(Alumno alumno,Map<String, Object> datos) throws Exception {
+        try {
+            String observaciones = JsonUtils.obtString(datos, "observaciones");
+            Integer estado = JsonUtils.obtInteger(datos, "estado");
+            alumno.setObservaciones(observaciones);
+            alumno.setEstadoRevision(estado);
+            if(estado != null && estado == 4 ) alumno.setObservaciones("");
+
+            this.save(alumno);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Error al cambiar el estado de revisión del alumno");
+        }
+    }
+
+    public void reiniciarProceso(FechasRegistradas fechasRegistradas) throws Exception {
+        CatCarrera carrera = fechasRegistradas.getCarrera();
+        try {
+            List<Alumno> alumnos = this.findByCarreraId(carrera.getId());
+            List<Alumno> alumnosModificados = new ArrayList<>();
+            for (Alumno alumno : alumnos) {
+                alumno.setEstudioCompleto(false);
+                alumno.setEstadoRevision(0);
+                alumno.getMisDatos().setModuloCompleto(false);
+                alumno.getMiTutor().setModuloCompleto(false);
+                alumno.getGastosIngresosFamiliares().setModuloCompleto(false);
+                alumno.getMiFamilia().setModuloCompleto(false);
+                alumnosModificados.add(alumno);
+            }
+            this.saveAll(alumnosModificados);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace(); // Opcional, ayuda en depuración si ocurre algún error inesperado
+            throw new IllegalArgumentException("Error al construir la fecha registrada");
+        }
     }
 }

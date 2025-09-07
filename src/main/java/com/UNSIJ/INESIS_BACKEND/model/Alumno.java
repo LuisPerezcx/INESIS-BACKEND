@@ -88,6 +88,9 @@ public class Alumno {
     @Column(name = "observaciones")
     private String observaciones;
 
+    @Column(name = "matricula_editada")
+    private Boolean matriculaEditada = false;
+
     @Transient
     private FechasRegistradas fechaRegistrada;
 
