@@ -215,7 +215,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
     @Transactional
     public List<Alumno> importarDesdeExcel(MultipartFile file) throws Exception {
         List<Alumno> alumnosImportados = new ArrayList<>();
-        int filasASaltar = 5;
+        int filasASaltar = 6;
         int filaActual = 0;
 
         try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
