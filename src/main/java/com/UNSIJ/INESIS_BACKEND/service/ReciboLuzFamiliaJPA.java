@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import com.UNSIJ.INESIS_BACKEND.model.Alumno;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -44,10 +45,10 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
     }
 
     @Override
-    public ReciboLuz create(Map<String, Object> params) throws Exception {
+    public ReciboLuz create(Map<String, Object> params, Alumno alumno) throws Exception {
         ReciboLuz ejemplo = new ReciboLuz();
         try {
-            this.build(params, ejemplo);
+            this.build(params, ejemplo, alumno);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
@@ -61,7 +62,7 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
     public ReciboLuz update(ReciboLuz reciboLuzModel, Map<String, Object> params) throws Exception {
         try {
             String rutaAnterior = reciboLuzModel.getRutaRecibo();
-            this.build(params, reciboLuzModel);
+            this.build(params, reciboLuzModel, reciboLuzModel.getAlumno());
             if (rutaAnterior != null && !rutaAnterior.equals(reciboLuzModel.getRutaRecibo())) {
                 archivoServiceJPA.eliminarArchivo(rutaAnterior);
             }
@@ -75,7 +76,7 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
     }
 
     @Override
-    public ReciboLuz build(Map<String, Object> params, ReciboLuz ReciboLuzModel) {
+    public ReciboLuz build(Map<String, Object> params, ReciboLuz ReciboLuzModel, Alumno alumno) {
         try {
             String titular = JsonUtils.obtString(params, "titular");
             String periodoInicio = JsonUtils.obtString(params, "periodoInicio");
@@ -113,7 +114,10 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
             if (domicilio == null)
                 throw new IllegalArgumentException("El campo domicilio es obligatorio");
 
-            String nombreCarpeta = titular.replace(" ", "_");
+            Long alumnoId = alumno.getId();
+            String nombreCarpeta = (alumnoId != null)
+                    ? "alumno_" + alumnoId
+                    : titular.replace(" ", "_");
 
             if(contenidoBase64 == null || contenidoBase64.isEmpty()) {
                 throw new IllegalArgumentException("El archivo de recibo de luz es obligatorio");
@@ -123,7 +127,8 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
                     contenidoBase64,
                     nombreOriginal,
                     "recibo-luz",
-                    nombreCarpeta
+                    nombreCarpeta,
+                    true
             );
 
 

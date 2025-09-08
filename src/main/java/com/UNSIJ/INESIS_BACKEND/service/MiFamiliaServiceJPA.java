@@ -59,6 +59,9 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
     @Autowired
     private FechasRegistradasServiceJPA fechasRegistradasServiceJPA;
 
+    @Autowired
+    private ArchivoServiceJPA archivoServiceJPA;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -115,7 +118,6 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
     @Transactional
     public MiFamilia build(Map<String, Object> params, MiFamilia miFamilia) {
         try {
-            System.out.println("Construyendo MiFamilia con los siguientes parámetros: " + params);
             String telefono = JsonUtils.obtString(params, "miFamilia.telefono");
             boolean tieneInternet = JsonUtils.obtBoolean(params, "vivienda.tieneInternet");
             Integer numHermanos = JsonUtils.obtInteger(params, "miFamilia.num_hermanos");
@@ -254,6 +256,11 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
             if (personasDependientes != null) {
                 // Limpiar y eliminar huérfanos
                 if (miFamilia.getPersonasDependientes() != null) {
+                    for (PersonasDependientes pd : miFamilia.getPersonasDependientes()) {
+                        if (pd.getRutaArchivo() != null) {
+                            archivoServiceJPA.eliminarArchivo(pd.getRutaArchivo());
+                        }
+                    }
                     miFamilia.getPersonasDependientes().clear();
                     this.save(miFamilia); // para aplicar orphanRemoval
                 } else {

@@ -75,9 +75,6 @@ public class RevisorServiceJPA implements IRevisorService {
             revisor.setNombre(JsonUtils.obtString(params, "nombre"));
             revisor.setApellidoPaterno(JsonUtils.obtString(params, "apellidoPaterno"));
             revisor.setApellidoMaterno(JsonUtils.obtString(params, "apellidoMaterno"));
-            revisor.setCurp(JsonUtils.obtString(params, "curp"));
-            revisor.setCorreo(JsonUtils.obtString(params, "correo"));
-            revisor.setTelefono(JsonUtils.obtString(params, "telefono"));
             revisor.setMatricula(JsonUtils.obtString(params, "matricula"));
             revisor.setDepartamento(JsonUtils.obtString(params, "departamento"));
 
@@ -86,19 +83,23 @@ public class RevisorServiceJPA implements IRevisorService {
 
             if (revisor.getUsuario() != null) {
                 // Actualizar usuario
-            
-                Map<String, Object> usuarioParams = new HashMap<>();
-                usuarioParams.put("usuario", JsonUtils.obtString(params, "usuario"));
-                usuarioParams.put("contrasenia", JsonUtils.obtString(params, "contrasenia"));
-                usuarioParams.put("estatus", params.getOrDefault("estatus", "Activo"));
-                
-                Long idRol = params.get("idCatRol") != null ? Long.parseLong(params.get("idCatRol").toString()) : 1L;  // Valor predeterminado
-                Map<String, Object> rolMap = new HashMap<>();
-                rolMap.put("idCatRol", idRol);
-                usuarioParams.put("rol", rolMap);
+                String usuario = JsonUtils.obtString(params, "usuario");
+                String contrasena = JsonUtils.obtString(params, "contrasenia");
+                if(usuario != null && contrasena != null) {
 
-                // Actualizar el usuario existente
-                usuarioServiceJPA.update(revisor.getUsuario(), usuarioParams);
+                    Map<String, Object> usuarioParams = new HashMap<>();
+                    usuarioParams.put("usuario", usuario);
+                    usuarioParams.put("contrasenia", contrasena);
+                    usuarioParams.put("estatus", params.getOrDefault("estatus", "Activo"));
+
+                    Long idRol = params.get("idCatRol") != null ? Long.parseLong(params.get("idCatRol").toString()) : 1L;  // Valor predeterminado
+                    Map<String, Object> rolMap = new HashMap<>();
+                    rolMap.put("idCatRol", idRol);
+                    usuarioParams.put("rol", rolMap);
+
+                    // Actualizar el usuario existente
+                    usuarioServiceJPA.update(revisor.getUsuario(), usuarioParams);
+                }
 
             } else {
                 Map<String, Object> usuarioParams = new HashMap<>();

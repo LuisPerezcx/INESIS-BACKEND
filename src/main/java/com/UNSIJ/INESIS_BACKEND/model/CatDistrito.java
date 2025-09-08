@@ -1,5 +1,6 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,5 +18,6 @@ public class CatDistrito {
 
     @ManyToOne
     @JoinColumn(name = "id_cat_region", nullable = false)
+    @JsonIgnore
     private CatRegion region;
 }

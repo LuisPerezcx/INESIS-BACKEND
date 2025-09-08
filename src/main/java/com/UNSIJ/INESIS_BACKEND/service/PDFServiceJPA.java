@@ -358,12 +358,12 @@ public class PDFServiceJPA {
             //Reporte ingreso mensual
 
 
-            form.setField(PDF.ESE.brutoTotal," ",true);
-            form.setField(PDF.ESE.netoTotal," ",true);
+            form.setField(PDF.ESE.brutoTotal,valorSeguro(String.valueOf(alumno.getGastosIngresosFamiliares().getIngresoBrutoTotal())," "),true);
+            form.setField(PDF.ESE.netoTotal,valorSeguro(String.valueOf(alumno.getGastosIngresosFamiliares().getIngresoTotal())," "),true);
 
             //datos del recibo de luz
             form.setField(PDF.ESE.reciboTitular,valorSeguro(alumno.getGastosIngresosFamiliares().getReciboLuzModel().getTitular()," "),true);
-            form.setField(PDF.ESE.reciboDomicilio,valorSeguro(alumno.getGastosIngresosFamiliares().getReciboLuzModel().getDomicilio()," "),true);
+            form.setField(PDF.ESE.reciboDomicilio,valorSeguro(alumno.getGastosIngresosFamiliares().getReciboLuzModel().getDomicilio(),""),true);
             form.setField(PDF.ESE.periodoReportado,periodoReportado(alumno.getGastosIngresosFamiliares().getReciboLuzModel().getPeriodoInicio(),alumno.getGastosIngresosFamiliares().getReciboLuzModel().getPeriodoFin()),true);
             form.setField(PDF.ESE.promedioMes,valorSeguro(String.valueOf(alumno.getGastosIngresosFamiliares().getReciboLuzModel().getPromedioPago())," "),true);
             //datos del recibo de luz
@@ -471,8 +471,8 @@ public class PDFServiceJPA {
             //datos del alumno
 
             // datos de domicio actual de la familia falta distrito y region
-            form.setField(PDF.ESE.regionActualFamilia, valorSeguro(alumno.getMiFamilia().getViviendaFamiliar().getRegion()," "), true);
-            form.setField(PDF.ESE.distritoActualFamilia,valorSeguro(alumno.getMiFamilia().getViviendaFamiliar().getDistrito()," "), true);
+            form.setField(PDF.ESE.regionActualFamilia, valorSeguro(alumno.getMiFamilia().getViviendaFamiliar().getRegion().getNombreRegion()," "), true);
+            form.setField(PDF.ESE.distritoActualFamilia,valorSeguro(alumno.getMiFamilia().getViviendaFamiliar().getDistrito().getNombreDistrito()," "), true);
             form.setField(PDF.ESE.municipioActualFamilia, municipioFamiliaActual(alumno.getMiFamilia().getDomicilio().getCp()), true);
             form.setField(PDF.ESE.localidadActualFamilia,valorSeguro(alumno.getMiFamilia().getDomicilio().getLocalidad()," "), true);
             form.setField(PDF.ESE.estadoActualFamilia, estadoFamiliaActual(alumno.getMiFamilia().getDomicilio().getCp()), true);
@@ -607,7 +607,7 @@ public class PDFServiceJPA {
 
 
             //Tipo de ocupacion
-            Long ocupacionSeleccionada = alumno.getMisDatos().getGastosIngresos().getOcupacion().getId();
+            Long ocupacionSeleccionada = alumno.getMiTutor().getOcupacion().getId();
             form.setField(PDF.ESE.comerciante, ocupacionSeleccionada == 1 ? "X" : "", true);
             form.setField(PDF.ESE.empleadoGobierno, ocupacionSeleccionada == 3 ? "X" : "", true);
             form.setField(PDF.ESE.empleadoPrivado, ocupacionSeleccionada == 5 ? "X" : "", true);
@@ -697,9 +697,9 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.firmaAlumno,nombreCompletoSeguro(alumno.getNombre(), alumno.getApellidoPaterno(),alumno.getApellidoMaterno()),true);
 
             //imprime los campos encontrados en el pdf
-            for (String campo : form.getFields().keySet()) {
+           /* for (String campo : form.getFields().keySet()) {
                 System.out.println("Campo encontrado: " + campo);
-            }
+            }*/
 
             // Opcional: hacer los campos no editables
             stamper.setFormFlattening(true);
@@ -712,7 +712,6 @@ public class PDFServiceJPA {
             String base64Pdf = Base64.getEncoder().encodeToString(pdfBytes);
 
             // Imprimir el Base64 (puedes devolverlo en una API REST, por ejemplo)
-            System.out.println(base64Pdf);
 
             System.out.println("PDF generado con éxito.");
             return base64Pdf;
