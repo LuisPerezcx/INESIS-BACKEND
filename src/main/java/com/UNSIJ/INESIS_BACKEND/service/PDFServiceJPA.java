@@ -101,12 +101,8 @@ public class PDFServiceJPA {
 
             estado = root.path("codigo_postal").path("estado").asText();
             municipio = root.path("codigo_postal").path("municipio").asText();
-
-            System.out.println("Estado: " + estado);
-            System.out.println("Municipio: " + municipio);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Error al procesar el JSON del CP");
         }
 
         return calleSeguro + " " + numeroSeguro + ", " + coloniaSeguro + ", " + localidadSeguro + ", " + municipio + ", " + estado + ", " + cp;

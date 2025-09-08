@@ -89,7 +89,6 @@ public class AlumnoServiceJPA implements IAlumnoService {
     @Override
     @Transactional
     public Alumno create(Map<String, Object> params) throws Exception {
-        System.out.println("Creando alumno con los siguientes parámetros: " + params);
         Alumno alumno = new Alumno();
         alumno.setEstadoRevision(0);
         try {
@@ -150,7 +149,6 @@ public class AlumnoServiceJPA implements IAlumnoService {
                 // Si ya existe un usuario, actualizamos su información
                 String usuario = JsonUtils.obtString(params, "usuario");
                 String contrasena = JsonUtils.obtString(params, "contrasenia");
-                System.out.println("usuario: " + usuario + ", contrasena: " + contrasena);
                 if(usuario != null && contrasena != null) {
                     Map<String, Object> usuarioParams = new HashMap<>();
                     usuarioParams.put("usuario", usuario);

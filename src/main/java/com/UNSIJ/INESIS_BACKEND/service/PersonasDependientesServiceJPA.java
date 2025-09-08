@@ -145,7 +145,6 @@ public class PersonasDependientesServiceJPA implements IPersonasDependientesServ
                     System.out.println("Archivo ya existente, no se reemplaza.");
                 } else {
                     try {
-                        System.out.println("Guardando nuevo archivo para persona dependiente: " + "alumno_" + miFamilia.getAlumno().getId());
                         String nombreCarpeta = miFamilia.getAlumno() != null ?
                                 "alumno_" + miFamilia.getAlumno().getId() :
                                 "alumno_Fam_" + miFamilia.getId();

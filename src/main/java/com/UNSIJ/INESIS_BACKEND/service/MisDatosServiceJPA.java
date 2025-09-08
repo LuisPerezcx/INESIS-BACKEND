@@ -207,7 +207,6 @@ public class MisDatosServiceJPA implements IMisDatosService {
             misDatos.setIdioma(idioma);
 
             Long idSituacionVivienda = JsonUtils.obtLong(params, "situacionVivienda");
-            System.out.println("Situacion vivienda: " + idSituacionVivienda);
             if (idSituacionVivienda == null)
                 throw new IllegalArgumentException("El campo 'situacionVivienda' es obligatorio");
             CatSituacionVivienda cat = catSituacionViviendaRepository.findById(idSituacionVivienda)
