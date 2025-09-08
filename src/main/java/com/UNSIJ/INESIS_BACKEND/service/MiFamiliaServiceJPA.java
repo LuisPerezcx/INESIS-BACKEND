@@ -194,6 +194,7 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
                     Domicilio nuevo = domicilioServiceJPA.create(domicilioParams);
                     miFamilia.setDomicilio(nuevo);
                 } else {
+                    System.out.println("hola");
                     Domicilio existente = domicilioServiceJPA.findById(domicilioAlumnoID);
                     Domicilio domicilioAntiguo = miFamilia.getDomicilio();
                     if (domicilioAntiguo != null && !domicilioAntiguo.equals(existente)) {

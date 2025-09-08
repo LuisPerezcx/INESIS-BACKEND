@@ -99,6 +99,8 @@ public class ViviendaFamiliarServiceJPA implements IViviendaFamiliarService {
             String serviciosOtro = JsonUtils.obtString(params, "servicios_otro");
             Long regionId = JsonUtils.obtLong(params, "domicilio.region");
             Long distritoId = JsonUtils.obtLong(params, "domicilio.distrito");
+            if(regionId == null) regionId = JsonUtils.obtLong(params,"domicilio.region.id");
+            if(distritoId == null) distritoId = JsonUtils.obtLong(params, "domicilio.distrito.id");
             Long situacionViviendaId = JsonUtils.obtLong(params, "id_cat_situacion_vivienda");
             Long tipoViviendaId = JsonUtils.obtLong(params, "id_cat_tipo_vivienda");
             Long materialViviendaId = JsonUtils.obtLong(params, "id_cat_material_vivienda");
@@ -144,6 +146,7 @@ public class ViviendaFamiliarServiceJPA implements IViviendaFamiliarService {
 
             model.setMiFamilia(miFamilia);
         } catch (IllegalArgumentException e) {
+            e.printStackTrace();
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();

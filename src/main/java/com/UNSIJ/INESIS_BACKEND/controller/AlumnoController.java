@@ -97,7 +97,7 @@ public class AlumnoController {
         try {
             Alumno alumno = alumnoServiceJPA.findById(id);
             //cambiar a pendiente si no tiene correcciones
-            if(alumno.getEstadoRevision() !=3) alumno.setEstadoRevision(1);
+            if(alumno.getEstadoRevision() !=2) alumno.setEstadoRevision(1);
             //cambiar de con correccion a corregido
             if(alumno.getEstadoRevision() == 2) alumno.setEstadoRevision(3);
             // Actualizar el campo estudioCompleto a true
