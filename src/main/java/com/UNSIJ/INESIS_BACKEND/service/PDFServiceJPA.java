@@ -363,7 +363,7 @@ public class PDFServiceJPA {
 
             //datos del recibo de luz
             form.setField(PDF.ESE.reciboTitular,valorSeguro(alumno.getGastosIngresosFamiliares().getReciboLuzModel().getTitular()," "),true);
-            form.setField(PDF.ESE.reciboDomicilio," ",true);
+            form.setField(PDF.ESE.reciboDomicilio,valorSeguro(alumno.getGastosIngresosFamiliares().getReciboLuzModel().getDomicilio()," "),true);
             form.setField(PDF.ESE.periodoReportado,periodoReportado(alumno.getGastosIngresosFamiliares().getReciboLuzModel().getPeriodoInicio(),alumno.getGastosIngresosFamiliares().getReciboLuzModel().getPeriodoFin()),true);
             form.setField(PDF.ESE.promedioMes,valorSeguro(String.valueOf(alumno.getGastosIngresosFamiliares().getReciboLuzModel().getPromedioPago())," "),true);
             //datos del recibo de luz
@@ -642,7 +642,7 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.espacioEstudio,idsBienesHogar.contains(ID_ESPACIO)? "X": " ", true);
 
 
-            final Long ID_COMPUTADORA = 7L, ID_IMPRESORA = 1L, ID_LIBRERO = 2L, ID_MESA = 3L, ID_LIBROS = 5L, ID_DICCIONARIO = 8L, ID_CALCULADORA = 4L;
+            final Long ID_COMPUTADORA = 6L, ID_IMPRESORA = 1L, ID_LIBRERO = 2L, ID_MESA = 3L, ID_LIBROS = 5L, ID_DICCIONARIO = 7L, ID_CALCULADORA = 4L;
             Set<Long> idsMediosEstudio = alumno.getMiFamilia().getMediosEstudio()
                     .stream()
                     .map(sv -> sv.getCatMediosEstudio().getId())
