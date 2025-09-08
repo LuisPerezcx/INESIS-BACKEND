@@ -534,7 +534,7 @@ public class PDFServiceJPA {
             }
 
             // servicios de mi familia
-            final Long ID_AGUA = 1L, ID_LUZ = 2L, ID_DRENAJE = 3L,ID_OTRO = 4L, ID_TELEFONO = 5L;
+            final Long ID_AGUA = 1L, ID_LUZ = 2L, ID_DRENAJE = 3L,ID_OTRO = 5L, ID_TELEFONO = 4L;
 
             Set<Long> idsServiciosVivienda = alumno.getMiFamilia()
                     .getViviendaFamiliar()
@@ -638,7 +638,7 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.espacioEstudio,idsBienesHogar.contains(ID_ESPACIO)? "X": " ", true);
 
 
-            final Long ID_COMPUTADORA = 7L, ID_IMPRESORA = 1L, ID_LIBRERO = 2L, ID_MESA = 3L, ID_LIBROS = 5L, ID_DICCIONARIO = 8L, ID_CALCULADORA = 4L;
+            final Long ID_COMPUTADORA = 6L, ID_IMPRESORA = 1L, ID_LIBRERO = 2L, ID_MESA = 3L, ID_LIBROS = 5L, ID_DICCIONARIO = 7L, ID_CALCULADORA = 4L;
             Set<Long> idsMediosEstudio = alumno.getMiFamilia().getMediosEstudio()
                     .stream()
                     .map(sv -> sv.getCatMediosEstudio().getId())
@@ -691,7 +691,6 @@ public class PDFServiceJPA {
 
 
             form.setField(PDF.ESE.firmaAlumno,nombreCompletoSeguro(alumno.getNombre(), alumno.getApellidoPaterno(),alumno.getApellidoMaterno()),true);
-
 
             //imprime los campos encontrados en el pdf
            /* for (String campo : form.getFields().keySet()) {
