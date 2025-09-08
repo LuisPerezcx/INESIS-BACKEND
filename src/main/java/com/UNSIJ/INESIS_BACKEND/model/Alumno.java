@@ -82,6 +82,8 @@ public class Alumno {
     @Column(name = "estudio_completo")
     private Boolean estudioCompleto;
 
+    /* 0.- sin revisar(no se ocupa), 1.-pendiente, 2.-con correcciones
+     * 3.- corregido, 4.- finalizado  */
     @Column(name = "estado_revision")
     private Integer estadoRevision = 0;
 
