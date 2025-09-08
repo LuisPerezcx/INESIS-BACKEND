@@ -538,7 +538,7 @@ public class PDFServiceJPA {
             }
 
             // servicios de mi familia
-            final Long ID_AGUA = 1L, ID_LUZ = 2L, ID_DRENAJE = 3L,ID_OTRO = 4L, ID_TELEFONO = 5L;
+            final Long ID_AGUA = 1L, ID_LUZ = 2L, ID_DRENAJE = 3L,ID_OTRO = 5L, ID_TELEFONO = 4L;
 
             Set<Long> idsServiciosVivienda = alumno.getMiFamilia()
                     .getViviendaFamiliar()
