@@ -73,7 +73,7 @@ public class GastosIngresosService implements IGatosIngresoFamiliares {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
-            throw new IllegalArgumentException("Error al construir el ejemplo");
+            throw new IllegalArgumentException("Error al construir gastos e ingresos familiares");
         }
         return ejemplo;
     }
@@ -83,6 +83,7 @@ public class GastosIngresosService implements IGatosIngresoFamiliares {
                                            Map<String, Object> params) throws Exception {
         try {
             // Reconstruir el objeto con los datos nuevos
+            System.out.println(gIngresosFamiliares);
             this.build(params, gIngresosFamiliares, gIngresosFamiliares.getAlumno());
             gIngresosFamiliares.setModuloCompleto(true);
 
@@ -127,7 +128,7 @@ public class GastosIngresosService implements IGatosIngresoFamiliares {
             // RECIBO DE LUZ
             Map<String, Object> reciboLuz = (Map<String, Object>) params.get("reciboLuz");
             if (gIngresosFamiliares.getReciboLuzModel() != null) {
-                reciboLuzFamiliaJPA.update(gIngresosFamiliares.getReciboLuzModel(), reciboLuz);
+                reciboLuzFamiliaJPA.update(gIngresosFamiliares.getReciboLuzModel(), reciboLuz, alumno);
             } else {
                 gIngresosFamiliares.setReciboLuzModel(reciboLuzFamiliaJPA.create(reciboLuz, alumno));
             }

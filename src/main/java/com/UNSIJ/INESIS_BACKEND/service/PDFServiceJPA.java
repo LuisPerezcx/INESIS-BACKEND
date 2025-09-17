@@ -11,6 +11,8 @@ import com.UNSIJ.INESIS_BACKEND.utils.PDF;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.itextpdf.text.Document;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.PageSize;
 import com.itextpdf.text.pdf.*;
 import jakarta.persistence.Transient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -721,11 +723,32 @@ public class PDFServiceJPA {
             }
 
             if (recibo.exists()) {
-                PdfReader readerRecibo = new PdfReader(recibo.getAbsolutePath());
-                for (int i = 1; i <= readerRecibo.getNumberOfPages(); i++) {
-                    copy.addPage(copy.getImportedPage(readerRecibo, i));
+                if (recibo.getName().toLowerCase().endsWith(".pdf")) {
+                    PdfReader readerRecibo = new PdfReader(recibo.getAbsolutePath());
+                    for (int i = 1; i <= readerRecibo.getNumberOfPages(); i++) {
+                        copy.addPage(copy.getImportedPage(readerRecibo, i));
+                    }
+                    readerRecibo.close();
+                } else {
+                    // Caso imagen → la metemos como página PDF
+                    Document imgDoc = new Document();
+                    ByteArrayOutputStream baosImg = new ByteArrayOutputStream();
+                    PdfWriter.getInstance(imgDoc, baosImg);
+                    imgDoc.open();
+
+                    Image img = Image.getInstance(recibo.getAbsolutePath());
+                    img.setAlignment(Image.ALIGN_CENTER);
+                    img.scaleToFit(PageSize.A4.getWidth() - 50, PageSize.A4.getHeight() - 50);
+
+                    imgDoc.add(img);
+                    imgDoc.close();
+
+                    PdfReader readerImg = new PdfReader(baosImg.toByteArray());
+                    for (int i = 1; i <= readerImg.getNumberOfPages(); i++) {
+                        copy.addPage(copy.getImportedPage(readerImg, i));
+                    }
+                    readerImg.close();
                 }
-                readerRecibo.close();
             }
 
             document.close();
@@ -763,8 +786,10 @@ public class PDFServiceJPA {
             String base64Pdf = Base64.getEncoder().encodeToString(baosConAdjuntos.toByteArray());
             return base64Pdf;
         }catch (IllegalArgumentException e) {
+            e.printStackTrace();
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException("Error al generar el pdf "+ e.getMessage(), e);
         }
 

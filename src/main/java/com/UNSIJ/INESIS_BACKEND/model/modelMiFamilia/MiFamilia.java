@@ -39,7 +39,7 @@ public class MiFamilia {
     @Column(name = "num_personas_dependen")
     private Integer numPersonasDependen;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_domicilio")
     private Domicilio domicilio;
 

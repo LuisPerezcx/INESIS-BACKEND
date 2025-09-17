@@ -11,7 +11,7 @@ public interface IReciboLuz {
     ReciboLuz findById(Long id);
     ReciboLuz save(ReciboLuz ReciboLuzModel) throws Exception;
     ReciboLuz create(Map<String, Object> params, Alumno alumno) throws Exception;
-    ReciboLuz update(ReciboLuz ReciboLuzModel, Map<String, Object> params) throws Exception;
+    ReciboLuz update(ReciboLuz ReciboLuzModel, Map<String, Object> params, Alumno alumno) throws Exception;
     ReciboLuz build(Map<String, Object> params, ReciboLuz ReciboLuzModel, Alumno alumno) throws IllegalArgumentException;
     void deleteById(Long id);
 }

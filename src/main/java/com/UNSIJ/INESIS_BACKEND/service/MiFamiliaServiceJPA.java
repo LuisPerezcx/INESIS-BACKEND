@@ -184,7 +184,7 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
                     if (domicilioAntiguo != null) {
                         // Si no hay ID, pero ya hay un domicilio asociado, lo desvinculamos
                         miFamilia.setDomicilio(null);
-                        this.save(miFamilia); // aquí JPA elimina el domicilio anterior automáticamente
+                        this.save(miFamilia); //
                         if (!domicilioServiceJPA.isDomicilioUsado(domicilioAntiguo.getId())) {
                             //eliminar domicilio antiguo
                             domicilioServiceJPA.deleteById(domicilioAntiguo.getId());
@@ -199,7 +199,7 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
                     Domicilio domicilioAntiguo = miFamilia.getDomicilio();
                     if (domicilioAntiguo != null && !domicilioAntiguo.equals(existente)) {
                         miFamilia.setDomicilio(null);
-                        this.save(miFamilia); // también aquí, JPA elimina el anterior automáticamente
+                        this.save(miFamilia); //
                         boolean enUso = domicilioServiceJPA.isDomicilioUsado(domicilioAntiguo.getId());
                         if (!enUso) {
                             domicilioServiceJPA.deleteById(domicilioAntiguo.getId());

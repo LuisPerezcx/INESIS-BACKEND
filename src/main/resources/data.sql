@@ -804,6 +804,10 @@ INSERT INTO cat_parentesco (nombre_parentesco)
 SELECT 'Hermano/a'
     WHERE NOT EXISTS (SELECT 1 FROM cat_parentesco WHERE nombre_parentesco = 'Hermano/a');
 
+INSERT INTO cat_parentesco (nombre_parentesco)
+SELECT 'Hijo/a'
+    WHERE NOT EXISTS (SELECT 1 FROM cat_parentesco WHERE nombre_parentesco = 'Hijo/a');
+
 -- -------------------------------
 -- REGISTROS PARA cat_servicio_otro
 -- -------------------------------

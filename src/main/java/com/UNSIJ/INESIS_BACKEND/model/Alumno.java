@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 @Entity
 @Table(name = "alumno")
@@ -92,6 +94,9 @@ public class Alumno {
 
     @Column(name = "matricula_editada")
     private Boolean matriculaEditada = false;
+
+    @Column(name = "fecha_enviado")
+    private Date fechaEnvio;
 
     @Transient
     private FechasRegistradas fechaRegistrada;

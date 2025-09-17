@@ -53,16 +53,16 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
-            throw new IllegalArgumentException("Error al construir el ejemplo");
+            throw new IllegalArgumentException("Error al construir el recibo de luz");
         }
         return this.save(ejemplo);
     }
 
     @Override
-    public ReciboLuz update(ReciboLuz reciboLuzModel, Map<String, Object> params) throws Exception {
+    public ReciboLuz update(ReciboLuz reciboLuzModel, Map<String, Object> params, Alumno alumno) throws Exception {
         try {
             String rutaAnterior = reciboLuzModel.getRutaRecibo();
-            this.build(params, reciboLuzModel, reciboLuzModel.getAlumno());
+            this.build(params, reciboLuzModel, alumno);
             if (rutaAnterior != null && !rutaAnterior.equals(reciboLuzModel.getRutaRecibo())) {
                 archivoServiceJPA.eliminarArchivo(rutaAnterior);
             }
@@ -149,7 +149,7 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve  para depuracion si ocurre algun error inesperado
-            throw new IllegalArgumentException("Error al construir el ejemplo");
+            throw new IllegalArgumentException("Error al guardar el recibo de luz");
         }
         return ReciboLuzModel;
     }

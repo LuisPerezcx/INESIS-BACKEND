@@ -124,6 +124,7 @@ public class MisDatosServiceJPA implements IMisDatosService {
                 Long idSemestre = JsonUtils.obtLong(params, "semestre");
                 String correo = JsonUtils.obtString(params, "correo");
                 String telefono = JsonUtils.obtString(params, "telefono");
+                if(telefono.length()>10) throw new IllegalArgumentException("El número de teléfono no puede tener más de 10 dígitos");
                 CatSemestre semestre = semestreService.findById(idSemestre);
                 alumno.setSemestre(semestre);
                 alumno.setTelefono(telefono);

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -102,6 +103,8 @@ public class AlumnoController {
             if(alumno.getEstadoRevision() == 2) alumno.setEstadoRevision(3);
             // Actualizar el campo estudioCompleto a true
             alumno.setEstudioCompleto(true);
+            //actualizar fecha envio
+            alumno.setFechaEnvio(new Date());
             // Guardar cambios usando el servicio
             alumnoServiceJPA.save(alumno);
             return ResponseEntity.ok("Estudio completo actualizado correctamente");
