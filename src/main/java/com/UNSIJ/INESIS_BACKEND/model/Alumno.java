@@ -102,6 +102,8 @@ public class Alumno {
     private FechasRegistradas fechaRegistrada;
 
     public String getNombreCompleto() {
-        return apellidoPaterno + " " + apellidoMaterno + " " + nombre;
+        return (apellidoPaterno != null ? apellidoPaterno : "") + " " +
+                (apellidoMaterno != null ? apellidoMaterno : "") + " " +
+                (nombre != null ? nombre : "");
     }
 }

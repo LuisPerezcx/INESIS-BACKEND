@@ -41,7 +41,7 @@ public class ArchivoUtil {
     }
 
     public static String getCellValueAsString(Cell cell) {
-        if (cell == null) return null;
+        if (cell == null) return "";
 
         switch (cell.getCellType()) {
             case STRING:
@@ -55,7 +55,7 @@ public class ArchivoUtil {
             case BOOLEAN:
                 return String.valueOf(cell.getBooleanCellValue());
             default:
-                return null;
+                return "";
         }
     }
 

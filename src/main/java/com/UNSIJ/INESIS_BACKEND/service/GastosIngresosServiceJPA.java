@@ -90,14 +90,10 @@ public class GastosIngresosServiceJPA implements IGastosIngresosService {
             gastosIngresos.setDependeEconomicamente(dependeEconomicamente);
 
             Double personasComparteRenta = JsonUtils.obtDouble(params, "personasComparteRenta");
-            if(personasComparteRenta == null)
-                throw new IllegalArgumentException("El campo de personas que comparten el costo es obligatorio");
-            gastosIngresos.setPersonasComparteRenta(personasComparteRenta);
+            if(personasComparteRenta != null) gastosIngresos.setPersonasComparteRenta(personasComparteRenta);
 
             Double pagoRentaMensual = JsonUtils.obtDouble(params, "pagoRentaMensual");
-            if(pagoRentaMensual == null)
-                throw new IllegalArgumentException("El campo de pago de renta mensual es obligatorio");
-            gastosIngresos.setPagoRentaMensual(pagoRentaMensual);
+            if(pagoRentaMensual != null) gastosIngresos.setPagoRentaMensual(pagoRentaMensual);
 
             if (dependeEconomicamente) {
                 String nombreQuienDependes = JsonUtils.obtString(params, "nombreQuienDependes");

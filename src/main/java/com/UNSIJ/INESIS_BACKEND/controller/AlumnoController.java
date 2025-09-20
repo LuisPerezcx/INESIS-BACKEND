@@ -86,7 +86,7 @@ public class AlumnoController {
             @RequestParam String matricula,
             @RequestParam String correo) {
 
-        boolean exists = alumnoServiceJPA.checkIfExists(curp, matricula, correo);
+        boolean exists = alumnoServiceJPA.checkIfExists(curp, matricula);
         Map<String, Boolean> response = new HashMap<>();
         response.put("exists", exists);
 

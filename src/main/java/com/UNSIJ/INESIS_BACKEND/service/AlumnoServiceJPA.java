@@ -206,10 +206,9 @@ public class AlumnoServiceJPA implements IAlumnoService {
         }
     }
 
-    public boolean checkIfExists(String curp, String matricula, String correo) {
+    public boolean checkIfExists(String curp, String matricula) {
         return alumnoRepository.existsByCurp(curp) ||
-                alumnoRepository.existsByMatricula(matricula) ||
-                alumnoRepository.existsByCorreo(correo);
+                alumnoRepository.existsByMatricula(matricula);
     }
 
     @Transactional
@@ -257,7 +256,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
                     } else if (sexoTexto.equals("M") || sexoTexto.equals("m")) {
                         alumnoData.put("sexo", 1); // Masculino
                     } else {
-                        throw new IllegalArgumentException("Sexo no válido en la fila " + row.getRowNum());
+                        throw new IllegalArgumentException("Sexo no válido en la fila " + (row.getRowNum()+1));
                     }
                     Long idSemestre = grupoServiceJPA.findIdSemestreByGrupo(nombreGrupo);
                     alumnoData.put("semestre", idSemestre);
@@ -267,8 +266,8 @@ public class AlumnoServiceJPA implements IAlumnoService {
                     alumnoData.put("apellidoMaterno", ArchivoUtil.getCellValueAsString(row.getCell(2)));
 
                     // campos not null no incluidos
-                    alumnoData.put("correo", " ");
-                    alumnoData.put("telefono", " ");
+                    alumnoData.put("correo", "");
+                    alumnoData.put("telefono", "");
 
                     // Crear el alumno
                     Alumno alumno = create(alumnoData);
@@ -276,7 +275,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
 
                 } catch (IllegalArgumentException e) {
                     // Opcionalmente, puedes manejar los errores por fila o acumularlos
-                    throw new IllegalArgumentException("Error en la fila " + row.getRowNum() + ": " + e.getMessage());
+                    throw new IllegalArgumentException(e.getMessage());
                 } catch (Exception e) {
                     e.printStackTrace(); // Esto es opcional, sirve para depuración si ocurre algún error inesperado
                     throw new IllegalArgumentException(
