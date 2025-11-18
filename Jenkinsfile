@@ -22,11 +22,10 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                // Copiar el nuevo *.jar al servidor
-                sh 'cp target/*.jar /opt/inesis-backend/INESIS-BACKEND.jar'
-
-                // Reiniciar el servicio systemd
-                sh 'systemctl restart inesis-backend'
+                sh '''
+                sudo cp target/*.jar /opt/inesis-backend/INESIS-BACKEND.jar
+                sudo systemctl restart inesis-backend
+                '''
             }
         }
     }
