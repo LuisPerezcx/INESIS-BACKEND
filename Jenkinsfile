@@ -23,8 +23,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 sh '''
-                sudo cp target/*.jar /opt/inesis-backend/INESIS-BACKEND.jar
-                sudo systemctl restart inesis-backend
+                cp target/*.jar /opt/inesis-backend/INESIS-BACKEND.jar
+                systemctl restart inesis-backend
                 '''
             }
         }
