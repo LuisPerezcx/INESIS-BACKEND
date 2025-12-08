@@ -24,7 +24,7 @@ pipeline {
             steps {
                 sh '''
                 cp target/*.jar /opt/inesis-backend/INESIS-BACKEND.jar
-                systemctl restart inesis-backend
+                sudo systemctl restart inesis-backend
                 '''
             }
         }
