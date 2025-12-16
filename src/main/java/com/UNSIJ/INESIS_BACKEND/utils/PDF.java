@@ -85,7 +85,7 @@ public class PDF {
         public static String emailAlumno = "emailAlumno";
         public static String lenguajeDialecto = "lenguajeDialecto";
         public static String regionActualFamilia = "regionActualFamilia";
-        public static String distritoActualFamilia = "distritoActualFamilia";
+        public static String distritoActualFamilia = "regionActualFamilia_2";
         public static String municipioActualFamilia = "municipioActualFamilia";
         public static String localidadActualFamilia = "localidadActualFamilia";
         public static String estadoActualFamilia = "estadoActualFamilia";
@@ -178,5 +178,11 @@ public class PDF {
         public static String autoFamiliar = "autoFamiliar";
         public static String autoAmigos = "autoAmigos";
         public static String firmaAlumno = "firmaAlumno";
+        public static String firmaAlumno1 = "firmaAlumno1";
+        public static String firmaTutor = "firmaTutor";
+        public static String fechaPdf = "fechaPdf";
+
+
+
     }
 }

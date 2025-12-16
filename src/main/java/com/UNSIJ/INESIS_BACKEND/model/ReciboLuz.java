@@ -1,5 +1,6 @@
 package com.UNSIJ.INESIS_BACKEND.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -26,6 +27,10 @@ public class ReciboLuz {
     private String periodoFin;
 
     @NotNull
+    @Column(name = "domicilio_recibo")
+    private String domicilio;
+
+    @NotNull
     @Column(name = "nombre_archivo")
     private String nombreArchivo;
 
@@ -47,4 +52,9 @@ public class ReciboLuz {
 
     @Column(name = "observaciones")
     private String observaciones;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_alumno", referencedColumnName = "id_alumno")
+    @JsonIgnore
+    private Alumno alumno;
 }

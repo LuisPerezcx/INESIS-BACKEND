@@ -17,8 +17,4 @@ public class CatTipoTransporte {
 
     @Column(name = "nombre_tipo")
     private String nombreTipo;
-
-    @OneToMany(mappedBy = "catTipoTransporte")
-    @JsonIgnore
-    private List<Transporte> transportes;
 }

@@ -1,5 +1,7 @@
 package com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia;
 
+import com.UNSIJ.INESIS_BACKEND.model.CatDistrito;
+import com.UNSIJ.INESIS_BACKEND.model.CatRegion;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -24,11 +26,13 @@ public class ViviendaFamiliar {
     @Column(name = "servicios_otro")
     private String serviciosOtro;
 
-    @Column(name = "region")
-    private String region;
+    @ManyToOne
+    @JoinColumn(name = "id_cat_region")
+    private CatRegion region;
 
-    @Column(name = "distrito")
-    private String distrito;
+    @ManyToOne
+    @JoinColumn(name = "id_cat_distrito")
+    private CatDistrito distrito;
 
     @OneToMany(mappedBy = "viviendaFamiliar", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ServiciosVivienda> serviciosVivienda = new ArrayList<>();

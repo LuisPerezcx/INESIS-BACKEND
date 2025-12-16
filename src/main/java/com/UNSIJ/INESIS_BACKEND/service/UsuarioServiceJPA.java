@@ -62,6 +62,7 @@ public class UsuarioServiceJPA implements IUsuarioService {
         try {
             this.build(params, usuarioModel);
         } catch (IllegalArgumentException e) {
+            e.printStackTrace();
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
@@ -80,8 +81,9 @@ public class UsuarioServiceJPA implements IUsuarioService {
             usuarioModel.setUsuario(usuario);
 
             String contrasenia = JsonUtils.obtString(params, "contrasenia");
-            if (contrasenia == null)
-                throw new IllegalArgumentException("El campo contraseña es obligatorio");
+
+             if (contrasenia == null) throw new IllegalArgumentException("El campo contraseña es obligatorio");
+
             // Cifrar aquí
             usuarioModel.setContrasenia(passwordEncoder.encode(contrasenia));
 
@@ -105,6 +107,14 @@ public class UsuarioServiceJPA implements IUsuarioService {
             throw new IllegalArgumentException("Error al construir el usuario");
         }
         return usuarioModel;
+    }
+
+    @Transactional
+    public void actualizarPassword(Long idUsuario, String rawPassword) throws Exception {
+        Usuario usuario = findById(idUsuario);
+        String passwordCifrada = passwordEncoder.encode(rawPassword);
+        usuario.setContrasenia(passwordCifrada);
+        save(usuario);
     }
 
     @Override
@@ -134,7 +144,7 @@ public class UsuarioServiceJPA implements IUsuarioService {
     @Transactional
     public Usuario crearDesdeAlumno(Alumno alumno) throws Exception {
         Usuario usuario = new Usuario();
-        try{
+        try {
             usuario.setAlumno(alumno);
             usuario.setContrasenia(passwordEncoder.encode(alumno.getMatricula()));
             usuario.setRol(rolServiceJPA.findById(1L)); // Asignar rol de Alumno
@@ -168,7 +178,8 @@ public class UsuarioServiceJPA implements IUsuarioService {
     }
 
     public String limpiarYFormatear(String texto) {
-        if (texto == null) return "";
+        if (texto == null)
+            return "";
         String textoNormalizado = Normalizer.normalize(texto, Normalizer.Form.NFD);
         String textoSinAcentos = textoNormalizado.replaceAll("\\p{M}", "");
         return textoSinAcentos.toLowerCase().trim();

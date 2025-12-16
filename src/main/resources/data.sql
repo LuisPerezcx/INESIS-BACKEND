@@ -711,20 +711,12 @@ SELECT 'Libros especializados'
 WHERE NOT EXISTS (SELECT 1 FROM cat_medios_estudio WHERE nombre_medios = 'Libros especializados');
 
 INSERT INTO cat_medios_estudio (nombre_medios)
-SELECT 'Teléfono móvil'
-WHERE NOT EXISTS (SELECT 1 FROM cat_medios_estudio WHERE nombre_medios = 'Teléfono móvil');
-
-INSERT INTO cat_medios_estudio (nombre_medios)
 SELECT 'Computadora'
 WHERE NOT EXISTS (SELECT 1 FROM cat_medios_estudio WHERE nombre_medios = 'Computadora');
 
 INSERT INTO cat_medios_estudio (nombre_medios)
 SELECT 'Diccionario'
 WHERE NOT EXISTS (SELECT 1 FROM cat_medios_estudio WHERE nombre_medios = 'Diccionario');
-
-INSERT INTO cat_medios_estudio (nombre_medios)
-SELECT 'Otro'
-WHERE NOT EXISTS (SELECT 1 FROM cat_medios_estudio WHERE nombre_medios = 'Otro');
 
 #------------------- REGISTROS DE CAT_SITUACION_VIVIENDA -------------------
 -- Inicio registros
@@ -812,6 +804,10 @@ INSERT INTO cat_parentesco (nombre_parentesco)
 SELECT 'Hermano/a'
     WHERE NOT EXISTS (SELECT 1 FROM cat_parentesco WHERE nombre_parentesco = 'Hermano/a');
 
+INSERT INTO cat_parentesco (nombre_parentesco)
+SELECT 'Hijo/a'
+    WHERE NOT EXISTS (SELECT 1 FROM cat_parentesco WHERE nombre_parentesco = 'Hijo/a');
+
 -- -------------------------------
 -- REGISTROS PARA cat_servicio_otro
 -- -------------------------------
@@ -854,113 +850,111 @@ SELECT 'Otro' WHERE NOT EXISTS (SELECT 1 FROM cat_region WHERE nombre_region = '
 
 -- ---------------------------------------insertar distritos
 
--- Cañada
+-- Cañada (2 distritos: Teotitlán y Cuicatlán)
 INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
-SELECT 'San Felipe Jalapa de Díaz', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Cañada')
-    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='San Felipe Jalapa de Díaz');
+SELECT 'Teotitlán', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Cañada')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Teotitlán');
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Cuicatlán', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Cañada')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Cuicatlán');
 
--- Papaloapan
+-- Costa (3 distritos: Jamiltepec, Juquila, Pochutla)
 INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
-SELECT 'San Juan Bautista Tuxtepec', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Papaloapan')
-    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='San Juan Bautista Tuxtepec');
+SELECT 'Jamiltepec', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Costa')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Jamiltepec');
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Juquila', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Costa')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Juquila');
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Pochutla', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Costa')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Pochutla');
 
+-- Istmo (2 distritos: Juchitán y Tehuantepec)
 INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
-SELECT 'Loma Bonita', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Papaloapan')
-    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Loma Bonita');
+SELECT 'Juchitán', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Istmo')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Juchitán');
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Tehuantepec', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Istmo')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Tehuantepec');
 
--- Sierra Norte
+-- Mixteca (7 distritos: Silacayoapam, Huajuapan, Coixtlahuaca, Juxtlahuaca, Teposcolula, Nochixtlán, Tlaxiaco)
 INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
-SELECT 'Teotitlán de Flores Magón', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Sierra Norte')
-    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Teotitlán de Flores Magón');
+SELECT 'Silacayoapam', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Mixteca')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Silacayoapam');
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Huajuapan', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Mixteca')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Huajuapan');
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Coixtlahuaca', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Mixteca')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Coixtlahuaca');
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Juxtlahuaca', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Mixteca')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Juxtlahuaca');
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Teposcolula', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Mixteca')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Teposcolula');
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Nochixtlán', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Mixteca')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Nochixtlán');
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Tlaxiaco', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Mixteca')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Tlaxiaco');
 
+-- Papaloapan (2 distritos: Tuxtepec y Choapan)
 INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
-SELECT 'Ixtlán de Juárez', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Sierra Norte')
-    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Ixtlán de Juárez');
+SELECT 'Tuxtepec', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Papaloapan')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Tuxtepec');
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Choapan', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Papaloapan')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Choapan');
 
+-- Sierra Sur (4 distritos: Putla, Sola de Vega, Miahuatlán, Yautepec)
 INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
-SELECT 'San Pedro y San Pablo Ayutla', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Sierra Norte')
-    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='San Pedro y San Pablo Ayutla');
+SELECT 'Putla', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Sierra Sur')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Putla');
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Sola de Vega', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Sierra Sur')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Sola de Vega');
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Miahuatlán', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Sierra Sur')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Miahuatlán');
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Yautepec', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Sierra Sur')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Yautepec');
 
--- Mixteca
+-- Sierra Norte (hoy Sierra de Juárez) (3 distritos: Ixtlán, Villa Alta, Mixe)
 INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
-SELECT 'Asunción Nochixtlán', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Mixteca')
-    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Asunción Nochixtlán');
+SELECT 'Ixtlán', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Sierra Norte')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Ixtlán');
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Villa Alta', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Sierra Norte')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Villa Alta');
+INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
+SELECT 'Mixe', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Sierra Norte')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Mixe');
 
+-- Valles Centrales (7 distritos: Centro, Etla, Zaachila, Zimatlán, Ejutla, Tlacolula, Ocotlán)
 INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
-SELECT 'Heroica Ciudad de Huajuapan de León', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Mixteca')
-    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Heroica Ciudad de Huajuapan de León');
-
+SELECT 'Centro', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Valles Centrales')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Centro');
 INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
-SELECT 'Heroica Ciudad de Tlaxiaco', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Mixteca')
-    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Heroica Ciudad de Tlaxiaco');
-
--- Sierra Sur
+SELECT 'Etla', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Valles Centrales')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Etla');
 INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
-SELECT 'Putla Villa de Guerrero', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Sierra Sur')
-    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Putla Villa de Guerrero');
-
+SELECT 'Zaachila', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Valles Centrales')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Zaachila');
 INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
-SELECT 'Miahuatlán de Porfirio Díaz', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Sierra Sur')
-    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Miahuatlán de Porfirio Díaz');
-
--- Istmo
+SELECT 'Zimatlán', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Valles Centrales')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Zimatlán');
 INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
-SELECT 'Santo Domingo Tehuantepec', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Istmo')
-    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Santo Domingo Tehuantepec');
-
+SELECT 'Ejutla', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Valles Centrales')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Ejutla');
 INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
-SELECT 'Ciudad Ixtepec', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Istmo')
-    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Ciudad Ixtepec');
-
+SELECT 'Tlacolula', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Valles Centrales')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Tlacolula');
 INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
-SELECT 'Juchitán de Zaragoza', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Istmo')
-    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Juchitán de Zaragoza');
-
--- Costa
-INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
-SELECT 'Matías Romero', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Costa')
-    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Matías Romero');
-
-INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
-SELECT 'Santiago Pinotepa Nacional', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Costa')
-    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Santiago Pinotepa Nacional');
-
-INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
-SELECT 'Puerto Escondido', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Costa')
-    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Puerto Escondido');
-
-INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
-SELECT 'San Pedro Pochutla', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Costa')
-    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='San Pedro Pochutla');
-
--- Valles Centrales
-INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
-SELECT 'Santa Lucia del Camino', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Valles Centrales')
-    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Santa Lucia del Camino');
-
-INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
-SELECT 'Oaxaca de Juárez', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Valles Centrales')
-    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Oaxaca de Juárez');
-
-INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
-SELECT 'Villa de Etla', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Valles Centrales')
-    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Villa de Etla');
-
-INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
-SELECT 'Santa Cruz Xoxocotlán', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Valles Centrales')
-    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Santa Cruz Xoxocotlán');
-
-INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
-SELECT 'Zimatlán de Álvarez', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Valles Centrales')
-    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Zimatlán de Álvarez');
-
-INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
-SELECT 'Tlacolula de Matamoros', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Valles Centrales')
-    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Tlacolula de Matamoros');
-
-INSERT INTO cat_distrito (nombre_distrito, id_cat_region)
-SELECT 'Ocotlán de Morelos', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Valles Centrales')
-    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Ocotlán de Morelos');
+SELECT 'Ocotlán', (SELECT id_cat_region FROM cat_region WHERE nombre_region='Valles Centrales')
+    WHERE NOT EXISTS (SELECT 1 FROM cat_distrito WHERE nombre_distrito='Ocotlán');
 
 -- OTRO
 INSERT INTO cat_distrito (nombre_distrito, id_cat_region)

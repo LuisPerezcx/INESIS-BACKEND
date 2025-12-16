@@ -1,6 +1,7 @@
 package com.UNSIJ.INESIS_BACKEND.controller;
 
 import com.UNSIJ.INESIS_BACKEND.model.Revisor;
+import com.UNSIJ.INESIS_BACKEND.service.AlumnoServiceJPA;
 import com.UNSIJ.INESIS_BACKEND.service.RevisorServiceJPA;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,9 @@ public class RevisorController {
 
     @Autowired
     private RevisorServiceJPA revisorServiceJPA;
+
+    @Autowired
+    private AlumnoServiceJPA alumnoServiceJPA;
 
     @GetMapping
     public List<Revisor> list() {
@@ -83,4 +87,17 @@ public class RevisorController {
         return ResponseEntity.ok(response);
     }
 
+
+    @GetMapping("/exportar")
+    public ResponseEntity<?> exportarFinalizados(){
+        try {
+            String excel = alumnoServiceJPA.exportarFinalizados();
+            return ResponseEntity.status(HttpStatus.OK).body(excel);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
+        }
+    }
 }

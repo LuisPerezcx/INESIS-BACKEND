@@ -49,6 +49,7 @@ public class FechasRegistradasController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
+            System.out.println("hola como estas");
             FechasRegistradas fechasRegistradasUpdated = fechasRegistradasServiceJPA
                     .update(fechasRegistradasServiceJPA.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(fechasRegistradasUpdated);

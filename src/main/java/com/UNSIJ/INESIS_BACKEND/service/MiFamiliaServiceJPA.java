@@ -59,6 +59,9 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
     @Autowired
     private FechasRegistradasServiceJPA fechasRegistradasServiceJPA;
 
+    @Autowired
+    private ArchivoServiceJPA archivoServiceJPA;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -115,7 +118,6 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
     @Transactional
     public MiFamilia build(Map<String, Object> params, MiFamilia miFamilia) {
         try {
-            System.out.println("Construyendo MiFamilia con los siguientes parámetros: " + params);
             String telefono = JsonUtils.obtString(params, "miFamilia.telefono");
             boolean tieneInternet = JsonUtils.obtBoolean(params, "vivienda.tieneInternet");
             Integer numHermanos = JsonUtils.obtInteger(params, "miFamilia.num_hermanos");
@@ -181,12 +183,10 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
                     Domicilio domicilioAntiguo = miFamilia.getDomicilio();
                     if (domicilioAntiguo != null) {
                         // Si no hay ID, pero ya hay un domicilio asociado, lo desvinculamos
-                        System.out.println("Desvinculando domicilio antiguo: " + domicilioAntiguo);
                         miFamilia.setDomicilio(null);
-                        this.save(miFamilia); // aquí JPA elimina el domicilio anterior automáticamente
+                        this.save(miFamilia); //
                         if (!domicilioServiceJPA.isDomicilioUsado(domicilioAntiguo.getId())) {
                             //eliminar domicilio antiguo
-                            System.out.println("Eliminando domicilio antiguo: " + domicilioAntiguo);
                             domicilioServiceJPA.deleteById(domicilioAntiguo.getId());
                         }
                     }
@@ -194,14 +194,14 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
                     Domicilio nuevo = domicilioServiceJPA.create(domicilioParams);
                     miFamilia.setDomicilio(nuevo);
                 } else {
+                    System.out.println("hola");
                     Domicilio existente = domicilioServiceJPA.findById(domicilioAlumnoID);
                     Domicilio domicilioAntiguo = miFamilia.getDomicilio();
                     if (domicilioAntiguo != null && !domicilioAntiguo.equals(existente)) {
                         miFamilia.setDomicilio(null);
-                        this.save(miFamilia); // también aquí, JPA elimina el anterior automáticamente
+                        this.save(miFamilia); //
                         boolean enUso = domicilioServiceJPA.isDomicilioUsado(domicilioAntiguo.getId());
                         if (!enUso) {
-                            System.out.println("Eliminando domicilio antiguo");
                             domicilioServiceJPA.deleteById(domicilioAntiguo.getId());
                         }
                     }
@@ -254,6 +254,11 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
             if (personasDependientes != null) {
                 // Limpiar y eliminar huérfanos
                 if (miFamilia.getPersonasDependientes() != null) {
+                    for (PersonasDependientes pd : miFamilia.getPersonasDependientes()) {
+                        if (pd.getRutaArchivo() != null) {
+                            archivoServiceJPA.eliminarArchivo(pd.getRutaArchivo());
+                        }
+                    }
                     miFamilia.getPersonasDependientes().clear();
                     this.save(miFamilia); // para aplicar orphanRemoval
                 } else {

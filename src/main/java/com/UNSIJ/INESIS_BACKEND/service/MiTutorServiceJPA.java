@@ -172,7 +172,6 @@ public class MiTutorServiceJPA implements IMiTutorService {
                     // Si se va a crear un nuevo domicilio y ya había uno, lo desvincula
                     Domicilio domicilioAntiguo = miTutor.getDomicilio();
                     if (domicilioAntiguo != null) {
-                        System.out.println("Desvinculando domicilio antiguo");
                         miTutor.setDomicilio(null);
                         this.save(miTutor);
                         entityManager.flush(); // Forzar sincronización con la base de datos
@@ -180,25 +179,19 @@ public class MiTutorServiceJPA implements IMiTutorService {
 
 
                         // Verifica si el domicilio ya no está relacionado con ningún otro registro
-                        System.out.println("Verificando uso del domicilio...");
                         boolean enUso = domicilioServiceJPA.isDomicilioUsado(domicilioAntiguo.getId());
-                        System.out.println("¿Está en uso? " + enUso);
 
                         if (!domicilioServiceJPA.isDomicilioUsado(domicilioAntiguo.getId())) {
-                            System.out.println("Eliminando domicilio antiguo");
                             domicilioServiceJPA.deleteById(domicilioAntiguo.getId());
                         }
                     }
-                    System.out.println("Creando nuevo domicilio");
                     Domicilio nuevo = domicilioServiceJPA.create(domicilioParams);
                     miTutor.setDomicilio(nuevo);
                 } else {
-                    System.out.println("Usando domicilio existente");
                     Domicilio existente = domicilioServiceJPA.findById(idDomicilio);
                     // Si el domicilio existente es el mismo que el del alumno, elimina el anterior
                     Domicilio domicilioAntiguo = miTutor.getDomicilio();
                     if (domicilioAntiguo != null && !domicilioAntiguo.equals(existente)) {
-                        System.out.println("Desvinculando domicilio antiguo 2");
                         miTutor.setDomicilio(null);
                         this.save(miTutor);
                         entityManager.flush();
@@ -206,7 +199,6 @@ public class MiTutorServiceJPA implements IMiTutorService {
 
                         boolean enUso = domicilioServiceJPA.isDomicilioUsado(domicilioAntiguo.getId());
                         if (!enUso) {
-                            System.out.println("Eliminando domicilio antiguo");
                             domicilioServiceJPA.deleteById(domicilioAntiguo.getId());
                         }
                     }

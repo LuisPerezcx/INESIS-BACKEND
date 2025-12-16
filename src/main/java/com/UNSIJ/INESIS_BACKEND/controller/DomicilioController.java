@@ -113,7 +113,6 @@ public class DomicilioController {
                     entity,
                     String.class
             );
-            System.out.println(response);
             // Retornas la respuesta tal cual a tu frontend
             return ResponseEntity.ok(response.getBody());
         } catch (Exception e) {

@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 @Entity
 @Table(name = "alumno")
@@ -82,16 +84,26 @@ public class Alumno {
     @Column(name = "estudio_completo")
     private Boolean estudioCompleto;
 
+    /* 0.- sin revisar(no se ocupa), 1.-pendiente, 2.-con correcciones
+     * 3.- corregido, 4.- finalizado  */
     @Column(name = "estado_revision")
-    private Boolean estadoRevision;
+    private Integer estadoRevision = 0;
 
     @Column(name = "observaciones")
     private String observaciones;
+
+    @Column(name = "matricula_editada")
+    private Boolean matriculaEditada = false;
+
+    @Column(name = "fecha_enviado")
+    private Date fechaEnvio;
 
     @Transient
     private FechasRegistradas fechaRegistrada;
 
     public String getNombreCompleto() {
-        return apellidoPaterno + " " + apellidoMaterno + " " + nombre;
+        return (apellidoPaterno != null ? apellidoPaterno : "") + " " +
+                (apellidoMaterno != null ? apellidoMaterno : "") + " " +
+                (nombre != null ? nombre : "");
     }
 }

@@ -18,7 +18,7 @@ public class ArchivoServiceJPA {
     @Value("${app.upload.dir:archivos}")
     private String uploadDir;
 
-    public String guardarArchivoBase64(String base64Data, String nombreOriginal, String tipoCarpeta, String carpetaPersonal) throws IOException {
+    public String guardarArchivoBase64(String base64Data, String nombreOriginal, String tipoCarpeta, String carpetaPersonal, boolean limpiarCarpeta) throws IOException {
         // Normalizar carpeta personal
         carpetaPersonal = java.text.Normalizer.normalize(carpetaPersonal, java.text.Normalizer.Form.NFD)
                 .replaceAll("[^\\p{ASCII}]", "")
@@ -28,7 +28,7 @@ public class ArchivoServiceJPA {
         Path directorioCompleto = Paths.get(uploadDir, tipoCarpeta, carpetaPersonal);
 
         // Eliminar archivos existentes
-        if (Files.exists(directorioCompleto)) {
+        if (limpiarCarpeta && Files.exists(directorioCompleto)) {
             Files.walk(directorioCompleto)
                     .filter(Files::isRegularFile)
                     .forEach(path -> {

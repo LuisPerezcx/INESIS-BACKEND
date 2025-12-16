@@ -64,7 +64,7 @@ public class GastosIngresosService implements IGatosIngresoFamiliares {
             if (idAlumno == null) throw new IllegalArgumentException("El campo idAlumno es obligatorio");
             Alumno alumno = alumnoService.findById(idAlumno);
             ejemplo.setAlumno(alumno);
-            this.build(params, ejemplo);
+            this.build(params, ejemplo, alumno);
             ejemplo.setModuloCompleto(true);
             ejemplo = this.save(ejemplo);
             alumno.setGastosIngresosFamiliares(ejemplo);
@@ -73,7 +73,7 @@ public class GastosIngresosService implements IGatosIngresoFamiliares {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
-            throw new IllegalArgumentException("Error al construir el ejemplo");
+            throw new IllegalArgumentException("Error al construir gastos e ingresos familiares");
         }
         return ejemplo;
     }
@@ -83,7 +83,8 @@ public class GastosIngresosService implements IGatosIngresoFamiliares {
                                            Map<String, Object> params) throws Exception {
         try {
             // Reconstruir el objeto con los datos nuevos
-            this.build(params, gIngresosFamiliares);
+            System.out.println(gIngresosFamiliares);
+            this.build(params, gIngresosFamiliares, gIngresosFamiliares.getAlumno());
             gIngresosFamiliares.setModuloCompleto(true);
 
             // Guardar y retornar
@@ -98,20 +99,23 @@ public class GastosIngresosService implements IGatosIngresoFamiliares {
 
     @Override
     @Transactional
-    public GastosIngresosFamiliares build(Map<String, Object> params, GastosIngresosFamiliares gIngresosFamiliares) {
+    public GastosIngresosFamiliares build(Map<String, Object> params, GastosIngresosFamiliares gIngresosFamiliares, Alumno alumno) {
         try {
             // VALIDACIONES Y CAMPOS BÁSICOS
             Integer personasAportan = JsonUtils.obtInteger(params, "personasAportan");
             Integer ingresoTotal = JsonUtils.obtInteger(params, "ingresoTotal");
             Integer personasDependen = JsonUtils.obtInteger(params, "personasDependen");
+            Double ingresoBrutoTotal = JsonUtils.obtDouble(params, "ingresoBrutoTotal");
 
-            if (personasAportan == null || ingresoTotal == null || personasDependen == null) {
+            if (personasAportan == null || ingresoTotal == null || personasDependen == null || ingresoBrutoTotal == null) {
                 throw new IllegalArgumentException("Campos obligatorios faltantes");
             }
 
             gIngresosFamiliares.setNummeroPersonasAportan(personasAportan);
             gIngresosFamiliares.setIngresoTotal(ingresoTotal);
             gIngresosFamiliares.setNumeroPersonasDependen(personasDependen);
+            gIngresosFamiliares.setIngresoBrutoTotal(ingresoBrutoTotal);
+
 
             // GASTOS FAMILIARES
             Map<String, Object> gastos = (Map<String, Object>) params.get("gastos");
@@ -124,9 +128,9 @@ public class GastosIngresosService implements IGatosIngresoFamiliares {
             // RECIBO DE LUZ
             Map<String, Object> reciboLuz = (Map<String, Object>) params.get("reciboLuz");
             if (gIngresosFamiliares.getReciboLuzModel() != null) {
-                reciboLuzFamiliaJPA.update(gIngresosFamiliares.getReciboLuzModel(), reciboLuz);
+                reciboLuzFamiliaJPA.update(gIngresosFamiliares.getReciboLuzModel(), reciboLuz, alumno);
             } else {
-                gIngresosFamiliares.setReciboLuzModel(reciboLuzFamiliaJPA.create(reciboLuz));
+                gIngresosFamiliares.setReciboLuzModel(reciboLuzFamiliaJPA.create(reciboLuz, alumno));
             }
 
             gIngresosFamiliares = gastosIngresosFamiliaresRepository.save(gIngresosFamiliares);

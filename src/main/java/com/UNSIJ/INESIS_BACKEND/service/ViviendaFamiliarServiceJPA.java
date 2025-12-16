@@ -5,7 +5,11 @@
 
 package com.UNSIJ.INESIS_BACKEND.service;
 
+import com.UNSIJ.INESIS_BACKEND.model.CatDistrito;
+import com.UNSIJ.INESIS_BACKEND.model.CatRegion;
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.*;
+import com.UNSIJ.INESIS_BACKEND.repository.CatDistritoRepository;
+import com.UNSIJ.INESIS_BACKEND.repository.CatRegionRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.CatMaterialViviendaRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.CatSituacionViviendaRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.CatTipoViviendaRepository;
@@ -37,6 +41,11 @@ public class ViviendaFamiliarServiceJPA implements IViviendaFamiliarService {
     private CatMaterialViviendaServiceJPA catMaterialViviendaServiceJPA;
     @Autowired
     private ServiciosViviendaServiceJPA serviciosViviendaServiceJPA;
+    @Autowired
+    private CatRegionRepository catRegionRepository;
+    @Autowired
+    private CatDistritoRepository catDistritoRepository;
+
     @Override
     public List<ViviendaFamiliar> findAll() {
         return repository.findAll();
@@ -88,8 +97,10 @@ public class ViviendaFamiliarServiceJPA implements IViviendaFamiliarService {
         try {
             Integer numPersonas = JsonUtils.obtInteger(params, "num_personas_habitan");
             String serviciosOtro = JsonUtils.obtString(params, "servicios_otro");
-            String region = JsonUtils.obtString(params, "domicilio.region");
-            String distrito = JsonUtils.obtString(params, "domicilio.distrito");
+            Long regionId = JsonUtils.obtLong(params, "domicilio.region");
+            Long distritoId = JsonUtils.obtLong(params, "domicilio.distrito");
+            if(regionId == null) regionId = JsonUtils.obtLong(params,"domicilio.region.id");
+            if(distritoId == null) distritoId = JsonUtils.obtLong(params, "domicilio.distrito.id");
             Long situacionViviendaId = JsonUtils.obtLong(params, "id_cat_situacion_vivienda");
             Long tipoViviendaId = JsonUtils.obtLong(params, "id_cat_tipo_vivienda");
             Long materialViviendaId = JsonUtils.obtLong(params, "id_cat_material_vivienda");
@@ -97,14 +108,19 @@ public class ViviendaFamiliarServiceJPA implements IViviendaFamiliarService {
             if (numPersonas == null || numPersonas < 0)
                 throw new IllegalArgumentException("El campo 'num_personas_habitan' " +
                         "es obligatorio y debe ser un número positivo");
-            if (region == null) throw new IllegalArgumentException("El campo 'domicilio.region' es obligatorio");
-            if (distrito == null) throw new IllegalArgumentException("El campo 'domicilio.distrito' es obligatorio");
+            if (regionId == null) throw new IllegalArgumentException("El campo 'domicilio.region' es obligatorio");
+            if (distritoId == null) throw new IllegalArgumentException("El campo 'domicilio.distrito' es obligatorio");
             if (situacionViviendaId == null)
                 throw new IllegalArgumentException("El campo 'id_cat_situacion_vivienda' es obligatorio");
             if (tipoViviendaId == null)
                 throw new IllegalArgumentException("El campo 'id_cat_tipo_vivienda' es obligatorio");
             if (materialViviendaId == null)
                 throw new IllegalArgumentException("El campo 'id_cat_material_vivienda' es obligatorio");
+
+            CatRegion region = catRegionRepository.findById(regionId)
+                    .orElseThrow(() -> new IllegalArgumentException("Región no encontrada"));
+            CatDistrito distrito = catDistritoRepository.findById(distritoId)
+                    .orElseThrow(() -> new IllegalArgumentException("Distrito no encontrado"));
 
             model.setNumPersonasHabitan(numPersonas);
             if (serviciosOtro != null) model.setServiciosOtro(serviciosOtro);
@@ -130,6 +146,7 @@ public class ViviendaFamiliarServiceJPA implements IViviendaFamiliarService {
 
             model.setMiFamilia(miFamilia);
         } catch (IllegalArgumentException e) {
+            e.printStackTrace();
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();

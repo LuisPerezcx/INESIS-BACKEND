@@ -39,7 +39,7 @@ public class GastosFamiliaresController {
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
         try {
             GastosIngresosFamiliares existing = gastosService.findById(id);
-            GastosIngresosFamiliares updated = gastosService.update(existing, params);
+            GastosIngresosFamiliares updated = gastosService.update(existing, params); //TODO: REVISAR
             return ResponseEntity.status(HttpStatus.CREATED).body(updated);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();

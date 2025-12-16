@@ -1,19 +1,18 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
+import com.UNSIJ.INESIS_BACKEND.model.Alumno;
 import com.UNSIJ.INESIS_BACKEND.model.CatCarrera;
 import com.UNSIJ.INESIS_BACKEND.model.FechasRegistradas;
 import com.UNSIJ.INESIS_BACKEND.repository.FechasRegistradasRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IFechasRegistradasService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class FechasRegistradasServiceJPA implements IFechasRegistradasService {
@@ -23,6 +22,10 @@ public class FechasRegistradasServiceJPA implements IFechasRegistradasService {
 
     @Autowired
     private CatCarreraServiceJPA carreraServiceJPA;
+
+    @Autowired
+    @Lazy
+    private AlumnoServiceJPA alumnoServiceJPA;
 
     @Override
     public List<FechasRegistradas> findAll() {
@@ -84,6 +87,7 @@ public class FechasRegistradasServiceJPA implements IFechasRegistradasService {
             throws Exception {
         try {
             this.build(params, fechasRegistradas);
+            alumnoServiceJPA.reiniciarProceso(fechasRegistradas);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
@@ -169,6 +173,14 @@ public class FechasRegistradasServiceJPA implements IFechasRegistradasService {
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
             return sdf.format(date); // Convertimos la fecha a String con el formato deseado
         }
+    }
+
+    public Optional<FechasRegistradas> findOptionalByCarreraId(Long idCarrera) {
+        return fechasRegistradasRepository.findByCarrera_Id(idCarrera);
+    }
+
+    public List<FechasRegistradas> findByCarreraIds(Set<Long> ids) {
+        return fechasRegistradasRepository.findByCarrera_IdIn(ids);
     }
 
     public FechasRegistradas findByCarreraId(Long idCarrera) {
