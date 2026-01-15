@@ -123,7 +123,6 @@ public class MiTutorServiceJPA implements IMiTutorService {
             miTutor.setTelefono(telefono);
 
             String correo = JsonUtils.obtString(params, "correo");
-            if (correo == null) throw new IllegalArgumentException("El campo correo es obligatorio");
             miTutor.setCorreo(correo);
 
             String trabajadorSuneoString = JsonUtils.obtString(params, "trabajadorSuneo");
