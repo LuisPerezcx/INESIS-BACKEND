@@ -465,8 +465,10 @@ public class AlumnoServiceJPA implements IAlumnoService {
                     default -> cell15.setCellValue("");
                 }
                 cell15.setCellStyle(borderedStyleData);
-                Cell cell16 = row.createCell(16); cell16.setCellValue(Math.round(a.getMisDatos().getGastosIngresos().getPersonasComparteRenta())); cell16.setCellStyle(borderedStyleData);
-                Cell cell17 = row.createCell(17); cell17.setCellValue(Math.round(a.getMisDatos().getGastosIngresos().getPagoRentaMensual())); cell17.setCellStyle(borderedStyleData);
+                Double personasComparteRenta = a.getMisDatos().getGastosIngresos().getPersonasComparteRenta();
+                Cell cell16 = row.createCell(16); cell16.setCellValue(personasComparteRenta != null && personasComparteRenta > 0 ?  String.valueOf(Math.round(personasComparteRenta)) : "NA");  cell16.setCellStyle(borderedStyleData);
+                Double pagoRentaMensual = a.getMisDatos().getGastosIngresos().getPagoRentaMensual();
+                Cell cell17 = row.createCell(17); cell17.setCellValue(pagoRentaMensual != null && pagoRentaMensual > 0 ? String.valueOf(Math.round(pagoRentaMensual)) : "NA");  cell17.setCellStyle(borderedStyleData);
                 String valorVehiculo = "NO";
                 if(a.getMisDatos().getLlevaAutomovil()) valorVehiculo = "C";
                 if(a.getMisDatos().getLlevamotocicleta() && a.getMisDatos().getTransporteMotocicleta() != null) {
