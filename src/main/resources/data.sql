@@ -793,6 +793,14 @@ SELECT 'Madre'
 WHERE NOT EXISTS (SELECT 1 FROM cat_parentesco WHERE nombre_parentesco = 'Madre');
 
 INSERT INTO cat_parentesco (nombre_parentesco)
+SELECT 'Tío'
+WHERE NOT EXISTS (SELECT 1 FROM cat_parentesco WHERE nombre_parentesco = 'Tío');
+
+INSERT INTO cat_parentesco (nombre_parentesco)
+SELECT 'Tía'
+WHERE NOT EXISTS (SELECT 1 FROM cat_parentesco WHERE nombre_parentesco = 'Tía');
+
+INSERT INTO cat_parentesco (nombre_parentesco)
 SELECT 'Abuelo'
 WHERE NOT EXISTS (SELECT 1 FROM cat_parentesco WHERE nombre_parentesco = 'Abuelo');
 
