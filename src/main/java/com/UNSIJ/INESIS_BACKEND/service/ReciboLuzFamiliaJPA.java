@@ -80,15 +80,23 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
 
 
             //VERIFICACION DEL CAMPO NUMERO
-            if(titular == null) throw new IllegalArgumentException("El campo titular es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
-            if(periodoInicio == null) throw new IllegalArgumentException("El campo periodoInicio es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            if(titular == null) throw new IllegalArgumentException("El campo titular es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONTif(periodoInicio == null) throw new IllegalArgumentException("El campo periodoInicio es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
             if(periodoFin == null) throw new IllegalArgumentException("El campo periodoFin es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
             if(nombreArchivo == null) throw new IllegalArgumentException("El campo nombreArchivo es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
             if(nombreOriginal == null) throw new IllegalArgumentException("El campo nombreOriginal es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
             if(ultimoPago == null) throw new IllegalArgumentException("El campo ultimoPago es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
             if(promedioPago == null) throw new IllegalArgumentException("El campo promedioPago es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
             if(observaciones == null) throw new IllegalArgumentException("El campo observaciones es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
-           
+           if(contenidoBase64 != null && !contenidoBase64.isEmpty()){
+               if(nombreArchivo == null) throw new IllegalArgumentException("El campo nombreArchivo es obligatorio");
+               if(nombreOriginal == null) throw new IllegalArgumentException("El campo nombreOriginal es obligatorio");
+
+               String rutaRecibo = ArchivoUtil.guardarArchivoBase64(contenidoBase64, nombreArchivo, rutaBase);
+
+               ReciboLuzModel.setNombreArchivo(nombreArchivo);
+               ReciboLuzModel.setNombreOriginal(nombreOriginal);
+               ReciboLuzModel.setRutaRecibo(rutaRecibo);
+           }
             String rutaRecibo = ArchivoUtil.guardarArchivoBase64(contenidoBase64, nombreArchivo, rutaBase);
 
            
