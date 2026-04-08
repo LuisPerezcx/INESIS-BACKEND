@@ -182,7 +182,7 @@ public class UsuarioServiceJPA implements IUsuarioService {
             return "";
         String textoNormalizado = Normalizer.normalize(texto, Normalizer.Form.NFD);
         String textoSinAcentos = textoNormalizado.replaceAll("\\p{M}", "");
-        return textoSinAcentos.toLowerCase().trim();
+        return textoSinAcentos.toLowerCase().replaceAll("\\s+", "");
     }
 
     public Usuario findByRevisorId(Long idRevisor) {
