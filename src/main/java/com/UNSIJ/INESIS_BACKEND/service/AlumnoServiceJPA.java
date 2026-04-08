@@ -120,6 +120,12 @@ public class AlumnoServiceJPA implements IAlumnoService {
     @Override
     public Alumno build(Map<String, Object> params, Alumno alumno) {
         try {
+            // Guardar el estado anterior si es una actualización (alumno ya existe en BD)
+            Boolean estudioCompletoAnterior = null;
+            if (alumno.getId() != null) {
+                estudioCompletoAnterior = alumno.getEstudioCompleto();
+            }
+
             // Asignar campos del alumno
             alumno.setNombre(JsonUtils.obtString(params, "nombre"));
             alumno.setApellidoPaterno(JsonUtils.obtString(params, "apellidoPaterno"));
@@ -143,6 +149,12 @@ public class AlumnoServiceJPA implements IAlumnoService {
 
             // Guardar los datos del alumno
             alumno = save(alumno);
+
+            // Restaurar estudioCompleto si era una actualización
+            if (estudioCompletoAnterior != null) {
+                alumno.setEstudioCompleto(estudioCompletoAnterior);
+                alumno = save(alumno);
+            }
 
             // Verificar si el alumno ya tiene un usuario
             if (alumno.getUsuario() != null) {
@@ -215,71 +227,77 @@ public class AlumnoServiceJPA implements IAlumnoService {
     public List<Alumno> importarDesdeExcel(MultipartFile file) throws Exception {
         List<Alumno> alumnosImportados = new ArrayList<>();
         int filasASaltar = 6;
-        int filaActual = 0;
 
         try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
-            Sheet sheet = workbook.getSheetAt(0);
+            // Iterar sobre todas las hojas del libro
+            int numSheets = workbook.getNumberOfSheets();
 
-            // Omitir las 5 primeras filas de encabezados
-            Iterator<Row> rowIterator = sheet.iterator();
-            while (rowIterator.hasNext() && filaActual < filasASaltar) {
-                rowIterator.next();
-                filaActual++;
-            }
+            for (int sheetIndex = 0; sheetIndex < numSheets; sheetIndex++) {
+                Sheet sheet = workbook.getSheetAt(sheetIndex);
+                int filaActual = 0;
 
-            while (rowIterator.hasNext()) {
-                Row row = rowIterator.next();
+                // Omitir las primeras 6 filas de encabezados
+                Iterator<Row> rowIterator = sheet.iterator();
+                while (rowIterator.hasNext() && filaActual < filasASaltar) {
+                    rowIterator.next();
+                    filaActual++;
+                }
 
-                // Validar que la fila no esté vacía
-                if (ArchivoUtil.isEmptyRow(row))
-                    continue;
+                while (rowIterator.hasNext()) {
+                    Row row = rowIterator.next();
 
-                try {
-                    // Crear un mapa con los datos de la fila
-                    Map<String, Object> alumnoData = new HashMap<>();
+                    // Validar que la fila no esté vacía
+                    if (ArchivoUtil.isEmptyRow(row))
+                        continue;
 
-                    // CAMPOS OBLIGATORIOS
-                    alumnoData.put("nombre", ArchivoUtil.getCellValueAsString(row.getCell(0)));
-                    alumnoData.put("apellidoPaterno", ArchivoUtil.getCellValueAsString(row.getCell(1)));
-                    alumnoData.put("curp", ArchivoUtil.getCellValueAsString(row.getCell(3)));
-                    String sexoTexto = ArchivoUtil.getCellValueAsString(row.getCell(4));
-                    // buscar id grupo
-                    String nombreGrupo = ArchivoUtil.getCellValueAsString(row.getCell(5));
-                    Long idGrupo = grupoServiceJPA.findIdByNombreGrupo(nombreGrupo);
-                    alumnoData.put("grupo", idGrupo);
-                    // Buscar id carrera
-                    Long idCarrera = grupoServiceJPA.findIdCarreraByGrupo(nombreGrupo);
-                    alumnoData.put("carrera", idCarrera);
-                    // extraer sexo
-                    if (sexoTexto.equals("F") || sexoTexto.equals("f")) {
-                        alumnoData.put("sexo", 2); // Femenino
-                    } else if (sexoTexto.equals("M") || sexoTexto.equals("m")) {
-                        alumnoData.put("sexo", 1); // Masculino
-                    } else {
-                        throw new IllegalArgumentException("Sexo no válido en la fila " + (row.getRowNum()+1));
+                    try {
+                        // ...existing code...
+                        Map<String, Object> alumnoData = new HashMap<>();
+
+                        alumnoData.put("nombre", ArchivoUtil.getCellValueAsString(row.getCell(0)));
+                        alumnoData.put("apellidoPaterno", ArchivoUtil.getCellValueAsString(row.getCell(1)));
+                        alumnoData.put("curp", ArchivoUtil.getCellValueAsString(row.getCell(3)));
+                        String sexoTexto = ArchivoUtil.getCellValueAsString(row.getCell(4));
+                        String nombreGrupo = ArchivoUtil.getCellValueAsString(row.getCell(5));
+                        Long idGrupo = grupoServiceJPA.findIdByNombreGrupo(nombreGrupo);
+                        alumnoData.put("grupo", idGrupo);
+                        Long idCarrera = grupoServiceJPA.findIdCarreraByGrupo(nombreGrupo);
+                        alumnoData.put("carrera", idCarrera);
+
+                        if (sexoTexto.equals("F") || sexoTexto.equals("f")) {
+                            alumnoData.put("sexo", 2);
+                        } else if (sexoTexto.equals("M") || sexoTexto.equals("m")) {
+                            alumnoData.put("sexo", 1);
+                        } else {
+                            throw new IllegalArgumentException("Sexo no válido en la fila " + (row.getRowNum()+1));
+                        }
+
+                        Long idSemestre = grupoServiceJPA.findIdSemestreByGrupo(nombreGrupo);
+                        alumnoData.put("semestre", idSemestre);
+                        alumnoData.put("matricula", ArchivoUtil.getCellValueAsString(row.getCell(6)));
+                        alumnoData.put("apellidoMaterno", ArchivoUtil.getCellValueAsString(row.getCell(2)));
+                        alumnoData.put("correo", "");
+                        alumnoData.put("telefono", "");
+
+                        String curp = ArchivoUtil.getCellValueAsString(row.getCell(3));
+                        Alumno alumno;
+                        Optional<Alumno> alumnoExistente = alumnoRepository.findByCurp(curp);
+
+                        if (alumnoExistente.isPresent()) {
+                            alumno = update(alumnoExistente.get(), alumnoData);
+                        } else {
+                            alumno = create(alumnoData);
+                        }
+
+                        alumnosImportados.add(alumno);
+
+                    } catch (IllegalArgumentException e) {
+                        throw new IllegalArgumentException(e.getMessage());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        throw new IllegalArgumentException(
+                                "Error al importar el alumno en la fila " + row.getRowNum() + " de la hoja " + sheet.getSheetName() + ": " + e.getMessage());
                     }
-                    Long idSemestre = grupoServiceJPA.findIdSemestreByGrupo(nombreGrupo);
-                    alumnoData.put("semestre", idSemestre);
-                    alumnoData.put("matricula", ArchivoUtil.getCellValueAsString(row.getCell(6)));
-
-                    // CAMPOS OPCIONALES
-                    alumnoData.put("apellidoMaterno", ArchivoUtil.getCellValueAsString(row.getCell(2)));
-
-                    // campos not null no incluidos
-                    alumnoData.put("correo", "");
-                    alumnoData.put("telefono", "");
-
-                    // Crear el alumno
-                    Alumno alumno = create(alumnoData);
-                    alumnosImportados.add(alumno);
-
-                } catch (IllegalArgumentException e) {
-                    // Opcionalmente, puedes manejar los errores por fila o acumularlos
-                    throw new IllegalArgumentException(e.getMessage());
-                } catch (Exception e) {
-                    e.printStackTrace(); // Esto es opcional, sirve para depuración si ocurre algún error inesperado
-                    throw new IllegalArgumentException(
-                            "Error al importar el alumno en la fila " + row.getRowNum() + ": " + e.getMessage());
                 }
             }
         }
