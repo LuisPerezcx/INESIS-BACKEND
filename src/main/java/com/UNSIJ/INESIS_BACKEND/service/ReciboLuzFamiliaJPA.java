@@ -115,7 +115,7 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace(); // esto es opcional sirve  para depuracion si ocurre algun error inesperado
+            e.printStackTrace(); // esto sirve  para depuracion si ocurre algun error inesperado
             throw new IllegalArgumentException("Error al construir el ejemplo");
         }
         return ReciboLuzModel;
