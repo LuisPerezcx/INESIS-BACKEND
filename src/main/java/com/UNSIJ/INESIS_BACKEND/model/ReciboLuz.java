@@ -47,10 +47,6 @@ public class ReciboLuz {
     private Double ultimoPago; // Puedes usar BigDecimal si vas a operar con montos
 
     @NotNull
-    @Column(name = "domicilio")
-    private String domicilio;
-
-    @NotNull
     @Column(name = "pago_promedio_mes")
     private Double promedioPago;
 
