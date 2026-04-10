@@ -1,5 +1,6 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
+import com.UNSIJ.INESIS_BACKEND.model.Alumno;
 import com.UNSIJ.INESIS_BACKEND.model.Usuario;
 import com.UNSIJ.INESIS_BACKEND.repository.UsuarioRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IUsuarioService;
@@ -10,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.Normalizer;
 import java.util.List;
 import java.util.Map;
 
@@ -60,6 +62,7 @@ public class UsuarioServiceJPA implements IUsuarioService {
         try {
             this.build(params, usuarioModel);
         } catch (IllegalArgumentException e) {
+            e.printStackTrace();
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
@@ -78,8 +81,9 @@ public class UsuarioServiceJPA implements IUsuarioService {
             usuarioModel.setUsuario(usuario);
 
             String contrasenia = JsonUtils.obtString(params, "contrasenia");
-            if (contrasenia == null)
-                throw new IllegalArgumentException("El campo contraseña es obligatorio");
+
+             if (contrasenia == null) throw new IllegalArgumentException("El campo contraseña es obligatorio");
+
             // Cifrar aquí
             usuarioModel.setContrasenia(passwordEncoder.encode(contrasenia));
 
@@ -103,6 +107,14 @@ public class UsuarioServiceJPA implements IUsuarioService {
             throw new IllegalArgumentException("Error al construir el usuario");
         }
         return usuarioModel;
+    }
+
+    @Transactional
+    public void actualizarPassword(Long idUsuario, String rawPassword) throws Exception {
+        Usuario usuario = findById(idUsuario);
+        String passwordCifrada = passwordEncoder.encode(rawPassword);
+        usuario.setContrasenia(passwordCifrada);
+        save(usuario);
     }
 
     @Override
@@ -129,6 +141,56 @@ public class UsuarioServiceJPA implements IUsuarioService {
                         "No se encontró un usuario para el alumno con ID: " + idAlumno));
     }
 
+    @Transactional
+    public Usuario crearDesdeAlumno(Alumno alumno) throws Exception {
+        Usuario usuario = new Usuario();
+        try {
+            usuario.setAlumno(alumno);
+            usuario.setContrasenia(passwordEncoder.encode(alumno.getMatricula()));
+            usuario.setRol(rolServiceJPA.findById(1L)); // Asignar rol de Alumno
+            usuario.setEstatus(true); // Por defecto, el usuario está activo
+
+            String nombreLimpio = limpiarYFormatear(alumno.getNombre());
+            String[] nombreCompleto = nombreLimpio.split(" ");
+            String baseUsuario = nombreCompleto[0] + "." + limpiarYFormatear(alumno.getApellidoPaterno());
+            String nombreUsuario = baseUsuario;
+            int contador = 0;
+            // Verificar si el usuario ya existe
+            while (usuarioRepository.findByUsuario(nombreUsuario).isPresent()) {
+                if (contador == 1 && nombreCompleto.length > 1) {
+                    nombreUsuario = nombreCompleto[1] + "." + limpiarYFormatear(alumno.getApellidoPaterno());
+                } else if (contador == 2) {
+                    nombreUsuario = nombreCompleto[0] + "." + limpiarYFormatear(alumno.getApellidoMaterno());
+                } else {
+                    nombreUsuario = baseUsuario + contador;
+                }
+                contador++;
+            }
+            usuario.setUsuario(nombreUsuario);
+
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Error al construir el usuario");
+        }
+        return this.save(usuario);
+    }
+
+    public String limpiarYFormatear(String texto) {
+        if (texto == null)
+            return "";
+        String textoNormalizado = Normalizer.normalize(texto, Normalizer.Form.NFD);
+        String textoSinAcentos = textoNormalizado.replaceAll("\\p{M}", "");
+        return textoSinAcentos.toLowerCase().replaceAll("\\s+", "");
+    }
+
+    public Usuario findByRevisorId(Long idRevisor) {
+        return usuarioRepository.findByRevisorId(idRevisor)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Usuario no encontrado para el revisor con ID: " + idRevisor));
+    }
+
     public Usuario validarLogin(String usuario, String contrasenia) {
         Usuario user = usuarioRepository.findByUsuario(usuario)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
@@ -152,4 +214,15 @@ public class UsuarioServiceJPA implements IUsuarioService {
         }
         return passwordEncoder.matches(contrasena, user.getContrasenia());
     }
+
+    @Transactional
+    public void cambiarContrasena(String usuario, String nuevaContrasena) {
+        Usuario user = usuarioRepository.findByUsuario(usuario)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
+        // Cifrar la nueva contraseña antes de guardarla
+        String nuevaContrasenaCifrada = passwordEncoder.encode(nuevaContrasena);
+        user.setContrasenia(nuevaContrasenaCifrada);
+        usuarioRepository.save(user);
+    }
+
 }

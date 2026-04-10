@@ -12,6 +12,7 @@ import com.UNSIJ.INESIS_BACKEND.model.*;
 import com.UNSIJ.INESIS_BACKEND.repository.*;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IGatosIngresoFamiliares;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class GastosIngresosService implements IGatosIngresoFamiliares {
@@ -28,88 +29,147 @@ public class GastosIngresosService implements IGatosIngresoFamiliares {
     @Autowired
     IngresoFamiliarJPA ingresoFamiliarJPA;
 
+    @Autowired
+    AlumnoServiceJPA alumnoService;
+
+    @Autowired
+    FechasRegistradasServiceJPA fechasRegistradasServiceJPA;
+
     @Override
     public List<GastosIngresosFamiliares> findAll() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findAll'");
+        return gastosIngresosFamiliaresRepository.findAll();
     }
 
     @Override
     public GastosIngresosFamiliares findById(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findById'");
+        return gastosIngresosFamiliaresRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("GastosIngresosFamiliares no encontrado con ID: " + id));
     }
 
     @Override
     public GastosIngresosFamiliares save(GastosIngresosFamiliares GastosIngresosFamiliares) throws Exception {
+        Alumno alumno = GastosIngresosFamiliares.getAlumno();
+        if(!fechasRegistradasServiceJPA.permitirRegistro(alumno.getCarrera().getId()))
+            throw new IllegalArgumentException("No es posible registrar tus datos en este momento. " +
+                    "El periodo de registro para tu carrera no está activo actualmente.");
         return gastosIngresosFamiliaresRepository.save(GastosIngresosFamiliares);
     }
 
     @Override
+    @Transactional
     public GastosIngresosFamiliares create(Map<String, Object> params) throws Exception {
         GastosIngresosFamiliares ejemplo = new GastosIngresosFamiliares();
         try {
-            ejemplo.setCompleto(true);
-            this.build(params, ejemplo);
+            Long idAlumno = JsonUtils.obtLong(params, "alumnoId");
+            if (idAlumno == null) throw new IllegalArgumentException("El campo idAlumno es obligatorio");
+            Alumno alumno = alumnoService.findById(idAlumno);
+            ejemplo.setAlumno(alumno);
+            this.build(params, ejemplo, alumno);
+            ejemplo.setModuloCompleto(true);
+            ejemplo = this.save(ejemplo);
+            alumno.setGastosIngresosFamiliares(ejemplo);
+            alumnoService.save(alumno);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
-            throw new IllegalArgumentException("Error al construir el ejemplo");
+            throw new IllegalArgumentException("Error al construir gastos e ingresos familiares");
         }
-        return this.save(ejemplo);
+        return ejemplo;
     }
 
     @Override
-    public GastosIngresosFamiliares update(GastosIngresosFamiliares GastosIngresosFamiliares,
-            Map<String, Object> params) throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
-    }
-
-    @Override
-    public GastosIngresosFamiliares build(Map<String, Object> params, GastosIngresosFamiliares gIngresosFamiliares) {
+    public GastosIngresosFamiliares update(GastosIngresosFamiliares gIngresosFamiliares,
+                                           Map<String, Object> params) throws Exception {
         try {
-            gIngresosFamiliares.setNummeroPersonasAportan(JsonUtils.obtInteger(params, "personasAportan"));
-            gIngresosFamiliares.setIngresoTotal(JsonUtils.obtDouble(params, "ingresoTotal"));
-            gIngresosFamiliares.setIngresoBrutoTotal(JsonUtils.obtDouble(params, "ingresoBrutoTotal"));
-            gIngresosFamiliares.setNumeroPersonasDependen(JsonUtils.obtInteger(params, "personasDependen"));
+            // Reconstruir el objeto con los datos nuevos
+            System.out.println(gIngresosFamiliares);
+            this.build(params, gIngresosFamiliares, gIngresosFamiliares.getAlumno());
+            gIngresosFamiliares.setModuloCompleto(true);
 
+            // Guardar y retornar
+            return this.save(gIngresosFamiliares);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Error al actualizar GastosIngresosFamiliares");
+        }
+    }
+
+    @Override
+    @Transactional
+    public GastosIngresosFamiliares build(Map<String, Object> params, GastosIngresosFamiliares gIngresosFamiliares, Alumno alumno) {
+        try {
+            // VALIDACIONES Y CAMPOS BÁSICOS
+            Integer personasAportan = JsonUtils.obtInteger(params, "personasAportan");
+            Integer ingresoTotal = JsonUtils.obtInteger(params, "ingresoTotal");
+            Integer personasDependen = JsonUtils.obtInteger(params, "personasDependen");
+            Double ingresoBrutoTotal = JsonUtils.obtDouble(params, "ingresoBrutoTotal");
+
+            if (personasAportan == null || ingresoTotal == null || personasDependen == null || ingresoBrutoTotal == null) {
+                throw new IllegalArgumentException("Campos obligatorios faltantes");
+            }
+
+            gIngresosFamiliares.setNummeroPersonasAportan(personasAportan);
+            gIngresosFamiliares.setIngresoTotal(ingresoTotal);
+            gIngresosFamiliares.setNumeroPersonasDependen(personasDependen);
+            gIngresosFamiliares.setIngresoBrutoTotal(ingresoBrutoTotal);
+
+
+            // GASTOS FAMILIARES
             Map<String, Object> gastos = (Map<String, Object>) params.get("gastos");
-            GastoFamiliarModel gastoFamiliar = gastoFamiliarServiceJPA.create(gastos);
-            gIngresosFamiliares.setGastoFamiliarModel(gastoFamiliar);
+            if (gIngresosFamiliares.getGastoFamiliarModel() != null) {
+                gastoFamiliarServiceJPA.update(gIngresosFamiliares.getGastoFamiliarModel(), gastos);
+            } else {
+                gIngresosFamiliares.setGastoFamiliarModel(gastoFamiliarServiceJPA.create(gastos));
+            }
 
+            // RECIBO DE LUZ
             Map<String, Object> reciboLuz = (Map<String, Object>) params.get("reciboLuz");
-            ReciboLuz reciboLuzM = reciboLuzFamiliaJPA.create(reciboLuz);
-            gIngresosFamiliares.setReciboLuzModel(reciboLuzM);
+            if (gIngresosFamiliares.getReciboLuzModel() != null) {
+                reciboLuzFamiliaJPA.update(gIngresosFamiliares.getReciboLuzModel(), reciboLuz, alumno);
+            } else {
+                gIngresosFamiliares.setReciboLuzModel(reciboLuzFamiliaJPA.create(reciboLuz, alumno));
+            }
 
             gIngresosFamiliares = gastosIngresosFamiliaresRepository.save(gIngresosFamiliares);
 
-            ArrayList<IngresoFamiliarModel> nIngresoFamiliarModels = new ArrayList<>();
+            // INGRESOS FAMILIARES
             List<Map<String, Object>> personas = (List<Map<String, Object>>) params.get("personas");
-            for (Map<String, Object> personaData : personas) {
-                IngresoFamiliarModel ingreso = new IngresoFamiliarModel();
-                ingresoFamiliarJPA.build(personaData, ingreso);
-                ingreso.setGastosIngresosFamiliares(gIngresosFamiliares);
-                ingresoFamiliarJPA.save(ingreso);
-                nIngresoFamiliarModels.add(ingreso);
-            }
-            gIngresosFamiliares.setIngresosFamiliares(nIngresoFamiliarModels);
+            if (personas != null) {
+                if (gIngresosFamiliares.getIngresosFamiliar() != null) {
+                    gIngresosFamiliares.getIngresosFamiliar().clear(); // orphanRemoval elimina los anteriores
+                } else {
+                    gIngresosFamiliares.setIngresosFamiliar(new ArrayList<>());
+                }
 
+                for (Map<String, Object> personaData : personas) {
+                    IngresoFamiliarModel ingreso = new IngresoFamiliarModel();
+                    ingresoFamiliarJPA.build(personaData, ingreso);
+                    ingreso.setGastosIngresosFamiliares(gIngresosFamiliares);
+                    ingresoFamiliarJPA.save(ingreso);
+                    gIngresosFamiliares.getIngresosFamiliar().add(ingreso);
+                }
+            }
+/* Map<String, Object> ingresoFamiliar = (Map<String, Object>) params.get("s");
+            IngresoFamiliarModel ingresoFamiliarModel = ingresoFamiliarJPA.create(ingresoFamiliar);
+            gIngresosFamiliares.setIngresoFamiliarModel(ingresoFamiliarModel);*/
             
-            if(gIngresosFamiliares.getIngresosFamiliares() == null  )
-            throw new IllegalArgumentException("Gastos ingresoa familiares no puede ser nulo");
+
+
 
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
-            throw new IllegalArgumentException("Error al construir el ejemplo");
+            e.printStackTrace();
+            throw new IllegalArgumentException("Error al construir GastosIngresosFamiliares");
         }
 
-        System.out.println("Cuerpo que se manda a la base"+gIngresosFamiliares);
+        System.out.println("Cuerpo que se manda a la base: " + gIngresosFamiliares);
         return gIngresosFamiliares;
     }
+
 
     @Override
     public void deleteById(Long id) {

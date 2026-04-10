@@ -43,6 +43,7 @@ public class MiTutorController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
     }
@@ -53,8 +54,10 @@ public class MiTutorController {
             MiTutor miTutorUpdated = miTutorServiceJPA.update(miTutorServiceJPA.findById(id), params);
             return ResponseEntity.status(HttpStatus.CREATED).body(miTutorUpdated);
         } catch (IllegalArgumentException e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
     }

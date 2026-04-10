@@ -5,10 +5,11 @@
 
 package com.UNSIJ.INESIS_BACKEND.service;
 
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatMaterialVivienda;
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatSituacionVivienda;
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatTipoVivienda;
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.ViviendaFamiliar;
+import com.UNSIJ.INESIS_BACKEND.model.CatDistrito;
+import com.UNSIJ.INESIS_BACKEND.model.CatRegion;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.*;
+import com.UNSIJ.INESIS_BACKEND.repository.CatDistritoRepository;
+import com.UNSIJ.INESIS_BACKEND.repository.CatRegionRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.CatMaterialViviendaRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.CatSituacionViviendaRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.CatTipoViviendaRepository;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -31,15 +33,18 @@ import java.util.Map;
 public class ViviendaFamiliarServiceJPA implements IViviendaFamiliarService {
     @Autowired
     private ViviendaFamiliarRepository repository;
-
     @Autowired
-    private CatSituacionViviendaRepository situacionViviendaRepository;
-
+    private CatSituacionViviendaServiceJPA catSituacionViviendaService;
     @Autowired
-    private CatTipoViviendaRepository tipoViviendaRepository;
-
+    private CatTipoViviendaServiceJPA catTipoViviendaServiceJPA;
     @Autowired
-    private CatMaterialViviendaRepository materialViviendaRepository;
+    private CatMaterialViviendaServiceJPA catMaterialViviendaServiceJPA;
+    @Autowired
+    private ServiciosViviendaServiceJPA serviciosViviendaServiceJPA;
+    @Autowired
+    private CatRegionRepository catRegionRepository;
+    @Autowired
+    private CatDistritoRepository catDistritoRepository;
 
     @Override
     public List<ViviendaFamiliar> findAll() {
@@ -59,50 +64,94 @@ public class ViviendaFamiliarServiceJPA implements IViviendaFamiliarService {
     }
 
     @Override
-    public ViviendaFamiliar create(Map<String, Object> params) throws Exception {
+    public ViviendaFamiliar create(Map<String, Object> params, MiFamilia miFamilia) throws Exception {
         ViviendaFamiliar model = new ViviendaFamiliar();
-        return this.save(this.build(params, model));
+        try {
+            this.build(params, model, miFamilia);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Error al construir el tramite");
+        }
+        return this.save(model);
     }
 
     @Override
     public ViviendaFamiliar update(ViviendaFamiliar model, Map<String, Object> params) throws Exception {
-        return this.save(this.build(params, model));
+        try {
+            MiFamilia miFamilia = model.getMiFamilia();
+            this.build(params, model, miFamilia);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
+            throw new IllegalArgumentException("Error al construir el ejemplo");
+        }
+        return this.save(model);
     }
 
     @Override
-    public ViviendaFamiliar build(Map<String, Object> params, ViviendaFamiliar model) {
-        Integer numPersonas = JsonUtils.obtInteger(params, "num_personas_habitan");
-        String serviciosOtro = (String) params.get("servicios_otro");
+    @Transactional
+    public ViviendaFamiliar build(Map<String, Object> params, ViviendaFamiliar model, MiFamilia miFamilia) {
+        try {
+            Integer numPersonas = JsonUtils.obtInteger(params, "num_personas_habitan");
+            String serviciosOtro = JsonUtils.obtString(params, "servicios_otro");
+            Long regionId = JsonUtils.obtLong(params, "domicilio.region");
+            Long distritoId = JsonUtils.obtLong(params, "domicilio.distrito");
+            if(regionId == null) regionId = JsonUtils.obtLong(params,"domicilio.region.id");
+            if(distritoId == null) distritoId = JsonUtils.obtLong(params, "domicilio.distrito.id");
+            Long situacionViviendaId = JsonUtils.obtLong(params, "id_cat_situacion_vivienda");
+            Long tipoViviendaId = JsonUtils.obtLong(params, "id_cat_tipo_vivienda");
+            Long materialViviendaId = JsonUtils.obtLong(params, "id_cat_material_vivienda");
 
-        if (numPersonas != null) {
+            if (numPersonas == null || numPersonas < 0)
+                throw new IllegalArgumentException("El campo 'num_personas_habitan' " +
+                        "es obligatorio y debe ser un número positivo");
+            if (regionId == null) throw new IllegalArgumentException("El campo 'domicilio.region' es obligatorio");
+            if (distritoId == null) throw new IllegalArgumentException("El campo 'domicilio.distrito' es obligatorio");
+            if (situacionViviendaId == null)
+                throw new IllegalArgumentException("El campo 'id_cat_situacion_vivienda' es obligatorio");
+            if (tipoViviendaId == null)
+                throw new IllegalArgumentException("El campo 'id_cat_tipo_vivienda' es obligatorio");
+            if (materialViviendaId == null)
+                throw new IllegalArgumentException("El campo 'id_cat_material_vivienda' es obligatorio");
+
+            CatRegion region = catRegionRepository.findById(regionId)
+                    .orElseThrow(() -> new IllegalArgumentException("Región no encontrada"));
+            CatDistrito distrito = catDistritoRepository.findById(distritoId)
+                    .orElseThrow(() -> new IllegalArgumentException("Distrito no encontrado"));
+
             model.setNumPersonasHabitan(numPersonas);
-        }
-        model.setServiciosOtro(serviciosOtro);
+            if (serviciosOtro != null) model.setServiciosOtro(serviciosOtro);
+            model.setRegion(region);
+            model.setDistrito(distrito);
+            model.setSituacionVivienda(catSituacionViviendaService.findById(situacionViviendaId));
+            model.setTipoVivienda(catTipoViviendaServiceJPA.findById(tipoViviendaId));
+            model.setMaterialVivienda(catMaterialViviendaServiceJPA.findById(materialViviendaId));
 
-        // Para las relaciones ManyToOne
-        Long idSituacion = JsonUtils.obtLong(params, "id_cat_situacion_vivienda");
-        if (idSituacion == null) {
-            throw new IllegalArgumentException("El campo 'id_cat_situacion_vivienda' es obligatorio.");
-        }
-        CatSituacionVivienda situacion = situacionViviendaRepository.findById(idSituacion)
-                .orElseThrow(() -> new IllegalArgumentException("Situación vivienda no encontrada con ID: " + idSituacion));
-        model.setSituacionVivienda(situacion);
+            //guardar el modelo antes de agregar los servicios
+            model = this.save(model);
 
-        Long idTipo = JsonUtils.obtLong(params, "id_cat_tipo_vivienda");
-        if (idTipo == null) {
-            throw new IllegalArgumentException("El campo 'id_cat_tipo_vivienda' es obligatorio.");
-        }
-        CatTipoVivienda tipo = tipoViviendaRepository.findById(idTipo)
-                .orElseThrow(() -> new IllegalArgumentException("Tipo vivienda no encontrado con ID: " + idTipo));
-        model.setTipoVivienda(tipo);
+            List<Map<String, Object>> servicios = (List<Map<String, Object>>) params.get("serviciosVivienda");
+            if (servicios != null) {
+                model.getServiciosVivienda().clear();
 
-        Long idMaterial = JsonUtils.obtLong(params, "id_cat_material_vivienda");
-        if (idMaterial == null) {
-            throw new IllegalArgumentException("El campo 'id_cat_material_vivienda' es obligatorio.");
+                for (Map<String, Object> servicio : servicios) {
+                    Long idCatServicio = JsonUtils.obtLong(servicio, "servicioViviendaId");
+                    ServiciosVivienda servicioVivienda = serviciosViviendaServiceJPA.create(idCatServicio, model);
+                    model.getServiciosVivienda().add(servicioVivienda); // Agregar a la misma lista
+                }
+            }
+
+            model.setMiFamilia(miFamilia);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Error al construir el alumno");
         }
-        CatMaterialVivienda material = materialViviendaRepository.findById(idMaterial)
-                .orElseThrow(() -> new IllegalArgumentException("Material vivienda no encontrado con ID: " + idMaterial));
-        model.setMaterialVivienda(material);
 
         return model;
     }

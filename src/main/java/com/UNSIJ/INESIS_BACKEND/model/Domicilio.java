@@ -11,7 +11,7 @@ public class Domicilio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_domicilio")
-    private Long idDomicilio;
+    private Long id;
 
     @NotNull
     private String localidad;

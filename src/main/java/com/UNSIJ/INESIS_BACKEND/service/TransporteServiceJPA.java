@@ -84,17 +84,6 @@ public class TransporteServiceJPA implements ITransporteService {
             if (anio == null)
                 throw new IllegalArgumentException("El campo 'anio' es obligatorio.");
             transporte.setAnio(anio);
-
-
-            Long idCatTipoTransporte = JsonUtils.obtLong(params, "catTipoTransporte");
-            if (idCatTipoTransporte == null) {
-                throw new IllegalArgumentException("El campo 'idCatTipoTransporte' es obligatorio.");
-            }
-            CatTipoTransporte catTipoTransporte = catTipoTransporteRepository.findById(idCatTipoTransporte)
-                    .orElseThrow(() -> new IllegalArgumentException(
-                            "Tipo de transporte no encontrado con el ID: " + idCatTipoTransporte));
-            transporte.setCatTipoTransporte(catTipoTransporte);
-
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
@@ -112,7 +101,6 @@ public class TransporteServiceJPA implements ITransporteService {
         transporteBD.setMarca(transporteInstance.getMarca());
         transporteBD.setModelo(transporteInstance.getModelo());
         transporteBD.setAnio(transporteInstance.getAnio());
-        transporteBD.setCatTipoTransporte(transporteInstance.getCatTipoTransporte());
 
         return this.save(transporteBD);
     }

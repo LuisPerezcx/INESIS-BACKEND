@@ -17,8 +17,4 @@ public class Transporte {
     private String modelo;
 
     private Integer anio;
-
-    @ManyToOne
-    @JoinColumn(name = "id_cat_tipo_transporte")
-    private CatTipoTransporte catTipoTransporte;
 }

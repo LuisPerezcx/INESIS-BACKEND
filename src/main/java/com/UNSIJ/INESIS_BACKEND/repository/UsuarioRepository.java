@@ -10,4 +10,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Optional<Usuario> findByAlumnoId(Long idAlumno);
 
     Optional<Usuario> findByUsuario(String usuario);
+
+    Optional<Usuario> findByRevisorId(Long idRevisor);
+
 }

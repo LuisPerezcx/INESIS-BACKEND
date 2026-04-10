@@ -1,7 +1,10 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
 import com.UNSIJ.INESIS_BACKEND.model.Domicilio;
+import com.UNSIJ.INESIS_BACKEND.repository.AlumnoRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.DomicilioRepository;
+import com.UNSIJ.INESIS_BACKEND.repository.MiTutorRepository;
+import com.UNSIJ.INESIS_BACKEND.repository.MisDatosRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IDomicilioService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +18,10 @@ import java.util.Map;
 public class DomicilioServiceJPA implements IDomicilioService {
     @Autowired
     private DomicilioRepository domicilioRepository;
+    @Autowired
+    private MiTutorRepository tutorRepository;
+    @Autowired
+    private MisDatosRepository misDatosRepository;
 
     @Override
     public List<Domicilio> findAll() {
@@ -84,7 +91,7 @@ public class DomicilioServiceJPA implements IDomicilioService {
     //ESTE METODO SE OCUPA CUANDO YA TENEMOS LA INSTANCIA QUE QUEREMOS ACTUALIZAR
     @Override
     public Domicilio updateInstance(Domicilio domicilioInstance) throws Exception {
-        Domicilio domicilioBD = this.findById(domicilioInstance.getIdDomicilio());
+        Domicilio domicilioBD = this.findById(domicilioInstance.getId());
         //domicilioBD.setEstado(domicilioInstance.getEstado());
         //domicilioBD.setMunicipio(domicilioInstance.getMunicipio());
         domicilioBD.setLocalidad(domicilioInstance.getLocalidad());
@@ -103,4 +110,11 @@ public class DomicilioServiceJPA implements IDomicilioService {
             domicilioRepository.deleteById(id);
         }
     }
+
+    @Transactional(readOnly = true)
+    public boolean isDomicilioUsado(Long idDomicilio) {
+        return tutorRepository.existsByDomicilio_Id(idDomicilio)
+                || misDatosRepository.existsByDomicilio_Id(idDomicilio);
+    }
+
 }

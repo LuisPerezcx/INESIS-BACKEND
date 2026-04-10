@@ -4,6 +4,8 @@
  */
 package com.UNSIJ.INESIS_BACKEND.service;
 
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatServiciosVivienda;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MiFamilia;
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.ServiciosVivienda;
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.ViviendaFamiliar;
 import com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia.ServiciosViviendaRepository;
@@ -26,8 +28,7 @@ public class ServiciosViviendaServiceJPA implements IServiciosViviendaService {
     @Autowired
     private ServiciosViviendaRepository repository;
 
-    @Autowired
-    private ViviendaFamiliarRepository viviendaFamiliarRepository;
+    @Autowired CatServiciosOtroServiceJPA catServiciosOtroService;
 
     @Override
     public List<ServiciosVivienda> findAll() {
@@ -47,27 +48,30 @@ public class ServiciosViviendaServiceJPA implements IServiciosViviendaService {
     }
 
     @Override
-    public ServiciosVivienda create(Map<String, Object> params) throws Exception {
+    @Transactional
+    public ServiciosVivienda create(Long idServicio, ViviendaFamiliar viviendaFamiliar) throws Exception {
         ServiciosVivienda model = new ServiciosVivienda();
-        return this.save(this.build(params, model));
-    }
-
-    @Override
-    public ServiciosVivienda update(ServiciosVivienda model, Map<String, Object> params) throws Exception {
-        return this.save(this.build(params, model));
-    }
-
-    @Override
-    public ServiciosVivienda build(Map<String, Object> params, ServiciosVivienda model) {
-        Long viviendaFamiliarId = JsonUtils.obtLong(params, "id_vivienda_familiar");
-        if (viviendaFamiliarId == null) {
-            throw new IllegalArgumentException("El campo 'id_vivienda_familiar' es obligatorio.");
+        try {
+            this.build(idServicio, model, viviendaFamiliar);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Error al construir el tramite");
         }
+        return this.save(model);
+    }
 
-        ViviendaFamiliar vivienda = viviendaFamiliarRepository.findById(viviendaFamiliarId)
-                .orElseThrow(() -> new IllegalArgumentException("Vivienda familiar no encontrada con ID: " + viviendaFamiliarId));
+    @Override
+    @Transactional
+    public ServiciosVivienda build(Long idServicio, ServiciosVivienda model, ViviendaFamiliar viviendaFamiliar) {
+        if (idServicio == null) {
+            throw new IllegalArgumentException("El campo 'id_servicio' es obligatorio.");
+        }
+        CatServiciosVivienda catServiciosVivienda = catServiciosOtroService.findById(idServicio);
+        model.setCatServiciosVivienda(catServiciosVivienda);
+        model.setViviendaFamiliar(viviendaFamiliar);
 
-        model.setViviendaFamiliar(vivienda);
         return model;
     }
 

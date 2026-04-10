@@ -7,6 +7,8 @@ import com.UNSIJ.INESIS_BACKEND.repository.MiTutorRepository;
 import com.UNSIJ.INESIS_BACKEND.repository.OcupacionRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IMiTutorService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +36,12 @@ public class MiTutorServiceJPA implements IMiTutorService {
     @Autowired
     AlumnoServiceJPA alumnoServiceJPA;
 
+    @Autowired
+    FechasRegistradasServiceJPA fechasRegistradasServiceJPA;
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Override
     public List<MiTutor> findAll() {
         return miTutorRepository.findAll();
@@ -48,10 +56,15 @@ public class MiTutorServiceJPA implements IMiTutorService {
     @Override
     @Transactional //SIEMPRE TRANSACTIONAL AQUI
     public MiTutor save(MiTutor miTutor) throws Exception {
+        Alumno alumno = miTutor.getAlumno();
+        if(!fechasRegistradasServiceJPA.permitirRegistro(alumno.getCarrera().getId()))
+            throw new IllegalArgumentException("No es posible registrar tus datos en este momento. " +
+                    "El periodo de registro para tu carrera no está activo actualmente.");
         return miTutorRepository.save(miTutor);
     }
 
     @Override
+    @Transactional
     public MiTutor create(Map<String, Object> params) throws Exception {
         MiTutor miTutor = new MiTutor();
         try {
@@ -75,6 +88,7 @@ public class MiTutorServiceJPA implements IMiTutorService {
 
     //ESTE METODO SE OCUPA AL ACTUALIZAR DESDE EL FRONTEND YA QUE RECIBE UN MAPA(JSON)
     @Override
+    @Transactional
     public MiTutor update(MiTutor miTutor, Map<String, Object> params) throws Exception {
         try {
             this.build(params, miTutor);
@@ -88,6 +102,7 @@ public class MiTutorServiceJPA implements IMiTutorService {
     }
 
     @Override
+    @Transactional
     public MiTutor build(Map<String, Object> params, MiTutor miTutor) {
         try {
             String nombreTutor = JsonUtils.obtString(params, "nombreTutor");
@@ -108,7 +123,6 @@ public class MiTutorServiceJPA implements IMiTutorService {
             miTutor.setTelefono(telefono);
 
             String correo = JsonUtils.obtString(params, "correo");
-            if (correo == null) throw new IllegalArgumentException("El campo correo es obligatorio");
             miTutor.setCorreo(correo);
 
             String trabajadorSuneoString = JsonUtils.obtString(params, "trabajadorSuneo");
@@ -149,13 +163,45 @@ public class MiTutorServiceJPA implements IMiTutorService {
 
             Map<String, Object> domicilioParams = (Map<String, Object>) params.get("datosDomicilio");
             if (domicilioParams != null) {
-                if (domicilioParams.get("idDomicilio") != null) {
-                    Long idDomicilio = Long.valueOf(domicilioParams.get("idDomicilio").toString());
-                    Domicilio domicilioExistente = domicilioServiceJPA.findById(idDomicilio);
-                    miTutor.setDomicilio(domicilioExistente);
+                Long idDomicilio = domicilioParams.get("idDomicilio") != null
+                        ? Long.valueOf(domicilioParams.get("idDomicilio").toString())
+                        : null;
+
+                if (idDomicilio == null) {
+                    // Si se va a crear un nuevo domicilio y ya había uno, lo desvincula
+                    Domicilio domicilioAntiguo = miTutor.getDomicilio();
+                    if (domicilioAntiguo != null) {
+                        miTutor.setDomicilio(null);
+                        this.save(miTutor);
+                        entityManager.flush(); // Forzar sincronización con la base de datos
+                        entityManager.clear();  // Limpia contexto para forzar que la próxima consulta lea desde BD
+
+
+                        // Verifica si el domicilio ya no está relacionado con ningún otro registro
+                        boolean enUso = domicilioServiceJPA.isDomicilioUsado(domicilioAntiguo.getId());
+
+                        if (!domicilioServiceJPA.isDomicilioUsado(domicilioAntiguo.getId())) {
+                            domicilioServiceJPA.deleteById(domicilioAntiguo.getId());
+                        }
+                    }
+                    Domicilio nuevo = domicilioServiceJPA.create(domicilioParams);
+                    miTutor.setDomicilio(nuevo);
                 } else {
-                    Domicilio domicilio = domicilioServiceJPA.create(domicilioParams);
-                    miTutor.setDomicilio(domicilio);
+                    Domicilio existente = domicilioServiceJPA.findById(idDomicilio);
+                    // Si el domicilio existente es el mismo que el del alumno, elimina el anterior
+                    Domicilio domicilioAntiguo = miTutor.getDomicilio();
+                    if (domicilioAntiguo != null && !domicilioAntiguo.equals(existente)) {
+                        miTutor.setDomicilio(null);
+                        this.save(miTutor);
+                        entityManager.flush();
+                        entityManager.clear();
+
+                        boolean enUso = domicilioServiceJPA.isDomicilioUsado(domicilioAntiguo.getId());
+                        if (!enUso) {
+                            domicilioServiceJPA.deleteById(domicilioAntiguo.getId());
+                        }
+                    }
+                    miTutor.setDomicilio(existente);
                 }
             }
 

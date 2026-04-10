@@ -6,6 +6,7 @@
 package com.UNSIJ.INESIS_BACKEND.service.interfaces;
 
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MediosEstudio;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MiFamilia;
 
 import java.util.List;
 import java.util.Map;
@@ -20,11 +21,10 @@ public interface IMediosEstudiosService {
 
     MediosEstudio save(MediosEstudio model) throws Exception;
 
-    MediosEstudio create(Map<String, Object> params) throws Exception;
+    MediosEstudio create(Long idCatMedios, MiFamilia miFamilia) throws Exception;
 
-    MediosEstudio update(MediosEstudio model, Map<String, Object> params) throws Exception;
 
-    MediosEstudio build(Map<String, Object> params, MediosEstudio model);
+    MediosEstudio build(Long idCatMedios, MediosEstudio model, MiFamilia miFamilia);
 
     MediosEstudio updateInstance(MediosEstudio instance) throws Exception;
 

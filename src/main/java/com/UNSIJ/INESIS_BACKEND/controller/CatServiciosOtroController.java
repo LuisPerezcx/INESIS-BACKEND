@@ -10,7 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatServiciosOtro;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatServiciosVivienda;
 import com.UNSIJ.INESIS_BACKEND.service.CatServiciosOtroServiceJPA;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,14 +27,14 @@ public class CatServiciosOtroController {
     private CatServiciosOtroServiceJPA catServiciosOtroService;
 
     @GetMapping
-    public List<CatServiciosOtro> list() {
+    public List<CatServiciosVivienda> list() {
         return catServiciosOtroService.findAll();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> show(@PathVariable Long id) {
         try {
-            CatServiciosOtro servicio = catServiciosOtroService.findById(id);
+            CatServiciosVivienda servicio = catServiciosOtroService.findById(id);
             return ResponseEntity.ok(servicio);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(404).body(e.getMessage());

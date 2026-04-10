@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import com.UNSIJ.INESIS_BACKEND.model.Alumno;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,10 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
     @Autowired
     ReciboLuzRepository reciboLuzRepository;
 
-    @Value("${archivos.recibo.luz.carpeta}")
+    @Autowired
+    ArchivoServiceJPA archivoServiceJPA;
+
+    @Value("${app.upload.recibo-luz.dir}")
     private String rutaBase;
 
     @Override
@@ -41,65 +45,105 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
     }
 
     @Override
-    public ReciboLuz create(Map<String, Object> params) throws Exception {
+    public ReciboLuz create(Map<String, Object> params, Alumno alumno) throws Exception {
         ReciboLuz ejemplo = new ReciboLuz();
         try {
-            this.build(params, ejemplo);
+            this.build(params, ejemplo, alumno);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
             e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
-            throw new IllegalArgumentException("Error al construir el ejemplo");
+            throw new IllegalArgumentException("Error al construir el recibo de luz");
         }
         return this.save(ejemplo);
     }
 
     @Override
-    public ReciboLuz update(ReciboLuz ReciboLuzModel, Map<String, Object> params) throws Exception {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+    public ReciboLuz update(ReciboLuz reciboLuzModel, Map<String, Object> params, Alumno alumno) throws Exception {
+        try {
+            String rutaAnterior = reciboLuzModel.getRutaRecibo();
+            this.build(params, reciboLuzModel, alumno);
+            if (rutaAnterior != null && !rutaAnterior.equals(reciboLuzModel.getRutaRecibo())) {
+                archivoServiceJPA.eliminarArchivo(rutaAnterior);
+            }
+            return this.save(reciboLuzModel);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new IllegalArgumentException("Error al actualizar Recibo de Luz");
+        }
     }
 
     @Override
-    public ReciboLuz build(Map<String, Object> params, ReciboLuz ReciboLuzModel){
-           try {
-            String titular = JsonUtils.obtString(params,"titular");
-            String periodoInicio = JsonUtils.obtString(params,"periodoInicio");
-            String periodoFin = JsonUtils.obtString(params,"periodoFin");
-            String nombreArchivo = JsonUtils.obtString(params,"nombreArchivo");
-            String nombreOriginal = JsonUtils.obtString(params,"nombreOriginal");
+    public ReciboLuz build(Map<String, Object> params, ReciboLuz ReciboLuzModel, Alumno alumno) {
+        try {
+            String titular = JsonUtils.obtString(params, "titular");
+            String periodoInicio = JsonUtils.obtString(params, "periodoInicio");
+            String periodoFin = JsonUtils.obtString(params, "periodoFin");
+            String nombreArchivo = JsonUtils.obtString(params, "nombreArchivo");
+            String nombreOriginal = JsonUtils.obtString(params, "nombreOriginal");
+
+            Double ultimoPago = JsonUtils.obtDouble(params, "ultimoPago");
+            Double promedioPago = JsonUtils.obtDouble(params, "promedioPago");
+            String observaciones = JsonUtils.obtString(params, "observaciones");
             String domicilio = JsonUtils.obtString(params, "domicilio");
 
-
-            Double ultimoPago = JsonUtils.obtDouble(params,"ultimoPago");
-            Double promedioPago = JsonUtils.obtDouble(params,"promedioPago");
-            String observaciones = JsonUtils.obtString(params,"observaciones");
 
 
             String contenidoBase64 = JsonUtils.obtString(params, "contenidoBase64"); // Asegúrate que llegue este campo
 
 
             //VERIFICACION DEL CAMPO NUMERO
-            if(titular == null) throw new IllegalArgumentException("El campo titular es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONTif(periodoInicio == null) throw new IllegalArgumentException("El campo periodoInicio es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
-            if(periodoFin == null) throw new IllegalArgumentException("El campo periodoFin es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
-            if(nombreArchivo == null) throw new IllegalArgumentException("El campo nombreArchivo es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
-            if(nombreOriginal == null) throw new IllegalArgumentException("El campo nombreOriginal es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
-            if(ultimoPago == null) throw new IllegalArgumentException("El campo ultimoPago es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
-            if(promedioPago == null) throw new IllegalArgumentException("El campo promedioPago es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
-            if(observaciones == null) throw new IllegalArgumentException("El campo observaciones es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
-           if(contenidoBase64 != null && !contenidoBase64.isEmpty()){
-               if(nombreArchivo == null) throw new IllegalArgumentException("El campo nombreArchivo es obligatorio");
-               if(nombreOriginal == null) throw new IllegalArgumentException("El campo nombreOriginal es obligatorio");
+            if (titular == null)
+                throw new IllegalArgumentException("El campo titular es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            if (periodoInicio == null)
+                throw new IllegalArgumentException("El campo periodoInicio es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            if (periodoFin == null)
+                throw new IllegalArgumentException("El campo periodoFin es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            if (nombreArchivo == null)
+                throw new IllegalArgumentException("El campo nombreArchivo es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            if (nombreOriginal == null)
+                throw new IllegalArgumentException("El campo nombreOriginal es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            if (ultimoPago == null)
+                throw new IllegalArgumentException("El campo ultimoPago es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            if (promedioPago == null)
+                throw new IllegalArgumentException("El campo promedioPago es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            if (observaciones == null)
+                throw new IllegalArgumentException("El campo observaciones es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+            if (domicilio == null)
+                throw new IllegalArgumentException("El campo domicilio es obligatorio");
 
-               String rutaRecibo = ArchivoUtil.guardarArchivoBase64(contenidoBase64, nombreArchivo, rutaBase);
+            if(contenidoBase64 != null && !contenidoBase64.isEmpty()){
+                if(nombreArchivo == null) throw new IllegalArgumentException("El campo nombreArchivo es obligatorio");
+                if(nombreOriginal == null) throw new IllegalArgumentException("El campo nombreOriginal es obligatorio");
 
-               ReciboLuzModel.setNombreArchivo(nombreArchivo);
-               ReciboLuzModel.setNombreOriginal(nombreOriginal);
-               ReciboLuzModel.setRutaRecibo(rutaRecibo);
-           }
-            String rutaRecibo = ArchivoUtil.guardarArchivoBase64(contenidoBase64, nombreArchivo, rutaBase);
+                String rutaRecibo = ArchivoUtil.guardarArchivoBase64(contenidoBase64, nombreArchivo, rutaBase);
 
-           
+                ReciboLuzModel.setNombreArchivo(nombreArchivo);
+                ReciboLuzModel.setNombreOriginal(nombreOriginal);
+                ReciboLuzModel.setRutaRecibo(rutaRecibo);
+            }
+
+            Long alumnoId = alumno.getId();
+            String nombreCarpeta = (alumnoId != null)
+                    ? "alumno_" + alumnoId
+                    : titular.replace(" ", "_");
+
+            if(contenidoBase64 == null || contenidoBase64.isEmpty()) {
+                throw new IllegalArgumentException("El archivo de recibo de luz es obligatorio");
+            }
+
+            String rutaRecibo = archivoServiceJPA.guardarArchivoBase64(
+                    contenidoBase64,
+                    nombreOriginal,
+                    "recibo-luz",
+                    nombreCarpeta,
+                    true
+            );
+
+
+
             ReciboLuzModel.setTitular(titular);
             ReciboLuzModel.setPeriodoInicio(periodoInicio);
             ReciboLuzModel.setPeriodoFin(periodoFin);
@@ -108,15 +152,15 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
             ReciboLuzModel.setRutaRecibo(rutaRecibo);
             ReciboLuzModel.setUltimoPago(ultimoPago);
             ReciboLuzModel.setPromedioPago(promedioPago);
-            ReciboLuzModel.setObservaciones(observaciones);
             ReciboLuzModel.setDomicilio(domicilio);
+            ReciboLuzModel.setObservaciones(observaciones);
 
 
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace(); // esto sirve  para depuracion si ocurre algun error inesperado
-            throw new IllegalArgumentException("Error al construir el ejemplo");
+            e.printStackTrace(); // esto es opcional sirve  para depuracion si ocurre algun error inesperado
+            throw new IllegalArgumentException("Error al guardar el recibo de luz");
         }
         return ReciboLuzModel;
     }

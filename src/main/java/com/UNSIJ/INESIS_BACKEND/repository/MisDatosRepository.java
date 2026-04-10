@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface MisDatosRepository extends JpaRepository<MisDatos, Long> {
     Optional<MisDatos> findByAlumno_Id(Long id);
+
+    boolean existsByDomicilio_Id(Long idDomicilio);
 }

@@ -5,6 +5,7 @@
 
 package com.UNSIJ.INESIS_BACKEND.service.interfaces;
 
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MiFamilia;
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.ViviendaFamiliar;
 
 import java.util.List;
@@ -17,11 +18,11 @@ public interface IViviendaFamiliarService {
 
     ViviendaFamiliar save(ViviendaFamiliar model) throws Exception;
 
-    ViviendaFamiliar create(Map<String, Object> params) throws Exception;
+    ViviendaFamiliar create(Map<String, Object> params, MiFamilia miFamilia) throws Exception;
 
     ViviendaFamiliar update(ViviendaFamiliar model, Map<String, Object> params) throws Exception;
 
-    ViviendaFamiliar build(Map<String, Object> params, ViviendaFamiliar model);
+    ViviendaFamiliar build(Map<String, Object> params, ViviendaFamiliar model, MiFamilia miFamilia);
 
     ViviendaFamiliar updateInstance(ViviendaFamiliar instance) throws Exception;
 

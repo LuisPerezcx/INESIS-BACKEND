@@ -4,7 +4,9 @@
  */
 package com.UNSIJ.INESIS_BACKEND.service.interfaces;
 
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MiFamilia;
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.ServiciosVivienda;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.ViviendaFamiliar;
 
 import java.util.List;
 import java.util.Map;
@@ -20,11 +22,9 @@ public interface IServiciosViviendaService {
 
     ServiciosVivienda save(ServiciosVivienda model) throws Exception;
 
-    ServiciosVivienda create(Map<String, Object> params) throws Exception;
+    ServiciosVivienda create(Long idServicio, ViviendaFamiliar viviendaFamiliar) throws Exception;
 
-    ServiciosVivienda update(ServiciosVivienda model, Map<String, Object> params) throws Exception;
-
-    ServiciosVivienda build(Map<String, Object> params, ServiciosVivienda model);
+    ServiciosVivienda build(Long idServicio, ServiciosVivienda model, ViviendaFamiliar viviendaFamiliar);
 
     ServiciosVivienda updateInstance(ServiciosVivienda instance) throws Exception;
 

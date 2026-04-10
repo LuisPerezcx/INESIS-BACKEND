@@ -28,7 +28,7 @@ public class MiTutor {
     @Column(name = "comparte_vivienda")
     private Boolean comparteVivienda;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "id_cat_tipo_trabajo")
     private CatTipoTrabajo catTipoTrabajo;
 
@@ -46,7 +46,7 @@ public class MiTutor {
     @JoinColumn(name = "id_cat_ocupacion")
     private Ocupacion ocupacion;
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "id_domicilio")
     private Domicilio domicilio;
 

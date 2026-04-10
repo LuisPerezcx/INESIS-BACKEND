@@ -6,12 +6,12 @@
 package com.UNSIJ.INESIS_BACKEND.repository.repositoryFamilia;
 
 
-import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatServiciosOtro;
+import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.CatServiciosVivienda;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
  * @author Alumnos
  */
-public interface CatServiciosOtroRepository extends JpaRepository<CatServiciosOtro, Long> {
+public interface CatServiciosOtroRepository extends JpaRepository<CatServiciosVivienda, Long> {
 
 }

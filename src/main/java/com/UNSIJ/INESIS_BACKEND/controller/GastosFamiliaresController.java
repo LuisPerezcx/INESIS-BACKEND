@@ -24,10 +24,28 @@ public class GastosFamiliaresController {
             GastosIngresosFamiliares creado = gastosService.create(params);
             return ResponseEntity.status(HttpStatus.CREATED).body(creado);
         } catch (IllegalArgumentException e) {
+            e.printStackTrace();
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
         }
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Map<String, Object> params) {
+        try {
+            GastosIngresosFamiliares existing = gastosService.findById(id);
+            GastosIngresosFamiliares updated = gastosService.update(existing, params); //TODO: REVISAR
+            return ResponseEntity.status(HttpStatus.CREATED).body(updated);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
+        }
+    }
+
 
 }

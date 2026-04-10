@@ -89,6 +89,12 @@ public class GastosIngresosServiceJPA implements IGastosIngresosService {
             Boolean dependeEconomicamente = JsonUtils.parseBooleanFlexible(params.get("dependeEconomicamente"), "dependeEconomicamente");
             gastosIngresos.setDependeEconomicamente(dependeEconomicamente);
 
+            Double personasComparteRenta = JsonUtils.obtDouble(params, "personasComparteRenta");
+            if(personasComparteRenta != null) gastosIngresos.setPersonasComparteRenta(personasComparteRenta);
+
+            Double pagoRentaMensual = JsonUtils.obtDouble(params, "pagoRentaMensual");
+            if(pagoRentaMensual != null) gastosIngresos.setPagoRentaMensual(pagoRentaMensual);
+
             if (dependeEconomicamente) {
                 String nombreQuienDependes = JsonUtils.obtString(params, "nombreQuienDependes");
                 gastosIngresos.setNombreQuienDependes(nombreQuienDependes);

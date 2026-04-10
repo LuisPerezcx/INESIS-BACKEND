@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 @Entity
 @Table(name = "alumno")
@@ -24,7 +26,6 @@ public class Alumno {
     @Column(name = "apellido_paterno")
     private String apellidoPaterno;
 
-    @NotNull
     @Column(name = "apellido_materno")
     private String apellidoMaterno;
 
@@ -68,14 +69,41 @@ public class Alumno {
     @JsonBackReference
     private Usuario usuario;
 
-    @OneToOne(mappedBy = "alumno")
+    @OneToOne(mappedBy = "alumno", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private MisDatos misDatos;
 
-    @OneToOne(mappedBy = "alumno")
+    @OneToOne(mappedBy = "alumno", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private MiTutor miTutor;
 
-    @OneToOne(mappedBy = "alumno")
+    @OneToOne(mappedBy = "alumno", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private GastosIngresosFamiliares gastosIngresosFamiliares;
+
+    @OneToOne(mappedBy = "alumno", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private MiFamilia miFamilia;
 
-    private Boolean completo;
+    @Column(name = "estudio_completo")
+    private Boolean estudioCompleto;
+
+    /* 0.- sin revisar(no se ocupa), 1.-pendiente, 2.-con correcciones
+     * 3.- corregido, 4.- finalizado  */
+    @Column(name = "estado_revision")
+    private Integer estadoRevision = 0;
+
+    @Column(name = "observaciones")
+    private String observaciones;
+
+    @Column(name = "matricula_editada")
+    private Boolean matriculaEditada = false;
+
+    @Column(name = "fecha_enviado")
+    private Date fechaEnvio;
+
+    @Transient
+    private FechasRegistradas fechaRegistrada;
+
+    public String getNombreCompleto() {
+        return (apellidoPaterno != null ? apellidoPaterno : "") + " " +
+                (apellidoMaterno != null ? apellidoMaterno : "") + " " +
+                (nombre != null ? nombre : "");
+    }
 }

@@ -20,10 +20,7 @@ public class MisDatosServiceJPA implements IMisDatosService {
     private MisDatosRepository misDatosRepository;
 
     @Autowired
-    private CatCarreraRepository catCarreraRepository;
-
-    @Autowired
-    private CatSemestreRepository catSemestreRepository;
+    private FechasRegistradasServiceJPA fechasRegistradasServiceJPA;
 
     @Autowired
     private CatSexoRepository catSexoRepository;
@@ -73,6 +70,10 @@ public class MisDatosServiceJPA implements IMisDatosService {
     @Override
     @Transactional
     public MisDatos save(MisDatos misDatos) throws Exception {
+        Alumno alumno = misDatos.getAlumno();
+        if(!fechasRegistradasServiceJPA.permitirRegistro(alumno.getCarrera().getId()))
+            throw new IllegalArgumentException("No es posible registrar tus datos en este momento. " +
+                    "El periodo de registro para tu carrera no está activo actualmente.");
         return misDatosRepository.save(misDatos);
     }
 
@@ -100,6 +101,7 @@ public class MisDatosServiceJPA implements IMisDatosService {
     }
 
     @Override
+    @Transactional
     public MisDatos update(MisDatos misDatos, Map<String, Object> params) throws Exception {
         try {
             this.build(params, misDatos);
@@ -120,8 +122,13 @@ public class MisDatosServiceJPA implements IMisDatosService {
             if (idAlumno != null) {
                 Alumno alumno = alumnoService.findById(idAlumno);
                 Long idSemestre = JsonUtils.obtLong(params, "semestre");
+                String correo = JsonUtils.obtString(params, "correo");
+                String telefono = JsonUtils.obtString(params, "telefono");
+                if(telefono.length()>10) throw new IllegalArgumentException("El número de teléfono no puede tener más de 10 dígitos");
                 CatSemestre semestre = semestreService.findById(idSemestre);
                 alumno.setSemestre(semestre);
+                alumno.setTelefono(telefono);
+                alumno.setCorreo(correo);
                 alumnoService.save(alumno);
             }
 
@@ -149,15 +156,13 @@ public class MisDatosServiceJPA implements IMisDatosService {
             Map<String, Object> gastosIngresosParams = (Map<String, Object>) params.get("gastosIngresos");
             if (gastosIngresosParams != null) {
                 if (misDatos.getGastosIngresos() != null) {
-                    System.out.println("update");
                     misDatos.setGastosIngresos(gastosIngresosServiceJPA.update(misDatos.getGastosIngresos(), gastosIngresosParams));
                 } else {
-                    System.out.println("create");
                     GastosIngresos gastosIngresos = gastosIngresosServiceJPA.create(gastosIngresosParams);
                     misDatos.setGastosIngresos(gastosIngresos);
                 }
             }
-            System.out.println("dasdasd");
+
 
             Map<String, Object> transporteAutomovilParams = (Map<String, Object>) params.get("transporteAutomovil");
             if (misDatos.getLlevaAutomovil() && transporteAutomovilParams != null &&
@@ -203,7 +208,6 @@ public class MisDatosServiceJPA implements IMisDatosService {
             misDatos.setIdioma(idioma);
 
             Long idSituacionVivienda = JsonUtils.obtLong(params, "situacionVivienda");
-            System.out.println("Situacion vivienda: " + idSituacionVivienda);
             if (idSituacionVivienda == null)
                 throw new IllegalArgumentException("El campo 'situacionVivienda' es obligatorio");
             CatSituacionVivienda cat = catSituacionViviendaRepository.findById(idSituacionVivienda)

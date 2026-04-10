@@ -1,18 +1,18 @@
 package com.UNSIJ.INESIS_BACKEND.service;
 
+import com.UNSIJ.INESIS_BACKEND.model.Alumno;
 import com.UNSIJ.INESIS_BACKEND.model.CatCarrera;
 import com.UNSIJ.INESIS_BACKEND.model.FechasRegistradas;
 import com.UNSIJ.INESIS_BACKEND.repository.FechasRegistradasRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IFechasRegistradasService;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class FechasRegistradasServiceJPA implements IFechasRegistradasService {
@@ -22,6 +22,10 @@ public class FechasRegistradasServiceJPA implements IFechasRegistradasService {
 
     @Autowired
     private CatCarreraServiceJPA carreraServiceJPA;
+
+    @Autowired
+    @Lazy
+    private AlumnoServiceJPA alumnoServiceJPA;
 
     @Override
     public List<FechasRegistradas> findAll() {
@@ -78,19 +82,21 @@ public class FechasRegistradasServiceJPA implements IFechasRegistradasService {
         return this.save(fechasRegistradas);
     }
 
-    @Override
-    public FechasRegistradas update(FechasRegistradas fechasRegistradas, Map<String, Object> params)
-            throws Exception {
-        try {
-            this.build(params, fechasRegistradas);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace(); // Opcional, ayuda en depuración si ocurre algún error inesperado
-            throw new IllegalArgumentException("Error al construir la fecha registrada");
-        }
-        return this.save(fechasRegistradas);
+   @Override
+public FechasRegistradas update(FechasRegistradas fechasRegistradas, Map<String, Object> params)
+        throws Exception {
+    try {
+        this.build(params, fechasRegistradas);
+        alumnoServiceJPA.reiniciarProceso(fechasRegistradas);
+    } catch (IllegalArgumentException e) {
+        throw e;
+    } catch (Exception e) {
+        e.printStackTrace();
+        throw new RuntimeException("Error al actualizar la fecha registrada");
     }
+
+    return this.save(fechasRegistradas);
+}
 
     @Override
     public FechasRegistradas build(Map<String, Object> params, FechasRegistradas fechasRegistradas)
@@ -170,10 +176,38 @@ public class FechasRegistradasServiceJPA implements IFechasRegistradasService {
         }
     }
 
+    public Optional<FechasRegistradas> findOptionalByCarreraId(Long idCarrera) {
+        return fechasRegistradasRepository.findByCarrera_Id(idCarrera);
+    }
+
+    public List<FechasRegistradas> findByCarreraIds(Set<Long> ids) {
+        return fechasRegistradasRepository.findByCarrera_IdIn(ids);
+    }
+
     public FechasRegistradas findByCarreraId(Long idCarrera) {
         return fechasRegistradasRepository.findByCarrera_Id(idCarrera)
                 .orElseThrow(() -> new IllegalArgumentException(
                         "No se encontró fecha registrada para la carrera con id: " + idCarrera));
+    }
+
+    public boolean estaEnRangoFechasRegistradas(Long idCarrera, Date fechaPeticion) {
+        try {
+            Optional<FechasRegistradas> fechasOpt = fechasRegistradasRepository.findByCarrera_Id(idCarrera);
+            // Si no hay fechas registradas o no está activo, retornamos false
+            if (fechasOpt.isEmpty() || !fechasOpt.get().isActive()) {
+                return false;
+            }
+            FechasRegistradas fechas = fechasOpt.get();
+            // Comprobamos si la fecha de petición está dentro del rango (inclusivo)
+            return !fechaPeticion.before(fechas.getFechaInicio()) && !fechaPeticion.after(fechas.getFechaFin());
+        } catch (Exception e) {
+            // Si ocurre algún error, asumimos que no está en rango
+            return false;
+        }
+    }
+
+    public boolean permitirRegistro(Long idCarrera) {
+        return estaEnRangoFechasRegistradas(idCarrera, new Date());
     }
 
 }

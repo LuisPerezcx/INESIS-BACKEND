@@ -51,11 +51,18 @@ public class FechasRegistradasController {
         try {
             FechasRegistradas fechasRegistradasUpdated = fechasRegistradasServiceJPA
                     .update(fechasRegistradasServiceJPA.findById(id), params);
-            return ResponseEntity.status(HttpStatus.CREATED).body(fechasRegistradasUpdated);
+
+            return ResponseEntity.ok(fechasRegistradasUpdated);
+
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.badRequest().body(e.getMessage());
+
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error interno del servidor");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error interno del servidor");
         }
     }
 
@@ -82,9 +89,9 @@ public class FechasRegistradasController {
         } catch (Exception e) {
             e.printStackTrace();
 
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al buscar la fecha por carrera.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al buscar la fecha por carrera.");
         }
     }
-
 
 }
