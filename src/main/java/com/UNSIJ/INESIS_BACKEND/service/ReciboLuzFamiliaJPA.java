@@ -100,13 +100,17 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
                                                                                              // MOSTRARÁN EN EL FRONT
             if (periodoFin == null)
                 throw new IllegalArgumentException("El campo periodoFin es obligatorio"); // ESTOS MENSAJES SE MOSTRARÁN
-                                                                                          // EN EL FRONT
-            if (nombreArchivo == null)
-                throw new IllegalArgumentException("El campo nombreArchivo es obligatorio"); // ESTOS MENSAJES SE
-                                                                                             // MOSTRARÁN EN EL FRONT
-            if (nombreOriginal == null)
-                throw new IllegalArgumentException("El campo nombreOriginal es obligatorio"); // ESTOS MENSAJES SE
-                                                                                              // MOSTRARÁN EN EL FRONT
+
+            // SOLO validar si hay archivo nuevo
+            if (contenidoBase64 != null && !contenidoBase64.isEmpty()) {
+                if (nombreArchivo == null)
+                    throw new IllegalArgumentException("El campo nombreArchivo es obligatorio");
+
+                if (nombreOriginal == null)
+                    throw new IllegalArgumentException("El campo nombreOriginal es obligatorio");
+            }
+
+            // EN EL FRONT             // MOSTRARÁN EN EL FRONT
             if (ultimoPago == null)
                 throw new IllegalArgumentException("El campo ultimoPago es obligatorio"); // ESTOS MENSAJES SE MOSTRARÁN
                                                                                           // EN EL FRONT
@@ -119,16 +123,7 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
             if (domicilio == null)
                 throw new IllegalArgumentException("El campo domicilio es obligatorio");
 
-            if(contenidoBase64 != null && !contenidoBase64.isEmpty()){
-                if(nombreArchivo == null) throw new IllegalArgumentException("El campo nombreArchivo es obligatorio");
-                if(nombreOriginal == null) throw new IllegalArgumentException("El campo nombreOriginal es obligatorio");
 
-                String rutaRecibo = ArchivoUtil.guardarArchivoBase64(contenidoBase64, nombreArchivo, rutaBase);
-
-                ReciboLuzModel.setNombreArchivo(nombreArchivo);
-                ReciboLuzModel.setNombreOriginal(nombreOriginal);
-                ReciboLuzModel.setRutaRecibo(rutaRecibo);
-            }
 
             Long alumnoId = alumno.getId();
             String nombreCarpeta = (alumnoId != null)
@@ -140,24 +135,31 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
                 throw new IllegalArgumentException("El archivo de recibo de luz es obligatorio");
             }
 
-            String rutaRecibo = ReciboLuzModel.getRutaRecibo();
-
             if (contenidoBase64 != null && !contenidoBase64.isEmpty()) {
-                rutaRecibo = archivoServiceJPA.guardarArchivoBase64(
-                        contenidoBase64,    
+
+                String rutaRecibo = archivoServiceJPA.guardarArchivoBase64(
+                        contenidoBase64,
                         nombreOriginal,
                         "recibo-luz",
                         nombreCarpeta,
-                        true);
+                        true
+                );
+
+                ReciboLuzModel.setNombreArchivo(nombreArchivo);
+                ReciboLuzModel.setNombreOriginal(nombreOriginal);
+                ReciboLuzModel.setRutaRecibo(rutaRecibo);
+
+            } else {
+                if (ReciboLuzModel.getRutaRecibo() == null) {
+                    throw new IllegalArgumentException("El archivo de recibo de luz es obligatorio");
+                }
             }
 
+            String rutaRecibo = ReciboLuzModel.getRutaRecibo();
 
             ReciboLuzModel.setTitular(titular);
             ReciboLuzModel.setPeriodoInicio(periodoInicio);
             ReciboLuzModel.setPeriodoFin(periodoFin);
-            ReciboLuzModel.setNombreArchivo(nombreArchivo);
-            ReciboLuzModel.setNombreOriginal(nombreOriginal);
-            ReciboLuzModel.setRutaRecibo(rutaRecibo);
             ReciboLuzModel.setUltimoPago(ultimoPago);
             ReciboLuzModel.setPromedioPago(promedioPago);
             ReciboLuzModel.setDomicilio(domicilio);
