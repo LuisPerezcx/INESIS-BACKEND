@@ -89,28 +89,33 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
             String observaciones = JsonUtils.obtString(params, "observaciones");
             String domicilio = JsonUtils.obtString(params, "domicilio");
 
-
-
             String contenidoBase64 = JsonUtils.obtString(params, "contenidoBase64"); // Asegúrate que llegue este campo
 
-
-            //VERIFICACION DEL CAMPO NUMERO
+            // VERIFICACION DEL CAMPO NUMERO
             if (titular == null)
-                throw new IllegalArgumentException("El campo titular es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+                throw new IllegalArgumentException("El campo titular es obligatorio"); // ESTOS MENSAJES SE MOSTRARÁN EN
+                                                                                       // EL FRONT
             if (periodoInicio == null)
-                throw new IllegalArgumentException("El campo periodoInicio es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+                throw new IllegalArgumentException("El campo periodoInicio es obligatorio"); // ESTOS MENSAJES SE
+                                                                                             // MOSTRARÁN EN EL FRONT
             if (periodoFin == null)
-                throw new IllegalArgumentException("El campo periodoFin es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+                throw new IllegalArgumentException("El campo periodoFin es obligatorio"); // ESTOS MENSAJES SE MOSTRARÁN
+                                                                                          // EN EL FRONT
             if (nombreArchivo == null)
-                throw new IllegalArgumentException("El campo nombreArchivo es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+                throw new IllegalArgumentException("El campo nombreArchivo es obligatorio"); // ESTOS MENSAJES SE
+                                                                                             // MOSTRARÁN EN EL FRONT
             if (nombreOriginal == null)
-                throw new IllegalArgumentException("El campo nombreOriginal es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+                throw new IllegalArgumentException("El campo nombreOriginal es obligatorio"); // ESTOS MENSAJES SE
+                                                                                              // MOSTRARÁN EN EL FRONT
             if (ultimoPago == null)
-                throw new IllegalArgumentException("El campo ultimoPago es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+                throw new IllegalArgumentException("El campo ultimoPago es obligatorio"); // ESTOS MENSAJES SE MOSTRARÁN
+                                                                                          // EN EL FRONT
             if (promedioPago == null)
-                throw new IllegalArgumentException("El campo promedioPago es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+                throw new IllegalArgumentException("El campo promedioPago es obligatorio"); // ESTOS MENSAJES SE
+                                                                                            // MOSTRARÁN EN EL FRONT
             if (observaciones == null)
-                throw new IllegalArgumentException("El campo observaciones es obligatorio"); //ESTOS MENSAJES SE MOSTRARÁN EN EL FRONT
+                throw new IllegalArgumentException("El campo observaciones es obligatorio"); // ESTOS MENSAJES SE
+                                                                                             // MOSTRARÁN EN EL FRONT
             if (domicilio == null)
                 throw new IllegalArgumentException("El campo domicilio es obligatorio");
 
@@ -119,18 +124,21 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
                     ? "alumno_" + alumnoId
                     : titular.replace(" ", "_");
 
-            if(contenidoBase64 == null || contenidoBase64.isEmpty()) {
+            if ((contenidoBase64 == null || contenidoBase64.isEmpty())
+                    && ReciboLuzModel.getRutaRecibo() == null) {
                 throw new IllegalArgumentException("El archivo de recibo de luz es obligatorio");
             }
 
-            String rutaRecibo = archivoServiceJPA.guardarArchivoBase64(
-                    contenidoBase64,
-                    nombreOriginal,
-                    "recibo-luz",
-                    nombreCarpeta,
-                    true
-            );
+            String rutaRecibo = ReciboLuzModel.getRutaRecibo();
 
+            if (contenidoBase64 != null && !contenidoBase64.isEmpty()) {
+                rutaRecibo = archivoServiceJPA.guardarArchivoBase64(
+                        contenidoBase64,    
+                        nombreOriginal,
+                        "recibo-luz",
+                        nombreCarpeta,
+                        true);
+            }
 
 
             ReciboLuzModel.setTitular(titular);
@@ -144,11 +152,10 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
             ReciboLuzModel.setDomicilio(domicilio);
             ReciboLuzModel.setObservaciones(observaciones);
 
-
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace(); // esto es opcional sirve  para depuracion si ocurre algun error inesperado
+            e.printStackTrace(); // esto es opcional sirve para depuracion si ocurre algun error inesperado
             throw new IllegalArgumentException("Error al guardar el recibo de luz");
         }
         return ReciboLuzModel;
