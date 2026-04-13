@@ -152,6 +152,12 @@ public class GastosIngresosService implements IGatosIngresoFamiliares {
                     gIngresosFamiliares.getIngresosFamiliar().add(ingreso);
                 }
             }
+/* Map<String, Object> ingresoFamiliar = (Map<String, Object>) params.get("s");
+            IngresoFamiliarModel ingresoFamiliarModel = ingresoFamiliarJPA.create(ingresoFamiliar);
+            gIngresosFamiliares.setIngresoFamiliarModel(ingresoFamiliarModel);*/
+            
+
+
 
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());

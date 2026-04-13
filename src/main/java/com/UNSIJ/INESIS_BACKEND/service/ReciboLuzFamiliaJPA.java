@@ -119,6 +119,17 @@ public class ReciboLuzFamiliaJPA implements IReciboLuz {
             if (domicilio == null)
                 throw new IllegalArgumentException("El campo domicilio es obligatorio");
 
+            if(contenidoBase64 != null && !contenidoBase64.isEmpty()){
+                if(nombreArchivo == null) throw new IllegalArgumentException("El campo nombreArchivo es obligatorio");
+                if(nombreOriginal == null) throw new IllegalArgumentException("El campo nombreOriginal es obligatorio");
+
+                String rutaRecibo = ArchivoUtil.guardarArchivoBase64(contenidoBase64, nombreArchivo, rutaBase);
+
+                ReciboLuzModel.setNombreArchivo(nombreArchivo);
+                ReciboLuzModel.setNombreOriginal(nombreOriginal);
+                ReciboLuzModel.setRutaRecibo(rutaRecibo);
+            }
+
             Long alumnoId = alumno.getId();
             String nombreCarpeta = (alumnoId != null)
                     ? "alumno_" + alumnoId
