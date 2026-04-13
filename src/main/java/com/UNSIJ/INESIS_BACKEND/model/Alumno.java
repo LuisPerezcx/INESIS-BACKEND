@@ -4,6 +4,7 @@ import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MiFamilia;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.util.Date;
@@ -89,7 +90,8 @@ public class Alumno {
     @Column(name = "estado_revision")
     private Integer estadoRevision = 0;
 
-    @Column(name = "observaciones")
+    @Column(name = "observaciones", length = 1000)
+    @Size(max = 1000)
     private String observaciones;
 
     @Column(name = "matricula_editada")

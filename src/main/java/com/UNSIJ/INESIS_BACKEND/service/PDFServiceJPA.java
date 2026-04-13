@@ -469,8 +469,23 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.apellidoP, valorSeguro(alumno.getApellidoPaterno(), " "), true);
             form.setField(PDF.ESE.apellidoM, valorSeguro(alumno.getApellidoMaterno(), " "), true);
             form.setField(PDF.ESE.nombreAlum, valorSeguro(alumno.getNombre(), " "), true);
-            form.setField(PDF.ESE.sexo, valorSeguro(alumno.getSexo().getNombreSexo(), " "), true);
-            form.setField(PDF.ESE.estadoCivil, valorSeguro(alumno.getMisDatos().getEstadoCivil().getNombreEstadoCivil(), " "), true);
+            String nombreSexo = alumno.getSexo() != null ? alumno.getSexo().getNombreSexo() : null;
+            String sexoPdf;
+
+            if (nombreSexo == null) {
+                sexoPdf = " ";
+            } else {
+                String s = nombreSexo.trim().toLowerCase();
+                if (s.equals("masculino") || s.equals("masculo") || s.equals("m")) {
+                    sexoPdf = "M";
+                } else if (s.equals("femenino") || s.equals("f")) {
+                    sexoPdf = "F";
+                } else {
+                    sexoPdf = " ";
+                }
+            }
+
+            form.setField(PDF.ESE.sexo, sexoPdf, true);            form.setField(PDF.ESE.estadoCivil, valorSeguro(alumno.getMisDatos().getEstadoCivil().getNombreEstadoCivil(), " "), true);
             form.setField(PDF.ESE.carrera, valorSeguro(alumno.getCarrera().getNombreCarrera(), " "), true);
             form.setField(PDF.ESE.telefonoAlumno, valorSeguro(alumno.getTelefono(), " "), true);
             form.setField(PDF.ESE.emailAlumno, valorSeguro(alumno.getCorreo(), " "), true);
