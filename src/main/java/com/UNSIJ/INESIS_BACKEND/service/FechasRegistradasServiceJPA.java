@@ -87,7 +87,7 @@ public FechasRegistradas update(FechasRegistradas fechasRegistradas, Map<String,
         throws Exception {
     try {
         this.build(params, fechasRegistradas);
-        alumnoServiceJPA.reiniciarProceso(fechasRegistradas);
+        //alumnoServiceJPA.reiniciarProceso(fechasRegistradas); Si esto es necesario darle la logica correcta 
     } catch (IllegalArgumentException e) {
         throw e;
     } catch (Exception e) {
