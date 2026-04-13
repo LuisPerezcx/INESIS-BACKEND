@@ -120,6 +120,12 @@ public class AlumnoServiceJPA implements IAlumnoService {
     @Override
     public Alumno build(Map<String, Object> params, Alumno alumno) {
         try {
+            // Guardar el estado anterior si es una actualización (alumno ya existe en BD)
+            Boolean estudioCompletoAnterior = null;
+            if (alumno.getId() != null) {
+                estudioCompletoAnterior = alumno.getEstudioCompleto();
+            }
+
             // Asignar campos del alumno
             alumno.setNombre(JsonUtils.obtString(params, "nombre"));
             alumno.setApellidoPaterno(JsonUtils.obtString(params, "apellidoPaterno"));
@@ -144,19 +150,26 @@ public class AlumnoServiceJPA implements IAlumnoService {
             // Guardar los datos del alumno
             alumno = save(alumno);
 
+            // Restaurar estudioCompleto si era una actualización
+            if (estudioCompletoAnterior != null) {
+                alumno.setEstudioCompleto(estudioCompletoAnterior);
+                alumno = save(alumno);
+            }
+
             // Verificar si el alumno ya tiene un usuario
             if (alumno.getUsuario() != null) {
                 // Si ya existe un usuario, actualizamos su información
                 String usuario = JsonUtils.obtString(params, "usuario");
                 String contrasena = JsonUtils.obtString(params, "contrasenia");
-                if(usuario != null && contrasena != null) {
+                if (usuario != null && contrasena != null) {
                     Map<String, Object> usuarioParams = new HashMap<>();
                     usuarioParams.put("usuario", usuario);
                     usuarioParams.put("contrasenia", contrasena);
                     usuarioParams.put("estatus", params.getOrDefault("estatus", "Activo"));
 
-                    Long idRol = params.get("idCatRol") != null ? Long.parseLong(params.get("idCatRol").toString()) : 1L; // Valor
-                                                                                                                          // predeterminado
+                    Long idRol = params.get("idCatRol") != null ? Long.parseLong(params.get("idCatRol").toString())
+                            : 1L; // Valor
+                                  // predeterminado
                     Map<String, Object> rolMap = new HashMap<>();
                     rolMap.put("idCatRol", idRol);
                     usuarioParams.put("rol", rolMap);
@@ -181,8 +194,6 @@ public class AlumnoServiceJPA implements IAlumnoService {
         return alumno;
     }
 
-
-
     @Override
     public void deleteById(Long id) {
         Alumno alumno = this.findById(id);
@@ -197,12 +208,15 @@ public class AlumnoServiceJPA implements IAlumnoService {
     }
 
     private void verificarFechas(Alumno alumno) {
-        if (alumno.getCarrera() == null) return;
+        if (alumno.getCarrera() == null)
+            return;
         try {
-            Optional<FechasRegistradas> opt = fechasRegistradasServiceJPA.findOptionalByCarreraId(alumno.getCarrera().getId());
+            Optional<FechasRegistradas> opt = fechasRegistradasServiceJPA
+                    .findOptionalByCarreraId(alumno.getCarrera().getId());
             opt.ifPresent(alumno::setFechaRegistrada);
         } catch (Exception e) {
-            //logger.error("Error al obtener fechas registradas para carrera {}: {}", alumno.getCarrera().getId(), e.getMessage(), e);
+            // logger.error("Error al obtener fechas registradas para carrera {}: {}",
+            // alumno.getCarrera().getId(), e.getMessage(), e);
         }
     }
 
@@ -215,71 +229,77 @@ public class AlumnoServiceJPA implements IAlumnoService {
     public List<Alumno> importarDesdeExcel(MultipartFile file) throws Exception {
         List<Alumno> alumnosImportados = new ArrayList<>();
         int filasASaltar = 6;
-        int filaActual = 0;
 
         try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
-            Sheet sheet = workbook.getSheetAt(0);
+            // Iterar sobre todas las hojas del libro
+            int numSheets = workbook.getNumberOfSheets();
 
-            // Omitir las 5 primeras filas de encabezados
-            Iterator<Row> rowIterator = sheet.iterator();
-            while (rowIterator.hasNext() && filaActual < filasASaltar) {
-                rowIterator.next();
-                filaActual++;
-            }
+            for (int sheetIndex = 0; sheetIndex < numSheets; sheetIndex++) {
+                Sheet sheet = workbook.getSheetAt(sheetIndex);
+                int filaActual = 0;
 
-            while (rowIterator.hasNext()) {
-                Row row = rowIterator.next();
+                // Omitir las primeras 6 filas de encabezados
+                Iterator<Row> rowIterator = sheet.iterator();
+                while (rowIterator.hasNext() && filaActual < filasASaltar) {
+                    rowIterator.next();
+                    filaActual++;
+                }
 
-                // Validar que la fila no esté vacía
-                if (ArchivoUtil.isEmptyRow(row))
-                    continue;
+                while (rowIterator.hasNext()) {
+                    Row row = rowIterator.next();
 
-                try {
-                    // Crear un mapa con los datos de la fila
-                    Map<String, Object> alumnoData = new HashMap<>();
+                    // Validar que la fila no esté vacía
+                    if (ArchivoUtil.isEmptyRow(row))
+                        continue;
 
-                    // CAMPOS OBLIGATORIOS
-                    alumnoData.put("nombre", ArchivoUtil.getCellValueAsString(row.getCell(0)));
-                    alumnoData.put("apellidoPaterno", ArchivoUtil.getCellValueAsString(row.getCell(1)));
-                    alumnoData.put("curp", ArchivoUtil.getCellValueAsString(row.getCell(3)));
-                    String sexoTexto = ArchivoUtil.getCellValueAsString(row.getCell(4));
-                    // buscar id grupo
-                    String nombreGrupo = ArchivoUtil.getCellValueAsString(row.getCell(5));
-                    Long idGrupo = grupoServiceJPA.findIdByNombreGrupo(nombreGrupo);
-                    alumnoData.put("grupo", idGrupo);
-                    // Buscar id carrera
-                    Long idCarrera = grupoServiceJPA.findIdCarreraByGrupo(nombreGrupo);
-                    alumnoData.put("carrera", idCarrera);
-                    // extraer sexo
-                    if (sexoTexto.equals("F") || sexoTexto.equals("f")) {
-                        alumnoData.put("sexo", 2); // Femenino
-                    } else if (sexoTexto.equals("M") || sexoTexto.equals("m")) {
-                        alumnoData.put("sexo", 1); // Masculino
-                    } else {
-                        throw new IllegalArgumentException("Sexo no válido en la fila " + (row.getRowNum()+1));
+                    try {
+                        // ...existing code...
+                        Map<String, Object> alumnoData = new HashMap<>();
+
+                        alumnoData.put("nombre", ArchivoUtil.getCellValueAsString(row.getCell(0)));
+                        alumnoData.put("apellidoPaterno", ArchivoUtil.getCellValueAsString(row.getCell(1)));
+                        alumnoData.put("curp", ArchivoUtil.getCellValueAsString(row.getCell(3)));
+                        String sexoTexto = ArchivoUtil.getCellValueAsString(row.getCell(4));
+                        String nombreGrupo = ArchivoUtil.getCellValueAsString(row.getCell(5));
+                        Long idGrupo = grupoServiceJPA.findIdByNombreGrupo(nombreGrupo);
+                        alumnoData.put("grupo", idGrupo);
+                        Long idCarrera = grupoServiceJPA.findIdCarreraByGrupo(nombreGrupo);
+                        alumnoData.put("carrera", idCarrera);
+
+                        if (sexoTexto.equals("F") || sexoTexto.equals("f")) {
+                            alumnoData.put("sexo", 2);
+                        } else if (sexoTexto.equals("M") || sexoTexto.equals("m")) {
+                            alumnoData.put("sexo", 1);
+                        } else {
+                            throw new IllegalArgumentException("Sexo no válido en la fila " + (row.getRowNum() + 1));
+                        }
+
+                        Long idSemestre = grupoServiceJPA.findIdSemestreByGrupo(nombreGrupo);
+                        alumnoData.put("semestre", idSemestre);
+                        alumnoData.put("matricula", ArchivoUtil.getCellValueAsString(row.getCell(6)));
+                        alumnoData.put("apellidoMaterno", ArchivoUtil.getCellValueAsString(row.getCell(2)));
+                        alumnoData.put("correo", "");
+                        alumnoData.put("telefono", "");
+
+                        String curp = ArchivoUtil.getCellValueAsString(row.getCell(3));
+                        Alumno alumno;
+                        Optional<Alumno> alumnoExistente = alumnoRepository.findByCurp(curp);
+
+                        if (alumnoExistente.isPresent()) {
+                            alumno = update(alumnoExistente.get(), alumnoData);
+                        } else {
+                            alumno = create(alumnoData);
+                        }
+
+                        alumnosImportados.add(alumno);
+
+                    } catch (IllegalArgumentException e) {
+                        throw new IllegalArgumentException(e.getMessage());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        throw new IllegalArgumentException(
+                                "Error al importar el alumno en la fila " + row.getRowNum() + " de la hoja " + sheet.getSheetName() + ": " + e.getMessage());
                     }
-                    Long idSemestre = grupoServiceJPA.findIdSemestreByGrupo(nombreGrupo);
-                    alumnoData.put("semestre", idSemestre);
-                    alumnoData.put("matricula", ArchivoUtil.getCellValueAsString(row.getCell(6)));
-
-                    // CAMPOS OPCIONALES
-                    alumnoData.put("apellidoMaterno", ArchivoUtil.getCellValueAsString(row.getCell(2)));
-
-                    // campos not null no incluidos
-                    alumnoData.put("correo", "");
-                    alumnoData.put("telefono", "");
-
-                    // Crear el alumno
-                    Alumno alumno = create(alumnoData);
-                    alumnosImportados.add(alumno);
-
-                } catch (IllegalArgumentException e) {
-                    // Opcionalmente, puedes manejar los errores por fila o acumularlos
-                    throw new IllegalArgumentException(e.getMessage());
-                } catch (Exception e) {
-                    e.printStackTrace(); // Esto es opcional, sirve para depuración si ocurre algún error inesperado
-                    throw new IllegalArgumentException(
-                            "Error al importar el alumno en la fila " + row.getRowNum() + ": " + e.getMessage());
                 }
             }
         }
@@ -316,13 +336,14 @@ public class AlumnoServiceJPA implements IAlumnoService {
         return alumnoRepository.findByCarrera_Id(id);
     }
 
-    public void cambiarEstadoRevision(Alumno alumno,Map<String, Object> datos) throws Exception {
+    public void cambiarEstadoRevision(Alumno alumno, Map<String, Object> datos) throws Exception {
         try {
             String observaciones = JsonUtils.obtString(datos, "observaciones");
             Integer estado = JsonUtils.obtInteger(datos, "estado");
             alumno.setObservaciones(observaciones);
             alumno.setEstadoRevision(estado);
-            if(estado != null && estado == 4 ) alumno.setObservaciones("");
+            if (estado != null && estado == 4)
+                alumno.setObservaciones("");
 
             this.save(alumno);
         } catch (IllegalArgumentException e) {
@@ -338,40 +359,48 @@ public class AlumnoServiceJPA implements IAlumnoService {
         try {
             List<Alumno> alumnos = this.findByCarreraId(carrera.getId());
             List<Alumno> alumnosModificados = new ArrayList<>();
+
             for (Alumno alumno : alumnos) {
                 alumno.setEstudioCompleto(false);
                 alumno.setEstadoRevision(0);
-                alumno.getMisDatos().setModuloCompleto(false);
-                alumno.getMiTutor().setModuloCompleto(false);
-                alumno.getGastosIngresosFamiliares().setModuloCompleto(false);
-                alumno.getMiFamilia().setModuloCompleto(false);
+                if (alumno.getMisDatos() != null) {
+                    alumno.getMisDatos().setModuloCompleto(false);
+                }
+                if (alumno.getMiTutor() != null) {
+                    alumno.getMiTutor().setModuloCompleto(false);
+                }
+                if (alumno.getGastosIngresosFamiliares() != null) {
+                    alumno.getGastosIngresosFamiliares().setModuloCompleto(false);
+                }
+                if (alumno.getMiFamilia() != null) {
+                    alumno.getMiFamilia().setModuloCompleto(false);
+                }
                 alumnosModificados.add(alumno);
             }
             this.saveAll(alumnosModificados);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(e.getMessage());
+
         } catch (Exception e) {
-            e.printStackTrace(); // Opcional, ayuda en depuración si ocurre algún error inesperado
-            throw new IllegalArgumentException("Error al construir la fecha registrada");
+            e.printStackTrace();
+            throw new RuntimeException("Error en reiniciar proceso: " + e.getMessage());
         }
     }
 
-    public String exportarFinalizados(){
+    public String exportarFinalizados() {
         Workbook workbook = new XSSFWorkbook();
 
         List<Alumno> alumnos = alumnoRepository.findAll();
-        //agrupar alumnos por carrera
+        // agrupar alumnos por carrera
         Map<Long, List<Alumno>> alumnosPorCarrera = alumnos.stream()
                 .filter(a -> a.getCarrera() != null && a.getEstudioCompleto() != null && a.getEstudioCompleto())
                 .collect(Collectors.groupingBy(a -> a.getCarrera().getId()));
 
-        //CREAR UNA HOJA POR CARRERRA
+        // CREAR UNA HOJA POR CARRERRA
         for (Map.Entry<Long, List<Alumno>> entry : alumnosPorCarrera.entrySet()) {
             Long carreraId = entry.getKey();
             List<Alumno> lista = entry.getValue();
             String nombreCarrera = " ";
 
-            switch (carreraId.intValue()){
+            switch (carreraId.intValue()) {
                 case 1 -> nombreCarrera = "AMBIENTAL";
                 case 2 -> nombreCarrera = "FORESTAL";
                 case 3 -> nombreCarrera = "INFORMATICA";
@@ -408,7 +437,8 @@ public class AlumnoServiceJPA implements IAlumnoService {
             header.createCell(18).setCellValue("VEHÍCULO (7)");
             header.createCell(19).setCellValue("INGRESO\nMENSUAL\nBRUTO\nREPORTADO\n(8)");
             header.createCell(20).setCellValue("INGRESO\nMENSUAL\nNETO\nREPORTADO\n(8)");
-            header.createCell(21).setCellValue("DIFERENCIA\nENTRE\nINGRESO\nMENSUAL\nBRUTO E\nINGRESO\nMENSUAL\nNETO\nREPORTADO\n(9)");
+            header.createCell(21).setCellValue(
+                    "DIFERENCIA\nENTRE\nINGRESO\nMENSUAL\nBRUTO E\nINGRESO\nMENSUAL\nNETO\nREPORTADO\n(9)");
             header.createCell(22).setCellValue("GASTOS DE\nMANUTENCION\nCOMO % DE\nINGRESO\nNETO\nREPORTADO\n(10)");
             header.createCell(23).setCellValue("GASTOS LUZ\n(11)");
             header.createCell(24).setCellValue("NÚMERO DE\nDEPENDIENTES\nECONÓMICOS\n(12)");
@@ -420,8 +450,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
             header.createCell(30).setCellValue("BECA\nALIMENTARIA\nRECOMENDADA\n(18)");
             header.createCell(31).setCellValue("OBSERVACIONES (19)");
 
-
-            //ESTILOS ENCABEZADO
+            // ESTILOS ENCABEZADO
             CellStyle borderedStyle = workbook.createCellStyle();
             borderedStyle.setBorderTop(BorderStyle.THIN);
             borderedStyle.setBorderBottom(BorderStyle.THIN);
@@ -436,9 +465,8 @@ public class AlumnoServiceJPA implements IAlumnoService {
                 }
             }
 
-
             int rowNum = 1;
-            for(Alumno a : lista){
+            for (Alumno a : lista) {
                 Row row = sheet.createRow(rowNum++);
                 CellStyle borderedStyleData = workbook.createCellStyle();
                 borderedStyleData.setBorderTop(BorderStyle.THIN);
@@ -446,19 +474,40 @@ public class AlumnoServiceJPA implements IAlumnoService {
                 borderedStyleData.setBorderLeft(BorderStyle.THIN);
                 borderedStyleData.setBorderRight(BorderStyle.THIN);
 
-                Cell cell0 = row.createCell(0); cell0.setCellValue(rowNum - 1); cell0.setCellStyle(borderedStyleData);
-                Cell cell1 = row.createCell(1); cell1.setCellValue(a.getNombreCompleto()); cell1.setCellStyle(borderedStyleData);
-                Cell cell2 = row.createCell(2); cell2.setCellValue(a.getCarrera() != null ? a.getCarrera().getNombreCarrera() : ""); cell2.setCellStyle(borderedStyleData);
-                Cell cell3 = row.createCell(3); cell3.setCellValue("IXTLAN"); cell3.setCellStyle(borderedStyleData);
-                Cell cell4 = row.createCell(4); cell4.setCellValue(a.getSemestre() != null ? a.getSemestre().getNombreSemestre() : ""); cell4.setCellStyle(borderedStyleData);
+                Cell cell0 = row.createCell(0);
+                cell0.setCellValue(rowNum - 1);
+                cell0.setCellStyle(borderedStyleData);
+                Cell cell1 = row.createCell(1);
+                cell1.setCellValue(a.getNombreCompleto());
+                cell1.setCellStyle(borderedStyleData);
+                Cell cell2 = row.createCell(2);
+                cell2.setCellValue(a.getCarrera() != null ? a.getCarrera().getNombreCarrera() : "");
+                cell2.setCellStyle(borderedStyleData);
+                Cell cell3 = row.createCell(3);
+                cell3.setCellValue("IXTLAN");
+                cell3.setCellStyle(borderedStyleData);
+                Cell cell4 = row.createCell(4);
+                cell4.setCellValue(a.getSemestre() != null ? a.getSemestre().getNombreSemestre() : "");
+                cell4.setCellStyle(borderedStyleData);
                 // Celdas 5-11 vacías pero con borde
-                for (int i = 5; i <= 11; i++) { Cell c = row.createCell(i); c.setCellStyle(borderedStyleData); }
-                Cell cell12 = row.createCell(12); cell12.setCellValue(a.getMisDatos().getGastosIngresos().getDependeEconomicamente() ? "SI" : "NO"); cell12.setCellStyle(borderedStyleData);
-                Cell cell13 = row.createCell(13); cell13.setCellValue(a.getMisDatos().getGastosIngresos().getSolicitaBecaAlimenticia() ? "SI" : "NO"); cell13.setCellStyle(borderedStyleData);
-                Cell cell14 = row.createCell(14); cell14.setCellValue(Math.round(a.getMisDatos().getGastosIngresos().getGastoMensual())); cell14.setCellStyle(borderedStyleData);
-                long idSituacion = a.getMisDatos().getSituacionVivienda() != null ? a.getMisDatos().getSituacionVivienda().getId() : 0L;
+                for (int i = 5; i <= 11; i++) {
+                    Cell c = row.createCell(i);
+                    c.setCellStyle(borderedStyleData);
+                }
+                Cell cell12 = row.createCell(12);
+                cell12.setCellValue(a.getMisDatos().getGastosIngresos().getDependeEconomicamente() ? "SI" : "NO");
+                cell12.setCellStyle(borderedStyleData);
+                Cell cell13 = row.createCell(13);
+                cell13.setCellValue(a.getMisDatos().getGastosIngresos().getSolicitaBecaAlimenticia() ? "SI" : "NO");
+                cell13.setCellStyle(borderedStyleData);
+                Cell cell14 = row.createCell(14);
+                cell14.setCellValue(Math.round(a.getMisDatos().getGastosIngresos().getGastoMensual()));
+                cell14.setCellStyle(borderedStyleData);
+                long idSituacion = a.getMisDatos().getSituacionVivienda() != null
+                        ? a.getMisDatos().getSituacionVivienda().getId()
+                        : 0L;
                 Cell cell15 = row.createCell(15);
-                switch ((int) idSituacion){
+                switch ((int) idSituacion) {
                     case 3 -> cell15.setCellValue("RU");
                     case 4 -> cell15.setCellValue("RA");
                     case 5 -> cell15.setCellValue("VF");
@@ -466,33 +515,70 @@ public class AlumnoServiceJPA implements IAlumnoService {
                 }
                 cell15.setCellStyle(borderedStyleData);
                 Double personasComparteRenta = a.getMisDatos().getGastosIngresos().getPersonasComparteRenta();
-                Cell cell16 = row.createCell(16); cell16.setCellValue(personasComparteRenta != null && personasComparteRenta > 0 ?  String.valueOf(Math.round(personasComparteRenta)) : "NA");  cell16.setCellStyle(borderedStyleData);
+                Cell cell16 = row.createCell(16);
+                cell16.setCellValue(personasComparteRenta != null && personasComparteRenta > 0
+                        ? String.valueOf(Math.round(personasComparteRenta))
+                        : "NA");
+                cell16.setCellStyle(borderedStyleData);
                 Double pagoRentaMensual = a.getMisDatos().getGastosIngresos().getPagoRentaMensual();
-                Cell cell17 = row.createCell(17); cell17.setCellValue(pagoRentaMensual != null && pagoRentaMensual > 0 ? String.valueOf(Math.round(pagoRentaMensual)) : "NA");  cell17.setCellStyle(borderedStyleData);
+                Cell cell17 = row.createCell(17);
+                cell17.setCellValue(
+                        pagoRentaMensual != null && pagoRentaMensual > 0 ? String.valueOf(Math.round(pagoRentaMensual))
+                                : "NA");
+                cell17.setCellStyle(borderedStyleData);
                 String valorVehiculo = "NO";
-                if(a.getMisDatos().getLlevaAutomovil()) valorVehiculo = "C";
-                if(a.getMisDatos().getLlevamotocicleta() && a.getMisDatos().getTransporteMotocicleta() != null) {
-                    valorVehiculo = "M (" + a.getMisDatos().getTransporteMotocicleta().getMarca() + " " + a.getMisDatos().getTransporteMotocicleta().getModelo()+ ")";
+                if (a.getMisDatos().getLlevaAutomovil())
+                    valorVehiculo = "C";
+                if (a.getMisDatos().getLlevamotocicleta() && a.getMisDatos().getTransporteMotocicleta() != null) {
+                    valorVehiculo = "M (" + a.getMisDatos().getTransporteMotocicleta().getMarca() + " "
+                            + a.getMisDatos().getTransporteMotocicleta().getModelo() + ")";
                 }
-                Cell cell18 = row.createCell(18); cell18.setCellValue(valorVehiculo); cell18.setCellStyle(borderedStyleData);
+                Cell cell18 = row.createCell(18);
+                cell18.setCellValue(valorVehiculo);
+                cell18.setCellStyle(borderedStyleData);
                 int ingresoBruto = Math.toIntExact(Math.round(a.getGastosIngresosFamiliares().getIngresoBrutoTotal()));
                 int ingresoNeto = Math.toIntExact(Math.round(a.getGastosIngresosFamiliares().getIngresoTotal()));
-                Cell cell19 = row.createCell(19); cell19.setCellValue(Math.round(a.getGastosIngresosFamiliares().getIngresoBrutoTotal())); cell19.setCellStyle(borderedStyleData);
-                Cell cell20 = row.createCell(20); cell20.setCellValue(Math.round(a.getGastosIngresosFamiliares().getIngresoTotal())); cell20.setCellStyle(borderedStyleData);
+                Cell cell19 = row.createCell(19);
+                cell19.setCellValue(Math.round(a.getGastosIngresosFamiliares().getIngresoBrutoTotal()));
+                cell19.setCellStyle(borderedStyleData);
+                Cell cell20 = row.createCell(20);
+                cell20.setCellValue(Math.round(a.getGastosIngresosFamiliares().getIngresoTotal()));
+                cell20.setCellStyle(borderedStyleData);
                 int diferencia = ingresoBruto - ingresoNeto;
-                Cell cell21 = row.createCell(21); cell21.setCellValue(diferencia); cell21.setCellStyle(borderedStyleData);
-                double porcentajeGasto = ingresoNeto != 0 ? (a.getMisDatos().getGastosIngresos().getGastoMensual() / ingresoNeto) * 100 : 0;
-                Cell cell22 = row.createCell(22); cell22.setCellValue(Math.round(porcentajeGasto)); cell22.setCellStyle(borderedStyleData);
-                Cell cell23 = row.createCell(23); cell23.setCellValue(Math.round(a.getGastosIngresosFamiliares().getReciboLuzModel().getPromedioPago())); cell23.setCellStyle(borderedStyleData);
-                Cell cell24 = row.createCell(24); cell24.setCellValue(a.getMiFamilia().getNumPersonasDependen()); cell24.setCellStyle(borderedStyleData);
-                String fechaSolicitud = a.getFechaEnvio() != null ? new SimpleDateFormat("dd/MM/yyyy").format(a.getFechaEnvio()) : "";
-                Cell cell25 = row.createCell(25); cell25.setCellValue(fechaSolicitud); cell25.setCellStyle(borderedStyleData);
-                Cell cell26 = row.createCell(26); cell26.setCellValue(a.getMisDatos().getFamiliarComunero() ? "SI" : "NO"); cell26.setCellStyle(borderedStyleData);
-                Cell cell27 = row.createCell(27); cell27.setCellValue(a.getMiTutor().getTrabajadorSuneo() ? "SI" : "NO"); cell27.setCellStyle(borderedStyleData);
+                Cell cell21 = row.createCell(21);
+                cell21.setCellValue(diferencia);
+                cell21.setCellStyle(borderedStyleData);
+                double porcentajeGasto = ingresoNeto != 0
+                        ? (a.getMisDatos().getGastosIngresos().getGastoMensual() / ingresoNeto) * 100
+                        : 0;
+                Cell cell22 = row.createCell(22);
+                cell22.setCellValue(Math.round(porcentajeGasto));
+                cell22.setCellStyle(borderedStyleData);
+                Cell cell23 = row.createCell(23);
+                cell23.setCellValue(Math.round(a.getGastosIngresosFamiliares().getReciboLuzModel().getPromedioPago()));
+                cell23.setCellStyle(borderedStyleData);
+                Cell cell24 = row.createCell(24);
+                cell24.setCellValue(a.getMiFamilia().getNumPersonasDependen());
+                cell24.setCellStyle(borderedStyleData);
+                String fechaSolicitud = a.getFechaEnvio() != null
+                        ? new SimpleDateFormat("dd/MM/yyyy").format(a.getFechaEnvio())
+                        : "";
+                Cell cell25 = row.createCell(25);
+                cell25.setCellValue(fechaSolicitud);
+                cell25.setCellStyle(borderedStyleData);
+                Cell cell26 = row.createCell(26);
+                cell26.setCellValue(a.getMisDatos().getFamiliarComunero() ? "SI" : "NO");
+                cell26.setCellStyle(borderedStyleData);
+                Cell cell27 = row.createCell(27);
+                cell27.setCellValue(a.getMiTutor().getTrabajadorSuneo() ? "SI" : "NO");
+                cell27.setCellStyle(borderedStyleData);
                 // Celdas 28-31 vacías pero con borde
-                for (int i = 28; i <= 31; i++) { Cell c = row.createCell(i); c.setCellStyle(borderedStyleData); }
+                for (int i = 28; i <= 31; i++) {
+                    Cell c = row.createCell(i);
+                    c.setCellStyle(borderedStyleData);
+                }
             }
-            
+
             // Autoajustar el ancho de cada columna al texto
             for (int i = 0; i <= 31; i++) {
                 sheet.autoSizeColumn(i);
