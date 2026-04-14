@@ -5,6 +5,7 @@ import com.UNSIJ.INESIS_BACKEND.model.CatCarrera;
 import com.UNSIJ.INESIS_BACKEND.model.FechasRegistradas;
 import com.UNSIJ.INESIS_BACKEND.model.Usuario;
 import com.UNSIJ.INESIS_BACKEND.repository.AlumnoRepository;
+import com.UNSIJ.INESIS_BACKEND.repository.UsuarioRepository;
 import com.UNSIJ.INESIS_BACKEND.service.interfaces.IAlumnoService;
 import com.UNSIJ.INESIS_BACKEND.utils.ArchivoUtil;
 import com.UNSIJ.INESIS_BACKEND.utils.JsonUtils;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
+import java.text.Normalizer;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -43,6 +45,9 @@ public class AlumnoServiceJPA implements IAlumnoService {
 
     @Autowired
     FechasRegistradasServiceJPA fechasRegistradasServiceJPA;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @Override
     public List<Alumno> findAll() {
@@ -183,7 +188,8 @@ public class AlumnoServiceJPA implements IAlumnoService {
                 Usuario usuario = usuarioServiceJPA.crearDesdeAlumno(alumno);
                 alumno.setUsuario(usuario);
             }
-
+            Usuario usuario = usuarioServiceJPA.crearDesdeAlumno(alumno);
+            alumno.setUsuario(usuario);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             throw new IllegalArgumentException(e.getMessage());
@@ -205,6 +211,37 @@ public class AlumnoServiceJPA implements IAlumnoService {
     @Transactional
     public List<Alumno> saveAll(List<Alumno> alumnos) {
         return alumnoRepository.saveAll(alumnos);
+    }
+
+    public String generarUsernameDesdeAlumno(Alumno alumno) {
+        String nombreLimpio = limpiarYFormatear(alumno.getNombre());
+        String[] nombreCompleto = nombreLimpio.split(" ");
+
+        String baseUsuario = nombreCompleto[0] + "." + limpiarYFormatear(alumno.getApellidoPaterno());
+        String nombreUsuario = baseUsuario;
+
+        int contador = 0;
+
+        while (usuarioRepository.findByUsuario(nombreUsuario).isPresent()) {
+            if (contador == 1 && nombreCompleto.length > 1) {
+                nombreUsuario = nombreCompleto[1] + "." + limpiarYFormatear(alumno.getApellidoPaterno());
+            } else if (contador == 2) {
+                nombreUsuario = nombreCompleto[0] + "." + limpiarYFormatear(alumno.getApellidoMaterno());
+            } else {
+                nombreUsuario = baseUsuario + contador;
+            }
+            contador++;
+        }
+
+        return nombreUsuario;
+    }
+
+    public String limpiarYFormatear(String texto) {
+        if (texto == null)
+            return "";
+        String textoNormalizado = Normalizer.normalize(texto, Normalizer.Form.NFD);
+        String textoSinAcentos = textoNormalizado.replaceAll("\\p{M}", "");
+        return textoSinAcentos.toLowerCase().replaceAll("\\s+", "");
     }
 
     private void verificarFechas(Alumno alumno) {
@@ -298,7 +335,8 @@ public class AlumnoServiceJPA implements IAlumnoService {
                     } catch (Exception e) {
                         e.printStackTrace();
                         throw new IllegalArgumentException(
-                                "Error al importar el alumno en la fila " + row.getRowNum() + " de la hoja " + sheet.getSheetName() + ": " + e.getMessage());
+                                "Error al importar el alumno en la fila " + row.getRowNum() + " de la hoja "
+                                        + sheet.getSheetName() + ": " + e.getMessage());
                     }
                 }
             }
