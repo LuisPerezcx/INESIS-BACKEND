@@ -227,7 +227,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
 
     @Transactional
     public List<Alumno> importarDesdeExcel(MultipartFile file) throws Exception {
-        List<Alumno> alumnosImportados = new ArrayList<>();
+        Map<String, Alumno> alumnosProcesados = new LinkedHashMap<>();
         int filasASaltar = 6;
 
         try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
@@ -245,12 +245,14 @@ public class AlumnoServiceJPA implements IAlumnoService {
                     filaActual++;
                 }
 
+                int contadorFilasDatos = 0; // contador de filas de datos procesadas
                 while (rowIterator.hasNext()) {
                     Row row = rowIterator.next();
 
                     // Validar que la fila no esté vacía
                     if (ArchivoUtil.isEmptyRow(row))
                         continue;
+                    contadorFilasDatos++;
 
                     try {
                         // ...existing code...
@@ -258,7 +260,8 @@ public class AlumnoServiceJPA implements IAlumnoService {
 
                         alumnoData.put("nombre", ArchivoUtil.getCellValueAsString(row.getCell(0)));
                         alumnoData.put("apellidoPaterno", ArchivoUtil.getCellValueAsString(row.getCell(1)));
-                        alumnoData.put("curp", ArchivoUtil.getCellValueAsString(row.getCell(3)));
+                        String curp = ArchivoUtil.getCellValueAsString(row.getCell(3));
+                        alumnoData.put("curp", curp);
                         String sexoTexto = ArchivoUtil.getCellValueAsString(row.getCell(4));
                         String nombreGrupo = ArchivoUtil.getCellValueAsString(row.getCell(5));
                         Long idGrupo = grupoServiceJPA.findIdByNombreGrupo(nombreGrupo);
@@ -271,7 +274,9 @@ public class AlumnoServiceJPA implements IAlumnoService {
                         } else if (sexoTexto.equals("M") || sexoTexto.equals("m")) {
                             alumnoData.put("sexo", 1);
                         } else {
-                            throw new IllegalArgumentException("Sexo no válido en la fila " + (row.getRowNum() + 1));
+                            // Calcular la fila que el usuario espera: filas saltadas + contador de datos
+                            int fila = filasASaltar + contadorFilasDatos;
+                            throw new IllegalArgumentException("Sexo no válido en la fila " + fila + " en la hoja " + sheet.getSheetName());
                         }
 
                         Long idSemestre = grupoServiceJPA.findIdSemestreByGrupo(nombreGrupo);
@@ -281,7 +286,6 @@ public class AlumnoServiceJPA implements IAlumnoService {
                         alumnoData.put("correo", "");
                         alumnoData.put("telefono", "");
 
-                        String curp = ArchivoUtil.getCellValueAsString(row.getCell(3));
                         Alumno alumno;
                         Optional<Alumno> alumnoExistente = alumnoRepository.findByCurp(curp);
 
@@ -291,7 +295,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
                             alumno = create(alumnoData);
                         }
 
-                        alumnosImportados.add(alumno);
+                        alumnosProcesados.put(curp, alumno);
 
                     } catch (IllegalArgumentException e) {
                         throw new IllegalArgumentException(e.getMessage());
@@ -304,7 +308,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
             }
         }
 
-        return alumnosImportados;
+        return new ArrayList<>(alumnosProcesados.values());
     }
 
     @Transactional
@@ -587,6 +591,71 @@ public class AlumnoServiceJPA implements IAlumnoService {
         }
 
         // Convertir a base64
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+            workbook.write(bos);
+            workbook.close();
+            return Base64.getEncoder().encodeToString(bos.toByteArray());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * Genera un Excel (en base64) con los alumnos proporcionados, dividido en hojas por grupo.
+     * Cada hoja contendrá: Nombre completo, usuario y contraseña asignada (si está disponible).
+     */
+    public String generarExcelAlumnosPorGrupoBase64(List<Alumno> alumnos) {
+        Workbook workbook = new XSSFWorkbook();
+
+        // Agrupar alumnos por nombre de grupo (usar "SinGrupo" si es null)
+        Map<String, List<Alumno>> alumnosPorGrupo = alumnos.stream()
+                .collect(Collectors.groupingBy(a -> a.getGrupo() != null && a.getGrupo().getNombreGrupo() != null
+                        ? a.getGrupo().getNombreGrupo()
+                        : "SinGrupo"));
+
+        for (Map.Entry<String, List<Alumno>> entry : alumnosPorGrupo.entrySet()) {
+            String nombreGrupo = entry.getKey();
+            List<Alumno> lista = entry.getValue();
+            // Sanitizar nombre de hoja para que sea válido en Excel (<=31 chars, sin caracteres inválidos)
+            String sheetName = nombreGrupo == null ? "SinGrupo" : nombreGrupo;
+            sheetName = sheetName.replaceAll("[\\\\/:?*\\[\\]]", "_");
+            if (sheetName.length() > 31) sheetName = sheetName.substring(0, 31);
+            if (sheetName.trim().isEmpty()) sheetName = "SinGrupo";
+
+            Sheet sheet = workbook.createSheet(sheetName);
+
+            // Encabezado: apellido paterno, apellido materno, nombres, usuario, contraseña
+            Row header = sheet.createRow(0);
+            header.createCell(0).setCellValue("Apellido Paterno");
+            header.createCell(1).setCellValue("Apellido Materno");
+            header.createCell(2).setCellValue("Nombres");
+            header.createCell(3).setCellValue("Usuario");
+            header.createCell(4).setCellValue("Contraseña");
+
+            int rowNum = 1;
+            for (Alumno a : lista) {
+                Row row = sheet.createRow(rowNum++);
+                String apellidoPaterno = a.getApellidoPaterno() != null ? a.getApellidoPaterno() : "";
+                String apellidoMaterno = a.getApellidoMaterno() != null ? a.getApellidoMaterno() : "";
+                String nombres = a.getNombre() != null ? a.getNombre() : "";
+                String usuario = a.getUsuario() != null && a.getUsuario().getUsuario() != null ? a.getUsuario().getUsuario() : "";
+                // La contraseña en BD viene cifrada; usar matrícula como contraseña durante la importación
+                String contrasenia = a.getMatricula() != null ? a.getMatricula() : "";
+
+                row.createCell(0).setCellValue(apellidoPaterno);
+                row.createCell(1).setCellValue(apellidoMaterno);
+                row.createCell(2).setCellValue(nombres);
+                row.createCell(3).setCellValue(usuario);
+                row.createCell(4).setCellValue(contrasenia);
+            }
+
+            // Autoajustar columnas
+            for (int i = 0; i <= 4; i++) {
+                sheet.autoSizeColumn(i);
+            }
+        }
+
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
             workbook.write(bos);
             workbook.close();
