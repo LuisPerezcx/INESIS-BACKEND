@@ -657,10 +657,6 @@ INSERT INTO cat_internet (nombre_internet)
 SELECT 'Internet en casa'
 WHERE NOT EXISTS (SELECT 1 FROM cat_internet WHERE nombre_internet = 'Internet en casa');
 
-INSERT INTO cat_internet (nombre_internet)
-SELECT 'Otra'
-WHERE NOT EXISTS (SELECT 1 FROM cat_internet WHERE nombre_internet = 'Otra');
-
 
 #------------------- REGISTROS DE CAT_MATERIAL_VIVIENDA -------------------
 -- Inicio registros
@@ -682,9 +678,6 @@ INSERT INTO cat_material_vivienda (nombre_material)
 SELECT 'Concreto'
 WHERE NOT EXISTS (SELECT 1 FROM cat_material_vivienda WHERE nombre_material = 'Concreto');
 
-INSERT INTO cat_material_vivienda (nombre_material)
-SELECT 'Otro'
-WHERE NOT EXISTS (SELECT 1 FROM cat_material_vivienda WHERE nombre_material = 'Otro');
 
 #------------------- REGISTROS DE CAT_MEDIOS_ESTUDIO -------------------
 -- Inicio registros
