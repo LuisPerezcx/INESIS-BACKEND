@@ -2,6 +2,7 @@ package com.UNSIJ.INESIS_BACKEND.service;
 
 import com.UNSIJ.INESIS_BACKEND.controller.DomicilioController;
 import com.UNSIJ.INESIS_BACKEND.model.Alumno;
+import com.UNSIJ.INESIS_BACKEND.model.CodigoPostal;
 import com.UNSIJ.INESIS_BACKEND.model.IngresoFamiliarModel;
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MediosEstudio;
 import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.PersonasDependientes;
@@ -36,6 +37,9 @@ public class PDFServiceJPA {
     @Autowired
     private DomicilioController domicilioController;
 
+    @Autowired
+    private CatCodigoPostalServiceJPA catCodigoPostalServiceJPA;
+
     @Transient
     private String estado;
     @Transient
@@ -43,8 +47,13 @@ public class PDFServiceJPA {
     @Transient
     private Alumno alumno;
 
+
+
     public static String valorSeguro(String valor, String valorPorDefecto) {
         return (valor != null && !valor.trim().isEmpty()) ? valor : valorPorDefecto;
+    }
+    public static String valorNumericoSeguro(Double valor) {
+        return valor != null ? String.valueOf(valor) : "0.0";
     }
 
     public static String domicilio(String calle, String numero, String colonia, String localidad, String casaHuesped) {
@@ -98,35 +107,35 @@ public class PDFServiceJPA {
         String municipio = "";
 
         try {
-            ResponseEntity<String> response = domicilioController.obtenerColoniasPorCP(cp); // <- usas cp directamente
-            String respuestaJson = response.getBody(); // <- Extraes el JSON real
+            List<CodigoPostal> codigos = catCodigoPostalServiceJPA.findByCp(cp);
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode root = objectMapper.readTree(respuestaJson);
-
-            estado = root.path("codigo_postal").path("estado").asText();
-            municipio = root.path("codigo_postal").path("municipio").asText();
+            if (codigos != null && !codigos.isEmpty()) {
+                CodigoPostal codigoPostal = codigos.get(0);
+                estado = codigoPostal.getNombreEstado();
+                municipio = codigoPostal.getNombreMunicipio();
+            }
         } catch (Exception e) {
             e.printStackTrace();
+            System.out.println("Error al obtener datos del CP");
         }
 
-        return calleSeguro + " " + numeroSeguro + ", " + coloniaSeguro + ", " + localidadSeguro + ", " + municipio + ", " + estado + ", " + cp;
+        return calleSeguro + " " + numeroSeguro + ", " + coloniaSeguro + ", "
+                + localidadSeguro + ", " + municipio + ", " + estado + ", " + cp;
     }
 
     public String estadoFamiliaActual(String cp){
         String estado = "";
         try {
-            ResponseEntity<String> response = domicilioController.obtenerColoniasPorCP(cp); // <- usas cp directamente
-            String respuestaJson = response.getBody(); // <- Extraes el JSON real
+            List<CodigoPostal> codigos = catCodigoPostalServiceJPA.findByCp(cp);
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode root = objectMapper.readTree(respuestaJson);
+            if (codigos != null && !codigos.isEmpty()) {
+                estado = codigos.get(0).getNombreEstado();
+            }
 
-            estado = root.path("codigo_postal").path("estado").asText();
             System.out.println("Estado: " + estado);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Error al procesar el JSON del CP");
+            System.out.println("Error al obtener el estado del CP");
         }
         return estado;
     }
@@ -134,17 +143,16 @@ public class PDFServiceJPA {
     public String municipioFamiliaActual(String cp){
         String municipio = "";
         try {
-            ResponseEntity<String> response = domicilioController.obtenerColoniasPorCP(cp); // <- usas cp directamente
-            String respuestaJson = response.getBody(); // <- Extraes el JSON real
+            List<CodigoPostal> codigos = catCodigoPostalServiceJPA.findByCp(cp);
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode root = objectMapper.readTree(respuestaJson);
+            if (codigos != null && !codigos.isEmpty()) {
+                municipio = codigos.get(0).getNombreMunicipio();
+            }
 
-            municipio = root.path("codigo_postal").path("municipio").asText();
             System.out.println("Municipio: " + municipio);
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Error al procesar el JSON del CP");
+            System.out.println("Error al obtener el municipio del CP");
         }
         return municipio;
     }
@@ -230,8 +238,7 @@ public class PDFServiceJPA {
 
 
             form.setField(PDF.ESE.numPersonaComparte, valorSeguro(String.valueOf(alumno.getMisDatos().getGastosIngresos().getPersonasComparteRenta()), " "), true);
-            form.setField(PDF.ESE.rentaMensual, valorSeguro(String.valueOf(alumno.getMisDatos().getGastosIngresos().getPagoRentaMensual()), " "), true);
-
+            form.setField(PDF.ESE.rentaMensual, valorNumericoSeguro(alumno.getMisDatos().getGastosIngresos().getPagoRentaMensual()), true);
             Boolean familiarComunero = alumno.getMisDatos().getFamiliarComunero();
             if (familiarComunero != null && familiarComunero) {
                 form.setField(PDF.ESE.nietoComuneroSi, "X", true);
@@ -462,8 +469,23 @@ public class PDFServiceJPA {
             form.setField(PDF.ESE.apellidoP, valorSeguro(alumno.getApellidoPaterno(), " "), true);
             form.setField(PDF.ESE.apellidoM, valorSeguro(alumno.getApellidoMaterno(), " "), true);
             form.setField(PDF.ESE.nombreAlum, valorSeguro(alumno.getNombre(), " "), true);
-            form.setField(PDF.ESE.sexo, valorSeguro(alumno.getSexo().getNombreSexo(), " "), true);
-            form.setField(PDF.ESE.estadoCivil, valorSeguro(alumno.getMisDatos().getEstadoCivil().getNombreEstadoCivil(), " "), true);
+            String nombreSexo = alumno.getSexo() != null ? alumno.getSexo().getNombreSexo() : null;
+            String sexoPdf;
+
+            if (nombreSexo == null) {
+                sexoPdf = " ";
+            } else {
+                String s = nombreSexo.trim().toLowerCase();
+                if (s.equals("masculino") || s.equals("masculo") || s.equals("m")) {
+                    sexoPdf = "M";
+                } else if (s.equals("femenino") || s.equals("f")) {
+                    sexoPdf = "F";
+                } else {
+                    sexoPdf = " ";
+                }
+            }
+
+            form.setField(PDF.ESE.sexo, sexoPdf, true);            form.setField(PDF.ESE.estadoCivil, valorSeguro(alumno.getMisDatos().getEstadoCivil().getNombreEstadoCivil(), " "), true);
             form.setField(PDF.ESE.carrera, valorSeguro(alumno.getCarrera().getNombreCarrera(), " "), true);
             form.setField(PDF.ESE.telefonoAlumno, valorSeguro(alumno.getTelefono(), " "), true);
             form.setField(PDF.ESE.emailAlumno, valorSeguro(alumno.getCorreo(), " "), true);

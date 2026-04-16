@@ -150,17 +150,24 @@ public class UsuarioServiceJPA implements IUsuarioService {
             usuario.setRol(rolServiceJPA.findById(1L)); // Asignar rol de Alumno
             usuario.setEstatus(true); // Por defecto, el usuario está activo
 
+            // Normalizar el nombre completo conservando separación entre nombres
             String nombreLimpio = limpiarYFormatear(alumno.getNombre());
             String[] nombreCompleto = nombreLimpio.split(" ");
-            String baseUsuario = nombreCompleto[0] + "." + limpiarYFormatear(alumno.getApellidoPaterno());
+            // Para el usuario usamos SOLO el primer nombre y el apellido (sin espacios)
+            String apellidoPaternoLimpio = limpiarYFormatear(alumno.getApellidoPaterno()).replaceAll("\\s+", "");
+            String primerNombre = nombreCompleto.length > 0 ? nombreCompleto[0] : "";
+            String baseUsuario = primerNombre + "." + apellidoPaternoLimpio;
             String nombreUsuario = baseUsuario;
-            int contador = 0;
+            int contador = 1;
             // Verificar si el usuario ya existe
             while (usuarioRepository.findByUsuario(nombreUsuario).isPresent()) {
                 if (contador == 1 && nombreCompleto.length > 1) {
-                    nombreUsuario = nombreCompleto[1] + "." + limpiarYFormatear(alumno.getApellidoPaterno());
+                    String segundoNombre = nombreCompleto[1].replaceAll("\\s+", "");
+                    nombreUsuario = segundoNombre + "." + apellidoPaternoLimpio;
                 } else if (contador == 2) {
-                    nombreUsuario = nombreCompleto[0] + "." + limpiarYFormatear(alumno.getApellidoMaterno());
+                    String primerNombreSinEsp = primerNombre.replaceAll("\\s+", "");
+                    String apellidoMaternoLimpio = limpiarYFormatear(alumno.getApellidoMaterno()).replaceAll("\\s+", "");
+                    nombreUsuario = primerNombreSinEsp + "." + apellidoMaternoLimpio;
                 } else {
                     nombreUsuario = baseUsuario + contador;
                 }
@@ -182,7 +189,8 @@ public class UsuarioServiceJPA implements IUsuarioService {
             return "";
         String textoNormalizado = Normalizer.normalize(texto, Normalizer.Form.NFD);
         String textoSinAcentos = textoNormalizado.replaceAll("\\p{M}", "");
-        return textoSinAcentos.toLowerCase().trim();
+        // Mantener separación entre palabras pero consolidar espacios múltiples y trim
+        return textoSinAcentos.toLowerCase().replaceAll("\\s+", " ").trim();
     }
 
     public Usuario findByRevisorId(Long idRevisor) {

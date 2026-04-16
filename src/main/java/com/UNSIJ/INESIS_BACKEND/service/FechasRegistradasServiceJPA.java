@@ -82,20 +82,22 @@ public class FechasRegistradasServiceJPA implements IFechasRegistradasService {
         return this.save(fechasRegistradas);
     }
 
-    @Override
-    public FechasRegistradas update(FechasRegistradas fechasRegistradas, Map<String, Object> params)
-            throws Exception {
-        try {
-            this.build(params, fechasRegistradas);
-            alumnoServiceJPA.reiniciarProceso(fechasRegistradas);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace(); // Opcional, ayuda en depuración si ocurre algún error inesperado
-            throw new IllegalArgumentException("Error al construir la fecha registrada");
-        }
-        return this.save(fechasRegistradas);
+   @Override
+public FechasRegistradas update(FechasRegistradas fechasRegistradas, Map<String, Object> params)
+        throws Exception {
+    try {
+        boolean reiniciarProceso = JsonUtils.obtBoolean(params, "reiniciarProceso");
+        this.build(params, fechasRegistradas);
+        if(reiniciarProceso) alumnoServiceJPA.reiniciarProceso(fechasRegistradas);
+    } catch (IllegalArgumentException e) {
+        throw e;
+    } catch (Exception e) {
+        e.printStackTrace();
+        throw new RuntimeException("Error al actualizar la fecha registrada");
     }
+
+    return this.save(fechasRegistradas);
+}
 
     @Override
     public FechasRegistradas build(Map<String, Object> params, FechasRegistradas fechasRegistradas)

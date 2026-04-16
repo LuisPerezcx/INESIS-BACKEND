@@ -32,7 +32,7 @@ public class ReciboLuz {
 
     @NotNull
     @Column(name = "nombre_archivo")
-    private String nombreArchivo;
+    private String nombreArchivo; 
 
     @NotNull
     @Column(name = "nombre_original")

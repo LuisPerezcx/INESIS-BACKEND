@@ -148,11 +148,17 @@ public class AlumnoController {
 
             // Procesar el archivo y crear alumnos
             List<Alumno> alumnosImportados = alumnoServiceJPA.importarDesdeExcel(file);
+            System.out.println("Alumnos importados: " + alumnosImportados.size());
+            // Generar Excel en base64 agrupado por grupos con nombre completo, usuario y contraseña
+            String excelBase64 = alumnoServiceJPA.generarExcelAlumnosPorGrupoBase64(alumnosImportados);
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
-                    "message", "Alumnos importados correctamente",
-                    "cantidad", alumnosImportados.size(),
-                    "alumnos", alumnosImportados));
+            Map<String, Object> resp = new HashMap<>();
+            resp.put("message", "Alumnos importados correctamente");
+            resp.put("cantidad", alumnosImportados.size());
+            resp.put("alumnos", alumnosImportados);
+            resp.put("excelBase64", excelBase64);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(resp);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
