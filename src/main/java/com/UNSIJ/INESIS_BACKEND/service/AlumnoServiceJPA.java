@@ -185,11 +185,28 @@ public class AlumnoServiceJPA implements IAlumnoService {
                 }
 
             } else {
-                // Si no existe un usuario, creamos uno nuevo
-                Usuario usuario = usuarioServiceJPA.crearDesdeAlumno(alumno);
-                alumno.setUsuario(usuario);
-                // Guardar alumno para que la columna id_usuario se actualice
-                alumno = save(alumno);
+                // Si no existe un usuario, intentar reasignar por el nombre de usuario enviado en params
+                //fallback
+                String usuarioParam = JsonUtils.obtString(params, "usuario");
+                if (usuarioParam != null && !usuarioParam.trim().isEmpty()) {
+                    Optional<Usuario> usuarioOpt = usuarioRepository.findByUsuario(usuarioParam);
+                    if (usuarioOpt.isPresent()) {
+                        Usuario usuario = usuarioOpt.get();
+                        // Asociar el usuario existente con el alumno y guardar ambos
+                        usuario.setAlumno(alumno);
+                        usuario = usuarioServiceJPA.save(usuario);
+                        alumno.setUsuario(usuario);
+                        alumno = save(alumno);
+                    } else {
+                        Usuario usuario = usuarioServiceJPA.crearDesdeAlumno(alumno);
+                        alumno.setUsuario(usuario);
+                        alumno = save(alumno);
+                    }
+                } else {
+                    Usuario usuario = usuarioServiceJPA.crearDesdeAlumno(alumno);
+                    alumno.setUsuario(usuario);
+                    alumno = save(alumno);
+                }
             }
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
