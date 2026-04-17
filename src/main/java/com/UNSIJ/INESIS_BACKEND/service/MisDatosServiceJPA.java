@@ -105,6 +105,8 @@ public class MisDatosServiceJPA implements IMisDatosService {
     public MisDatos update(MisDatos misDatos, Map<String, Object> params) throws Exception {
         try {
             this.build(params, misDatos);
+            misDatos.setModuloCompleto(true);
+            misDatos = this.save(misDatos);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {

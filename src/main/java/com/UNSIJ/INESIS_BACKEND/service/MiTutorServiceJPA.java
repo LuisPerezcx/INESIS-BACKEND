@@ -92,6 +92,8 @@ public class MiTutorServiceJPA implements IMiTutorService {
     public MiTutor update(MiTutor miTutor, Map<String, Object> params) throws Exception {
         try {
             this.build(params, miTutor);
+            miTutor.setModuloCompleto(true);
+            miTutor = this.save(miTutor);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
