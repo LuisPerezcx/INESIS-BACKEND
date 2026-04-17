@@ -33,7 +33,7 @@ public class GastosIngresos {
     @Column(name = "solicita_beca_alimenticia")
     private Boolean solicitaBecaAlimenticia;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "id_cat_tipo_trabajo")
     private CatTipoTrabajo catTipoTrabajo;
 

@@ -203,8 +203,9 @@ public class AlumnoServiceJPA implements IAlumnoService {
     @Override
     public void deleteById(Long id) {
         Alumno alumno = this.findById(id);
+
         if (alumno != null) {
-            alumnoRepository.deleteById(id);
+            alumnoRepository.delete(alumno);
         }
     }
 
