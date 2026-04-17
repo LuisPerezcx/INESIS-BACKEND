@@ -114,7 +114,9 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
 
     @Override
     public MiFamilia update(MiFamilia model, Map<String, Object> params) throws Exception {
-        return this.save(this.build(params, model));
+        model = this.build(params, model);
+        model.setModuloCompleto(true);
+        return this.save(model);
     }
 
     @Override

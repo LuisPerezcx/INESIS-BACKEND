@@ -86,8 +86,9 @@ public class FechasRegistradasServiceJPA implements IFechasRegistradasService {
 public FechasRegistradas update(FechasRegistradas fechasRegistradas, Map<String, Object> params)
         throws Exception {
     try {
+        boolean reiniciarProceso = JsonUtils.obtBoolean(params, "reiniciarProceso");
         this.build(params, fechasRegistradas);
-        //alumnoServiceJPA.reiniciarProceso(fechasRegistradas); Si esto es necesario darle la logica correcta 
+        if(reiniciarProceso) alumnoServiceJPA.reiniciarProceso(fechasRegistradas);
     } catch (IllegalArgumentException e) {
         throw e;
     } catch (Exception e) {

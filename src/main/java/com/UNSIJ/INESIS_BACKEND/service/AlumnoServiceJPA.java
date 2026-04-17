@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.text.Normalizer;
@@ -24,6 +26,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class AlumnoServiceJPA implements IAlumnoService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AlumnoServiceJPA.class);
 
     @Autowired
     private AlumnoRepository alumnoRepository;
@@ -80,7 +84,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
                     .orElseThrow(() -> new IllegalArgumentException("Alumno no encontrado con el ID: " + id));
             verificarFechas(alumno);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error al buscar alumno por id {}: {}", id, e.getMessage(), e);
         }
         return alumno;
     }
@@ -101,7 +105,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error al crear alumno: {}", e.getMessage(), e);
             throw new IllegalArgumentException("Error al crear el alumno");
         }
         return this.save(alumno);
@@ -115,7 +119,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error al actualizar alumno id {}: {}", alumno != null ? alumno.getId() : null, e.getMessage(), e);
             throw new IllegalArgumentException("Error al actualizar el alumno");
         }
         return save(alumno); // Guardar los cambios en el alumno
@@ -154,15 +158,18 @@ public class AlumnoServiceJPA implements IAlumnoService {
 
             // Guardar los datos del alumno
             alumno = save(alumno);
+            logger.debug("Alumno guardado temporalmente: id={}", alumno.getId());
 
             // Restaurar estudioCompleto si era una actualización
             if (estudioCompletoAnterior != null) {
                 alumno.setEstudioCompleto(estudioCompletoAnterior);
                 alumno = save(alumno);
+                logger.debug("Restaurado estudioCompleto para alumno id={}", alumno.getId());
             }
 
             // Verificar si el alumno ya tiene un usuario
             if (alumno.getUsuario() != null) {
+                logger.debug("Alumno id={} ya tiene usuario asociado id={}", alumno.getId(), alumno.getUsuario() != null ? alumno.getUsuario().getId() : null);
                 // Si ya existe un usuario, actualizamos su información
                 String usuario = JsonUtils.obtString(params, "usuario");
                 String contrasena = JsonUtils.obtString(params, "contrasenia");
@@ -173,28 +180,53 @@ public class AlumnoServiceJPA implements IAlumnoService {
                     usuarioParams.put("estatus", params.getOrDefault("estatus", "Activo"));
 
                     Long idRol = params.get("idCatRol") != null ? Long.parseLong(params.get("idCatRol").toString())
-                            : 1L; // Valor
-                                  // predeterminado
+                            : 1L; // Valor predeterminado
                     Map<String, Object> rolMap = new HashMap<>();
                     rolMap.put("idCatRol", idRol);
                     usuarioParams.put("rol", rolMap);
 
                     // Actualizar el usuario existente
+                    logger.debug("Actualizando usuario existente para alumno id={}", alumno.getId());
                     usuarioServiceJPA.update(alumno.getUsuario(), usuarioParams);
+                    // Asegurar que la relación en alumno quede persistida
+                    alumno = save(alumno);
+                    logger.debug("Usuario actualizado; alumno id={} vinculado a usuario id={}", alumno.getId(), alumno.getUsuario() != null ? alumno.getUsuario().getId() : null);
                 }
 
             } else {
-                // Si no existe un usuario, creamos uno nuevo
-                Usuario usuario = usuarioServiceJPA.crearDesdeAlumno(alumno);
-                alumno.setUsuario(usuario);
+                // Si no existe un usuario, intentar reasignar por el nombre de usuario enviado en params
+                //fallback
+                String usuarioParam = JsonUtils.obtString(params, "usuario");
+                if (usuarioParam != null && !usuarioParam.trim().isEmpty()) {
+                    Optional<Usuario> usuarioOpt = usuarioRepository.findByUsuario(usuarioParam);
+                    if (usuarioOpt.isPresent()) {
+                        Usuario usuario = usuarioOpt.get();
+                        logger.info("Found existing Usuario '{}' id={} to reassign to alumno id={}", usuarioParam, usuario.getId(), alumno.getId());
+                        // Asociar el usuario existente con el alumno y guardar ambos
+                        usuario.setAlumno(alumno);
+                        usuario = usuarioServiceJPA.save(usuario);
+                        alumno.setUsuario(usuario);
+                        alumno = save(alumno);
+                        logger.debug("Reasignado usuario id={} a alumno id={}", usuario.getId(), alumno.getId());
+                    } else {
+                        logger.info("No existe Usuario '{}' -> se creará uno nuevo para alumno id={}", usuarioParam, alumno.getId());
+                        Usuario usuario = usuarioServiceJPA.crearDesdeAlumno(alumno);
+                        alumno.setUsuario(usuario);
+                        alumno = save(alumno);
+                        logger.debug("Usuario creado id={} y asignado a alumno id={}", usuario.getId(), alumno.getId());
+                    }
+                } else {
+                        Usuario usuario = usuarioServiceJPA.crearDesdeAlumno(alumno);
+                        alumno.setUsuario(usuario);
+                        alumno = save(alumno);
+                        logger.debug("Usuario creado id={} y asignado a alumno id={}", usuario.getId(), alumno.getId());
+                }
             }
-            Usuario usuario = usuarioServiceJPA.crearDesdeAlumno(alumno);
-            alumno.setUsuario(usuario);
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            logger.warn("Validación en build alumno: {}", e.getMessage());
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error al construir el alumno: {}", e.getMessage(), e);
             throw new IllegalArgumentException("Error al construir el alumno");
         }
         return alumno;
@@ -265,7 +297,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
 
     @Transactional
     public List<Alumno> importarDesdeExcel(MultipartFile file) throws Exception {
-        List<Alumno> alumnosImportados = new ArrayList<>();
+        Map<String, Alumno> alumnosProcesados = new LinkedHashMap<>();
         int filasASaltar = 6;
 
         try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
@@ -283,12 +315,14 @@ public class AlumnoServiceJPA implements IAlumnoService {
                     filaActual++;
                 }
 
+                int contadorFilasDatos = 0; // contador de filas de datos procesadas
                 while (rowIterator.hasNext()) {
                     Row row = rowIterator.next();
 
                     // Validar que la fila no esté vacía
                     if (ArchivoUtil.isEmptyRow(row))
                         continue;
+                    contadorFilasDatos++;
 
                     try {
                         // ...existing code...
@@ -296,7 +330,8 @@ public class AlumnoServiceJPA implements IAlumnoService {
 
                         alumnoData.put("nombre", ArchivoUtil.getCellValueAsString(row.getCell(0)));
                         alumnoData.put("apellidoPaterno", ArchivoUtil.getCellValueAsString(row.getCell(1)));
-                        alumnoData.put("curp", ArchivoUtil.getCellValueAsString(row.getCell(3)));
+                        String curp = ArchivoUtil.getCellValueAsString(row.getCell(3));
+                        alumnoData.put("curp", curp);
                         String sexoTexto = ArchivoUtil.getCellValueAsString(row.getCell(4));
                         String nombreGrupo = ArchivoUtil.getCellValueAsString(row.getCell(5));
                         Long idGrupo = grupoServiceJPA.findIdByNombreGrupo(nombreGrupo);
@@ -309,7 +344,9 @@ public class AlumnoServiceJPA implements IAlumnoService {
                         } else if (sexoTexto.equals("M") || sexoTexto.equals("m")) {
                             alumnoData.put("sexo", 1);
                         } else {
-                            throw new IllegalArgumentException("Sexo no válido en la fila " + (row.getRowNum() + 1));
+                            // Calcular la fila que el usuario espera: filas saltadas + contador de datos
+                            int fila = filasASaltar + contadorFilasDatos;
+                            throw new IllegalArgumentException("Sexo no válido en la fila " + fila + " en la hoja " + sheet.getSheetName());
                         }
 
                         Long idSemestre = grupoServiceJPA.findIdSemestreByGrupo(nombreGrupo);
@@ -319,7 +356,6 @@ public class AlumnoServiceJPA implements IAlumnoService {
                         alumnoData.put("correo", "");
                         alumnoData.put("telefono", "");
 
-                        String curp = ArchivoUtil.getCellValueAsString(row.getCell(3));
                         Alumno alumno;
                         Optional<Alumno> alumnoExistente = alumnoRepository.findByCurp(curp);
 
@@ -329,12 +365,12 @@ public class AlumnoServiceJPA implements IAlumnoService {
                             alumno = create(alumnoData);
                         }
 
-                        alumnosImportados.add(alumno);
+                        alumnosProcesados.put(curp, alumno);
 
                     } catch (IllegalArgumentException e) {
                         throw new IllegalArgumentException(e.getMessage());
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error("Error al importar alumno fila {} hoja {}: {}", row.getRowNum(), sheet.getSheetName(), e.getMessage(), e);
                         throw new IllegalArgumentException(
                                 "Error al importar el alumno en la fila " + row.getRowNum() + " de la hoja "
                                         + sheet.getSheetName() + ": " + e.getMessage());
@@ -343,7 +379,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
             }
         }
 
-        return alumnosImportados;
+        return new ArrayList<>(alumnosProcesados.values());
     }
 
     @Transactional
@@ -354,7 +390,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
             }
 
             String matriculaTrim = nuevaMatricula.replaceAll("\\D", "");
-            System.out.println("Validando matrícula: " + matriculaTrim);
+            logger.debug("Validando matrícula: {}", matriculaTrim);
             if (!matriculaTrim.matches("\\d{10}")) {
                 throw new IllegalArgumentException("La matricula debe tener exactamente 10 dígitos numéricos");
             }
@@ -363,10 +399,10 @@ public class AlumnoServiceJPA implements IAlumnoService {
             alumno.setMatriculaEditada(true);
             this.save(alumno);
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            logger.warn("Validación al actualizar matrícula para id {}: {}", id, e.getMessage());
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error al actualizar matrícula para id {}: {}", id, e.getMessage(), e);
             throw new IllegalArgumentException("Error al actualizar el alumno");
         }
     }
@@ -388,7 +424,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error al cambiar estado revision alumno id {}: {}", alumno != null ? alumno.getId() : null, e.getMessage(), e);
             throw new IllegalArgumentException("Error al cambiar el estado de revisión del alumno");
         }
     }
@@ -419,7 +455,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
             this.saveAll(alumnosModificados);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error en reiniciar proceso para carrera id {}: {}", carrera != null ? carrera.getId() : null, e.getMessage(), e);
             throw new RuntimeException("Error en reiniciar proceso: " + e.getMessage());
         }
     }
@@ -631,7 +667,72 @@ public class AlumnoServiceJPA implements IAlumnoService {
             workbook.close();
             return Base64.getEncoder().encodeToString(bos.toByteArray());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error al convertir workbook a base64: {}", e.getMessage(), e);
+            return null;
+        }
+    }
+
+    /**
+     * Genera un Excel (en base64) con los alumnos proporcionados, dividido en hojas por grupo.
+     * Cada hoja contendrá: Nombre completo, usuario y contraseña asignada (si está disponible).
+     */
+    public String generarExcelAlumnosPorGrupoBase64(List<Alumno> alumnos) {
+        Workbook workbook = new XSSFWorkbook();
+
+        // Agrupar alumnos por nombre de grupo (usar "SinGrupo" si es null)
+        Map<String, List<Alumno>> alumnosPorGrupo = alumnos.stream()
+                .collect(Collectors.groupingBy(a -> a.getGrupo() != null && a.getGrupo().getNombreGrupo() != null
+                        ? a.getGrupo().getNombreGrupo()
+                        : "SinGrupo"));
+
+        for (Map.Entry<String, List<Alumno>> entry : alumnosPorGrupo.entrySet()) {
+            String nombreGrupo = entry.getKey();
+            List<Alumno> lista = entry.getValue();
+            // Sanitizar nombre de hoja para que sea válido en Excel (<=31 chars, sin caracteres inválidos)
+            String sheetName = nombreGrupo == null ? "SinGrupo" : nombreGrupo;
+            sheetName = sheetName.replaceAll("[\\\\/:?*\\[\\]]", "_");
+            if (sheetName.length() > 31) sheetName = sheetName.substring(0, 31);
+            if (sheetName.trim().isEmpty()) sheetName = "SinGrupo";
+
+            Sheet sheet = workbook.createSheet(sheetName);
+
+            // Encabezado: apellido paterno, apellido materno, nombres, usuario, contraseña
+            Row header = sheet.createRow(0);
+            header.createCell(0).setCellValue("Apellido Paterno");
+            header.createCell(1).setCellValue("Apellido Materno");
+            header.createCell(2).setCellValue("Nombres");
+            header.createCell(3).setCellValue("Usuario");
+            header.createCell(4).setCellValue("Contraseña");
+
+            int rowNum = 1;
+            for (Alumno a : lista) {
+                Row row = sheet.createRow(rowNum++);
+                String apellidoPaterno = a.getApellidoPaterno() != null ? a.getApellidoPaterno() : "";
+                String apellidoMaterno = a.getApellidoMaterno() != null ? a.getApellidoMaterno() : "";
+                String nombres = a.getNombre() != null ? a.getNombre() : "";
+                String usuario = a.getUsuario() != null && a.getUsuario().getUsuario() != null ? a.getUsuario().getUsuario() : "";
+                // La contraseña en BD viene cifrada; usar matrícula como contraseña durante la importación
+                String contrasenia = a.getMatricula() != null ? a.getMatricula() : "";
+
+                row.createCell(0).setCellValue(apellidoPaterno);
+                row.createCell(1).setCellValue(apellidoMaterno);
+                row.createCell(2).setCellValue(nombres);
+                row.createCell(3).setCellValue(usuario);
+                row.createCell(4).setCellValue(contrasenia);
+            }
+
+            // Autoajustar columnas
+            for (int i = 0; i <= 4; i++) {
+                sheet.autoSizeColumn(i);
+            }
+        }
+
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+            workbook.write(bos);
+            workbook.close();
+            return Base64.getEncoder().encodeToString(bos.toByteArray());
+        } catch (Exception e) {
+            logger.error("Error al convertir workbook a base64: {}", e.getMessage(), e);
             return null;
         }
     }
