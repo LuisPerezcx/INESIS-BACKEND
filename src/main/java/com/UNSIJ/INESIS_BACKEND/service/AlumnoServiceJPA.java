@@ -173,23 +173,24 @@ public class AlumnoServiceJPA implements IAlumnoService {
                     usuarioParams.put("estatus", params.getOrDefault("estatus", "Activo"));
 
                     Long idRol = params.get("idCatRol") != null ? Long.parseLong(params.get("idCatRol").toString())
-                            : 1L; // Valor
-                                  // predeterminado
+                            : 1L; // Valor predeterminado
                     Map<String, Object> rolMap = new HashMap<>();
                     rolMap.put("idCatRol", idRol);
                     usuarioParams.put("rol", rolMap);
 
                     // Actualizar el usuario existente
                     usuarioServiceJPA.update(alumno.getUsuario(), usuarioParams);
+                    // Asegurar que la relación en alumno quede persistida
+                    alumno = save(alumno);
                 }
 
             } else {
                 // Si no existe un usuario, creamos uno nuevo
                 Usuario usuario = usuarioServiceJPA.crearDesdeAlumno(alumno);
                 alumno.setUsuario(usuario);
+                // Guardar alumno para que la columna id_usuario se actualice
+                alumno = save(alumno);
             }
-            Usuario usuario = usuarioServiceJPA.crearDesdeAlumno(alumno);
-            alumno.setUsuario(usuario);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             throw new IllegalArgumentException(e.getMessage());
