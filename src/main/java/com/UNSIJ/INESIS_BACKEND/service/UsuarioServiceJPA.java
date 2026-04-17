@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.Normalizer;
@@ -17,6 +19,8 @@ import java.util.Map;
 
 @Service
 public class UsuarioServiceJPA implements IUsuarioService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UsuarioServiceJPA.class);
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -200,14 +204,22 @@ public class UsuarioServiceJPA implements IUsuarioService {
     }
 
     public Usuario validarLogin(String usuario, String contrasenia) {
+        // Intentar obtener el usuario junto con su alumno asociado
         Usuario user = usuarioRepository.findByUsuario(usuario)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 
-        // Generar el hash de la contraseña que llega (solo para mostrar)
-        String hashGenerado = passwordEncoder.encode(contrasenia);
-        System.out.println("Hash generado de la contraseña recibida: " + hashGenerado);
+        // Log para depuración: si el alumno está presente o no
+        if (user.getAlumno() == null) {
+            logger.debug("Usuario '{}' no tiene Alumno asociado (null) al validar login", usuario);
+        } else {
+            logger.debug("Usuario '{}' tiene Alumno asociado id={} al validar login", usuario, user.getAlumno().getId());
+        }
+
+        // No imprimir hashes en consola; usar logger.debug si realmente hace falta
+        logger.debug("Validando contraseña para usuario={}", usuario);
 
         if (!passwordEncoder.matches(contrasenia, user.getContrasenia())) {
+            logger.warn("Contraseña incorrecta para usuario={}", usuario);
             throw new IllegalArgumentException("Contraseña incorrecta");
         }
 
