@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.text.Normalizer;
@@ -24,6 +26,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class AlumnoServiceJPA implements IAlumnoService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AlumnoServiceJPA.class);
 
     @Autowired
     private AlumnoRepository alumnoRepository;
@@ -80,7 +84,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
                     .orElseThrow(() -> new IllegalArgumentException("Alumno no encontrado con el ID: " + id));
             verificarFechas(alumno);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error al buscar alumno por id {}: {}", id, e.getMessage(), e);
         }
         return alumno;
     }
@@ -101,7 +105,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error al crear alumno: {}", e.getMessage(), e);
             throw new IllegalArgumentException("Error al crear el alumno");
         }
         return this.save(alumno);
@@ -115,7 +119,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error al actualizar alumno id {}: {}", alumno != null ? alumno.getId() : null, e.getMessage(), e);
             throw new IllegalArgumentException("Error al actualizar el alumno");
         }
         return save(alumno); // Guardar los cambios en el alumno
@@ -154,15 +158,18 @@ public class AlumnoServiceJPA implements IAlumnoService {
 
             // Guardar los datos del alumno
             alumno = save(alumno);
+            logger.debug("Alumno guardado temporalmente: id={}", alumno.getId());
 
             // Restaurar estudioCompleto si era una actualización
             if (estudioCompletoAnterior != null) {
                 alumno.setEstudioCompleto(estudioCompletoAnterior);
                 alumno = save(alumno);
+                logger.debug("Restaurado estudioCompleto para alumno id={}", alumno.getId());
             }
 
             // Verificar si el alumno ya tiene un usuario
             if (alumno.getUsuario() != null) {
+                logger.debug("Alumno id={} ya tiene usuario asociado id={}", alumno.getId(), alumno.getUsuario() != null ? alumno.getUsuario().getId() : null);
                 // Si ya existe un usuario, actualizamos su información
                 String usuario = JsonUtils.obtString(params, "usuario");
                 String contrasena = JsonUtils.obtString(params, "contrasenia");
@@ -179,9 +186,11 @@ public class AlumnoServiceJPA implements IAlumnoService {
                     usuarioParams.put("rol", rolMap);
 
                     // Actualizar el usuario existente
+                    logger.debug("Actualizando usuario existente para alumno id={}", alumno.getId());
                     usuarioServiceJPA.update(alumno.getUsuario(), usuarioParams);
                     // Asegurar que la relación en alumno quede persistida
                     alumno = save(alumno);
+                    logger.debug("Usuario actualizado; alumno id={} vinculado a usuario id={}", alumno.getId(), alumno.getUsuario() != null ? alumno.getUsuario().getId() : null);
                 }
 
             } else {
@@ -192,27 +201,32 @@ public class AlumnoServiceJPA implements IAlumnoService {
                     Optional<Usuario> usuarioOpt = usuarioRepository.findByUsuario(usuarioParam);
                     if (usuarioOpt.isPresent()) {
                         Usuario usuario = usuarioOpt.get();
+                        logger.info("Found existing Usuario '{}' id={} to reassign to alumno id={}", usuarioParam, usuario.getId(), alumno.getId());
                         // Asociar el usuario existente con el alumno y guardar ambos
                         usuario.setAlumno(alumno);
                         usuario = usuarioServiceJPA.save(usuario);
                         alumno.setUsuario(usuario);
                         alumno = save(alumno);
+                        logger.debug("Reasignado usuario id={} a alumno id={}", usuario.getId(), alumno.getId());
                     } else {
+                        logger.info("No existe Usuario '{}' -> se creará uno nuevo para alumno id={}", usuarioParam, alumno.getId());
                         Usuario usuario = usuarioServiceJPA.crearDesdeAlumno(alumno);
                         alumno.setUsuario(usuario);
                         alumno = save(alumno);
+                        logger.debug("Usuario creado id={} y asignado a alumno id={}", usuario.getId(), alumno.getId());
                     }
                 } else {
-                    Usuario usuario = usuarioServiceJPA.crearDesdeAlumno(alumno);
-                    alumno.setUsuario(usuario);
-                    alumno = save(alumno);
+                        Usuario usuario = usuarioServiceJPA.crearDesdeAlumno(alumno);
+                        alumno.setUsuario(usuario);
+                        alumno = save(alumno);
+                        logger.debug("Usuario creado id={} y asignado a alumno id={}", usuario.getId(), alumno.getId());
                 }
             }
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            logger.warn("Validación en build alumno: {}", e.getMessage());
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error al construir el alumno: {}", e.getMessage(), e);
             throw new IllegalArgumentException("Error al construir el alumno");
         }
         return alumno;
@@ -355,7 +369,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
                     } catch (IllegalArgumentException e) {
                         throw new IllegalArgumentException(e.getMessage());
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        logger.error("Error al importar alumno fila {} hoja {}: {}", row.getRowNum(), sheet.getSheetName(), e.getMessage(), e);
                         throw new IllegalArgumentException(
                                 "Error al importar el alumno en la fila " + row.getRowNum() + " de la hoja "
                                         + sheet.getSheetName() + ": " + e.getMessage());
@@ -375,7 +389,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
             }
 
             String matriculaTrim = nuevaMatricula.replaceAll("\\D", "");
-            System.out.println("Validando matrícula: " + matriculaTrim);
+            logger.debug("Validando matrícula: {}", matriculaTrim);
             if (!matriculaTrim.matches("\\d{10}")) {
                 throw new IllegalArgumentException("La matricula debe tener exactamente 10 dígitos numéricos");
             }
@@ -384,10 +398,10 @@ public class AlumnoServiceJPA implements IAlumnoService {
             alumno.setMatriculaEditada(true);
             this.save(alumno);
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            logger.warn("Validación al actualizar matrícula para id {}: {}", id, e.getMessage());
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error al actualizar matrícula para id {}: {}", id, e.getMessage(), e);
             throw new IllegalArgumentException("Error al actualizar el alumno");
         }
     }
@@ -409,7 +423,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error al cambiar estado revision alumno id {}: {}", alumno != null ? alumno.getId() : null, e.getMessage(), e);
             throw new IllegalArgumentException("Error al cambiar el estado de revisión del alumno");
         }
     }
@@ -440,7 +454,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
             this.saveAll(alumnosModificados);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error en reiniciar proceso para carrera id {}: {}", carrera != null ? carrera.getId() : null, e.getMessage(), e);
             throw new RuntimeException("Error en reiniciar proceso: " + e.getMessage());
         }
     }
@@ -652,7 +666,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
             workbook.close();
             return Base64.getEncoder().encodeToString(bos.toByteArray());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error al convertir workbook a base64: {}", e.getMessage(), e);
             return null;
         }
     }
@@ -717,7 +731,7 @@ public class AlumnoServiceJPA implements IAlumnoService {
             workbook.close();
             return Base64.getEncoder().encodeToString(bos.toByteArray());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Error al convertir workbook a base64: {}", e.getMessage(), e);
             return null;
         }
     }
