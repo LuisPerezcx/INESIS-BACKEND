@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * @author 24mda
  */
@@ -32,6 +31,9 @@ import java.util.Map;
 public class MiFamiliaServiceJPA implements IMiFamiliaService {
     @Autowired
     private MiFamiliaRepository repository;
+
+    @Autowired
+    private CatParentescoServiceJPA catParentescoServiceJPA;
 
     @Autowired
     private CatEscolaridadServiceJPA escolaridadServiceJPA;
@@ -92,7 +94,8 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
         MiFamilia model = new MiFamilia();
         try {
             Long idAlumno = JsonUtils.obtLong(params, "alumnoId");
-            if (idAlumno == null) throw new IllegalArgumentException("El campo idAlumno es obligatorio");
+            if (idAlumno == null)
+                throw new IllegalArgumentException("El campo idAlumno es obligatorio");
             Alumno alumno = alumnoService.findById(idAlumno);
             model.setAlumno(alumno);
             this.build(params, model);
@@ -111,7 +114,9 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
 
     @Override
     public MiFamilia update(MiFamilia model, Map<String, Object> params) throws Exception {
-        return this.save(this.build(params, model));
+        model = this.build(params, model);
+        model.setModuloCompleto(true);
+        return this.save(model);
     }
 
     @Override
@@ -129,8 +134,10 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
             Long idEscolaridadMadre = JsonUtils.obtLong(params, "miFamilia.id_escolaridad_madre");
             Long idCatInternet = JsonUtils.obtLong(params, "vivienda.id_cat_internet");
 
-            if (telefono == null) throw new IllegalArgumentException("El campo telefono es obligatorio");
-            if (numHermanos == null) throw new IllegalArgumentException("El campo numero de hermanos es obligatorio");
+            if (telefono == null)
+                throw new IllegalArgumentException("El campo telefono es obligatorio");
+            if (numHermanos == null)
+                throw new IllegalArgumentException("El campo numero de hermanos es obligatorio");
             if (numHermanosEstudiando == null)
                 throw new IllegalArgumentException("El campo numero de hermanos estudiando es obligatorio");
             if (numHermanosNoEstudiando == null)
@@ -143,7 +150,8 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
                 throw new IllegalArgumentException("El campo escolaridad del padre es obligatorio");
             if (idEscolaridadMadre == null)
                 throw new IllegalArgumentException("El campo escolaridad de la madre es obligatorio");
-            if (idCatInternet == null) throw new IllegalArgumentException("El campo tipo de internet es obligatorio");
+            if (idCatInternet == null)
+                throw new IllegalArgumentException("El campo tipo de internet es obligatorio");
 
             miFamilia.setTelefono(telefono);
             miFamilia.setTieneInternet(tieneInternet);
@@ -158,9 +166,10 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
 
             miFamilia = this.save(miFamilia); // Guardar miFamilia antes de agregar los servicios
 
-            //construir y guardar la vivienda
+            // construir y guardar la vivienda
             Map<String, Object> viviendaParams = (Map<String, Object>) params.get("vivienda");
-            List<Map<String, Object>> serviciosViviendaParams = (List<Map<String, Object>>) params.get("serviciosVivienda");
+            List<Map<String, Object>> serviciosViviendaParams = (List<Map<String, Object>>) params
+                    .get("serviciosVivienda");
             Map<String, Object> domicilioParams = (Map<String, Object>) params.get("domicilio");
 
             if (viviendaParams != null) {
@@ -170,14 +179,16 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
                     ViviendaFamiliar nuevaVivienda = viviendaFamiliarServiceJPA.create(viviendaParams, miFamilia);
                     miFamilia.setViviendaFamiliar(nuevaVivienda);
                 } else {
-                    miFamilia.setViviendaFamiliar(viviendaFamiliarServiceJPA.update(miFamilia.getViviendaFamiliar(), viviendaParams));
+                    miFamilia.setViviendaFamiliar(
+                            viviendaFamiliarServiceJPA.update(miFamilia.getViviendaFamiliar(), viviendaParams));
                 }
             }
 
             // Construir y guardar el domicilio
             if (domicilioParams != null) {
-                Long domicilioAlumnoID = domicilioParams.get("idDomicilioAlumno") != null ?
-                        Long.valueOf(domicilioParams.get("idDomicilioAlumno").toString()) : null;
+                Long domicilioAlumnoID = domicilioParams.get("idDomicilioAlumno") != null
+                        ? Long.valueOf(domicilioParams.get("idDomicilioAlumno").toString())
+                        : null;
 
                 if (domicilioAlumnoID == null) {
                     Domicilio domicilioAntiguo = miFamilia.getDomicilio();
@@ -186,7 +197,7 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
                         miFamilia.setDomicilio(null);
                         this.save(miFamilia); //
                         if (!domicilioServiceJPA.isDomicilioUsado(domicilioAntiguo.getId())) {
-                            //eliminar domicilio antiguo
+                            // eliminar domicilio antiguo
                             domicilioServiceJPA.deleteById(domicilioAntiguo.getId());
                         }
                     }
@@ -230,7 +241,6 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
                 }
             }
 
-
             List<Map<String, Object>> bienesHogar = (List<Map<String, Object>>) params.get("bienesHogar");
             if (bienesHogar != null) {
                 if (miFamilia.getBienesHogar() != null) {
@@ -250,39 +260,116 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
                 }
             }
 
-            List<Map<String, Object>> personasDependientes = (List<Map<String, Object>>) params.get("personasDependientes");
-            if (personasDependientes != null) {
-                // Limpiar y eliminar huérfanos
-                if (miFamilia.getPersonasDependientes() != null) {
-                    for (PersonasDependientes pd : miFamilia.getPersonasDependientes()) {
-                        if (pd.getRutaArchivo() != null) {
-                            archivoServiceJPA.eliminarArchivo(pd.getRutaArchivo());
-                        }
-                    }
-                    miFamilia.getPersonasDependientes().clear();
-                    this.save(miFamilia); // para aplicar orphanRemoval
-                } else {
+            List<Map<String, Object>> personasDependientesPayload = (List<Map<String, Object>>) params
+                    .get("personasDependientes"); // aquí se maneja el update/insert/delete de dependientes en un solo bloque para evitar problemas de sincronización entre la lista en memoria y la base de datos, especialmente por el manejo de archivos adjuntos
+
+            if (personasDependientesPayload != null) {
+
+                if (miFamilia.getPersonasDependientes() == null) {
                     miFamilia.setPersonasDependientes(new ArrayList<>());
                 }
 
-                for (Map<String, Object> personaDependienteParams : personasDependientes) {
-                    Long id = personaDependienteParams.get("id") != null ?
-                            Long.valueOf(personaDependienteParams.get("id").toString()) : null;
-
-                    PersonasDependientes persona;
-                    if (id != null) {
-                        // Actualizar si existe
-                        persona = personasDependientesServiceJPA.findById(id);
-                        personasDependientesServiceJPA.update(persona, personaDependienteParams);
-                    } else {
-                        // Crear nueva si no tiene ID
-                        persona = personasDependientesServiceJPA.create(personaDependienteParams, miFamilia);
+                // Obtener IDs que vienen en el payload (solo existentes)
+                List<Long> idsEnPayload = new ArrayList<>();
+                for (Map<String, Object> p : personasDependientesPayload) {
+                    if (p.get("id") != null) {
+                        idsEnPayload.add(Long.valueOf(p.get("id").toString()));
                     }
+                }
 
-                    miFamilia.getPersonasDependientes().add(persona);
+                // Eliminar SOLO los que ya no vienen en el payload
+                List<PersonasDependientes> paraEliminar = new ArrayList<>();
+                for (PersonasDependientes pd : miFamilia.getPersonasDependientes()) {
+                    if (!idsEnPayload.contains(pd.getId())) {
+                        paraEliminar.add(pd);
+                    }
+                }
+                for (PersonasDependientes pd : paraEliminar) {
+                    if (pd.getRutaArchivo() != null) {
+                        archivoServiceJPA.eliminarArchivo(pd.getRutaArchivo()); // solo borra el que sí se quitó
+                    }
+                    miFamilia.getPersonasDependientes().remove(pd);
+                }
+                if (!paraEliminar.isEmpty()) {
+                    this.save(miFamilia); // aplicar orphanRemoval solo si hay algo que borrar
+                }
+
+                // Actualizar existentes o crear nuevos
+                for (Map<String, Object> personaDependienteParams : personasDependientesPayload) {
+                    Long id = personaDependienteParams.get("id") != null
+                            ? Long.valueOf(personaDependienteParams.get("id").toString())
+                            : null;
+
+                    if (id != null) {
+                        // UPDATE: buscar en la lista ya cargada (no en BD, que podría haber sido
+                        // eliminado)
+                        PersonasDependientes existente = miFamilia.getPersonasDependientes().stream()
+                                .filter(pd -> pd.getId().equals(id))
+                                .findFirst()
+                                .orElse(null);
+
+                        if (existente != null) {
+                            // Actualizar datos básicos
+                            existente.setNombrePersona(
+                                    (String) personaDependienteParams.getOrDefault("nombrePersona",
+                                            existente.getNombrePersona()));
+                            Object edadObj = personaDependienteParams.get("edad");
+                            if (edadObj != null) {
+                                existente.setEdad(Integer.valueOf(edadObj.toString()));
+                            }
+                            Object parentescoObj = personaDependienteParams.get("parentesco");
+                            if (parentescoObj != null) {
+                                Long parentescoId = Long.valueOf(parentescoObj.toString());
+                                existente.setParentesco(catParentescoServiceJPA.findById(parentescoId));
+                            }
+
+                            // Manejo de archivo: solo reemplazar si hay uno nuevo
+                            Map<String, Object> archivoMap = (Map<String, Object>) personaDependienteParams
+                                    .get("archivo");
+                            String nuevoBase64 = archivoMap != null ? (String) archivoMap.get("contenido") : null;
+                            String nuevoNombre = archivoMap != null ? (String) archivoMap.get("name") : null;
+
+                            if (nuevoBase64 != null && !nuevoBase64.isEmpty()) {
+                                // Hay archivo nuevo: guardar y reemplazar
+                                String rutaAnterior = existente.getRutaArchivo();
+                                String nombreCarpeta = miFamilia.getAlumno() != null
+                                        ? "alumno_" + miFamilia.getAlumno().getId()
+                                        : "alumno_desconocido";
+                                try {
+                                    String rutaNueva = archivoServiceJPA.guardarArchivoBase64(
+                                            nuevoBase64, nuevoNombre,
+                                            "personas-dependientes", nombreCarpeta, false);
+                                    if (rutaAnterior != null && !rutaAnterior.equals(rutaNueva)) {
+                                        archivoServiceJPA.eliminarArchivo(rutaAnterior);
+                                    }
+                                    existente.setNombreArchivo(nuevoNombre);
+                                    existente.setRutaArchivo(rutaNueva);
+                                } catch (Exception e) {
+                                    throw new IllegalArgumentException("Error al guardar archivo: " + e.getMessage());
+                                }
+                            } else {
+                                // Sin archivo nuevo: conservar el existente usando rutaArchivoExistente
+                                String rutaExistente = (String) personaDependienteParams.get("rutaArchivoExistente");
+                                String nombreExistente = (String) personaDependienteParams
+                                        .get("nombreArchivoExistente");
+                                if (rutaExistente != null && !rutaExistente.isEmpty()) {
+                                    existente.setRutaArchivo(rutaExistente);
+                                    if (nombreExistente != null)
+                                        existente.setNombreArchivo(nombreExistente);
+                                }
+                                // Si no hay rutaExistente, no tocar nada (conservar lo que tiene en BD)
+                            }
+
+                            personasDependientesServiceJPA.save(existente);
+                        }
+                    } else {
+                        // INSERT: es un dependiente nuevo
+                        PersonasDependientes nueva = personasDependientesServiceJPA.create(personaDependienteParams,
+                                miFamilia);
+                        miFamilia.getPersonasDependientes().add(nueva);
+                    }
                 }
             }
-
 
         } catch (IllegalArgumentException e) {
             e.printStackTrace();

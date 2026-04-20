@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.Normalizer;
@@ -17,6 +19,8 @@ import java.util.Map;
 
 @Service
 public class UsuarioServiceJPA implements IUsuarioService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UsuarioServiceJPA.class);
 
     @Autowired
     private UsuarioRepository usuarioRepository;
@@ -150,17 +154,24 @@ public class UsuarioServiceJPA implements IUsuarioService {
             usuario.setRol(rolServiceJPA.findById(1L)); // Asignar rol de Alumno
             usuario.setEstatus(true); // Por defecto, el usuario está activo
 
+            // Normalizar el nombre completo conservando separación entre nombres
             String nombreLimpio = limpiarYFormatear(alumno.getNombre());
             String[] nombreCompleto = nombreLimpio.split(" ");
-            String baseUsuario = nombreCompleto[0] + "." + limpiarYFormatear(alumno.getApellidoPaterno());
+            // Para el usuario usamos SOLO el primer nombre y el apellido (sin espacios)
+            String apellidoPaternoLimpio = limpiarYFormatear(alumno.getApellidoPaterno()).replaceAll("\\s+", "");
+            String primerNombre = nombreCompleto.length > 0 ? nombreCompleto[0] : "";
+            String baseUsuario = primerNombre + "." + apellidoPaternoLimpio;
             String nombreUsuario = baseUsuario;
-            int contador = 0;
+            int contador = 1;
             // Verificar si el usuario ya existe
             while (usuarioRepository.findByUsuario(nombreUsuario).isPresent()) {
                 if (contador == 1 && nombreCompleto.length > 1) {
-                    nombreUsuario = nombreCompleto[1] + "." + limpiarYFormatear(alumno.getApellidoPaterno());
+                    String segundoNombre = nombreCompleto[1].replaceAll("\\s+", "");
+                    nombreUsuario = segundoNombre + "." + apellidoPaternoLimpio;
                 } else if (contador == 2) {
-                    nombreUsuario = nombreCompleto[0] + "." + limpiarYFormatear(alumno.getApellidoMaterno());
+                    String primerNombreSinEsp = primerNombre.replaceAll("\\s+", "");
+                    String apellidoMaternoLimpio = limpiarYFormatear(alumno.getApellidoMaterno()).replaceAll("\\s+", "");
+                    nombreUsuario = primerNombreSinEsp + "." + apellidoMaternoLimpio;
                 } else {
                     nombreUsuario = baseUsuario + contador;
                 }
@@ -182,7 +193,8 @@ public class UsuarioServiceJPA implements IUsuarioService {
             return "";
         String textoNormalizado = Normalizer.normalize(texto, Normalizer.Form.NFD);
         String textoSinAcentos = textoNormalizado.replaceAll("\\p{M}", "");
-        return textoSinAcentos.toLowerCase().replaceAll("\\s+", "");
+        // Mantener separación entre palabras pero consolidar espacios múltiples y trim
+        return textoSinAcentos.toLowerCase().replaceAll("\\s+", " ").trim();
     }
 
     public Usuario findByRevisorId(Long idRevisor) {
@@ -192,14 +204,22 @@ public class UsuarioServiceJPA implements IUsuarioService {
     }
 
     public Usuario validarLogin(String usuario, String contrasenia) {
+        // Intentar obtener el usuario junto con su alumno asociado
         Usuario user = usuarioRepository.findByUsuario(usuario)
                 .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado"));
 
-        // Generar el hash de la contraseña que llega (solo para mostrar)
-        String hashGenerado = passwordEncoder.encode(contrasenia);
-        System.out.println("Hash generado de la contraseña recibida: " + hashGenerado);
+        // Log para depuración: si el alumno está presente o no
+        if (user.getAlumno() == null) {
+            logger.debug("Usuario '{}' no tiene Alumno asociado (null) al validar login", usuario);
+        } else {
+            logger.debug("Usuario '{}' tiene Alumno asociado id={} al validar login", usuario, user.getAlumno().getId());
+        }
+
+        // No imprimir hashes en consola; usar logger.debug si realmente hace falta
+        logger.debug("Validando contraseña para usuario={}", usuario);
 
         if (!passwordEncoder.matches(contrasenia, user.getContrasenia())) {
+            logger.warn("Contraseña incorrecta para usuario={}", usuario);
             throw new IllegalArgumentException("Contraseña incorrecta");
         }
 

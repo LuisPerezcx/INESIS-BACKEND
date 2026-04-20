@@ -4,6 +4,7 @@ import com.UNSIJ.INESIS_BACKEND.model.modelMiFamilia.MiFamilia;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.util.Date;
@@ -64,7 +65,7 @@ public class Alumno {
     @JoinColumn(name = "id_cat_grupo")
     private CatGrupo grupo;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
     @JsonBackReference
     private Usuario usuario;
@@ -84,12 +85,15 @@ public class Alumno {
     @Column(name = "estudio_completo")
     private Boolean estudioCompleto;
 
-    /* 0.- sin revisar(no se ocupa), 1.-pendiente, 2.-con correcciones
-     * 3.- corregido, 4.- finalizado  */
+    /*
+     * 0.- sin revisar(no se ocupa), 1.-pendiente, 2.-con correcciones
+     * 3.- corregido, 4.- finalizado
+     */
     @Column(name = "estado_revision")
     private Integer estadoRevision = 0;
 
-    @Column(name = "observaciones")
+    @Column(name = "observaciones", length = 1000)
+    @Size(max = 1000)
     private String observaciones;
 
     @Column(name = "matricula_editada")
