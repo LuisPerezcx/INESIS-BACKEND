@@ -123,6 +123,7 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
     @Transactional
     public MiFamilia build(Map<String, Object> params, MiFamilia miFamilia) {
         try {
+            System.out.println("params" + params.toString());
             String telefono = JsonUtils.obtString(params, "miFamilia.telefono");
             boolean tieneInternet = JsonUtils.obtBoolean(params, "vivienda.tieneInternet");
             Integer numHermanos = JsonUtils.obtInteger(params, "miFamilia.num_hermanos");
@@ -189,8 +190,10 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
                 Long domicilioAlumnoID = domicilioParams.get("idDomicilioAlumno") != null
                         ? Long.valueOf(domicilioParams.get("idDomicilioAlumno").toString())
                         : null;
-
-                if (domicilioAlumnoID == null) {
+                Long domicilioTutor = domicilioParams.get("idDomicilioTutor") != null
+                        ? Long.valueOf(domicilioParams.get("idDomicilioTutor").toString())
+                        : null;
+                if (domicilioAlumnoID == null && domicilioTutor == null) {
                     Domicilio domicilioAntiguo = miFamilia.getDomicilio();
                     if (domicilioAntiguo != null) {
                         // Si no hay ID, pero ya hay un domicilio asociado, lo desvinculamos
@@ -204,8 +207,7 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
                     // agregar el nuevo domicilio
                     Domicilio nuevo = domicilioServiceJPA.create(domicilioParams);
                     miFamilia.setDomicilio(nuevo);
-                } else {
-                    System.out.println("hola");
+                } else if (domicilioTutor == null) {
                     Domicilio existente = domicilioServiceJPA.findById(domicilioAlumnoID);
                     Domicilio domicilioAntiguo = miFamilia.getDomicilio();
                     if (domicilioAntiguo != null && !domicilioAntiguo.equals(existente)) {
@@ -218,6 +220,18 @@ public class MiFamiliaServiceJPA implements IMiFamiliaService {
                     }
 
                     miFamilia.setDomicilio(existente); // setea el nuevo
+                } else {
+                    Domicilio tutor = domicilioServiceJPA.findById(domicilioTutor);
+                    Domicilio domicilioAntiguo = miFamilia.getDomicilio();
+                    if(domicilioAntiguo != null && !domicilioAntiguo.equals(tutor)){
+                        miFamilia.setDomicilio(null);
+                        this.save(miFamilia);
+                        boolean enUso = domicilioServiceJPA.isDomicilioUsado(domicilioAntiguo.getId());
+                        if (!enUso) {
+                            domicilioServiceJPA.deleteById(domicilioAntiguo.getId());
+                        }
+                    }
+                    miFamilia.setDomicilio(tutor); // setea el nuevo
                 }
             }
 
