@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.*;
 import java.util.*;
 
 @Service
@@ -31,6 +32,10 @@ public class CatCodigoPostalServiceJPA implements ICatCodigoPostalService {
     @Override
     public List<CodigoPostal> findByCp(String cp) {
         return catCodigoPostalRepository.findCodigoPostalByCodigoPostal(cp);
+    }
+
+    public long contarRegistros() {
+        return catCodigoPostalRepository.count();
     }
 
     @Override
@@ -91,7 +96,7 @@ public class CatCodigoPostalServiceJPA implements ICatCodigoPostalService {
                         if (asentamiento == null) razon.append("d_asenta ");
                         if (municipio == null) razon.append("d_mnpio ");
                         if (estado == null) razon.append("d_estado ");
-                        log.info("Fila {} omitida: {}", i, razon.toString());
+                        log.info("Fila {} omitida: {}", i, razon);
                         continue;
                     }
 
@@ -139,6 +144,111 @@ public class CatCodigoPostalServiceJPA implements ICatCodigoPostalService {
         return resultado;
     }
 
+    @Transactional
+    public Map<String, Object> importarDesdeArchivo(String rutaArchivo) throws Exception {
+        File archivo = new File(rutaArchivo);
+        validarArchivoFilesystem(archivo);
+
+        int hojasProcesadas = 0;
+        int filasLeidas = 0;
+        int filasValidas = 0;
+        int filasOmitidas = 0;
+        int registrosGuardados = 0;
+
+        List<CodigoPostal> batch = new ArrayList<>(BATCH_SIZE);
+
+        log.info("Iniciando importación desde archivo: {} ... Limpiando tabla de codigos postales", rutaArchivo);
+        catCodigoPostalRepository.deleteAllInBatch();
+
+        try (FileInputStream fis = new FileInputStream(archivo);
+             Workbook workbook = WorkbookFactory.create(fis)) {
+            DataFormatter formatter = new DataFormatter(Locale.ROOT);
+
+            for (Sheet sheet : workbook) {
+                hojasProcesadas++;
+
+                int filasLeidasHoja = 0;
+                int filasValidasHoja = 0;
+                int filasOmitidasHoja = 0;
+                String estadoHoja = sheet.getSheetName();
+
+                log.info("Iniciando procesamiento de hoja/estado: {}", estadoHoja);
+
+                if (sheet.getPhysicalNumberOfRows() == 0) continue;
+
+                int inicio = sheet.getFirstRowNum() + 1;
+                for (int i = inicio; i <= sheet.getLastRowNum(); i++) {
+                    Row row = sheet.getRow(i);
+                    if (row == null) continue;
+
+                    filasLeidas++;
+                    filasLeidasHoja++;
+
+                    String codigoPostal = normalizarCodigoPostal(obtenerCelda(row, COL_D_CODIGO, formatter));
+                    String asentamiento = limpiarTexto(obtenerCelda(row, COL_D_ASENTA, formatter));
+                    String municipio = limpiarTexto(obtenerCelda(row, COL_D_MNPIO, formatter));
+                    String estado = limpiarTexto(obtenerCelda(row, COL_D_ESTADO, formatter));
+
+                    if (codigoPostal == null && asentamiento == null && municipio == null && estado == null) continue;
+
+                    if (codigoPostal == null || asentamiento == null || municipio == null || estado == null) {
+                        filasOmitidas++;
+                        filasOmitidasHoja++;
+
+                        StringBuilder razon = new StringBuilder("Campos faltantes: ");
+                        if (codigoPostal == null) razon.append("d_codigo ");
+                        if (asentamiento == null) razon.append("d_asenta ");
+                        if (municipio == null) razon.append("d_mnpio ");
+                        if (estado == null) razon.append("d_estado ");
+                        log.info("Fila {} omitida: {}", i, razon);
+                        continue;
+                    }
+
+                    if (filasValidasHoja == 0) {
+                        estadoHoja = estado;
+                    }
+
+                    CodigoPostal cp = new CodigoPostal();
+                    cp.setCodigoPostal(codigoPostal);
+                    cp.setNombreAsentamiento(asentamiento);
+                    cp.setNombreMunicipio(municipio);
+                    cp.setNombreEstado(estado);
+                    cp.setActive(true);
+
+                    batch.add(cp);
+                    filasValidas++;
+                    filasValidasHoja++;
+
+                    if (batch.size() >= BATCH_SIZE) {
+                        registrosGuardados += guardarLote(batch);
+                    }
+                }
+
+                log.info(
+                        "Hoja/estado procesado: {} | Leidas: {} | Validas: {} | Omitidas: {}",
+                        estadoHoja,
+                        filasLeidasHoja,
+                        filasValidasHoja,
+                        filasOmitidasHoja
+                );
+            }
+
+            if (!batch.isEmpty()) {
+                registrosGuardados += guardarLote(batch);
+            }
+        }
+
+        Map<String, Object> resultado = new HashMap<>();
+        resultado.put("hojasProcesadas", hojasProcesadas);
+        resultado.put("filasLeidas", filasLeidas);
+        resultado.put("filasValidas", filasValidas);
+        resultado.put("filasOmitidas", filasOmitidas);
+        resultado.put("registrosGuardados", registrosGuardados);
+        resultado.put("archivoFuente", rutaArchivo);
+
+        return resultado;
+    }
+
     private int guardarLote(List<CodigoPostal> batch) {
         int size = batch.size();
         catCodigoPostalRepository.saveAll(batch);
@@ -158,6 +268,21 @@ public class CatCodigoPostalServiceJPA implements ICatCodigoPostalService {
 
         String lower = nombre.toLowerCase();
         if (!lower.endsWith(".xlsx") && !lower.endsWith(".xls")) {
+            throw new IllegalArgumentException("El archivo debe ser .xlsx o .xls");
+        }
+    }
+
+    private void validarArchivoFilesystem(File file) {
+        if (file == null || !file.exists()) {
+            throw new IllegalArgumentException("El archivo no existe: " + (file != null ? file.getAbsolutePath() : "null"));
+        }
+
+        if (!file.isFile()) {
+            throw new IllegalArgumentException("La ruta no es un archivo: " + file.getAbsolutePath());
+        }
+
+        String nombre = file.getName().toLowerCase();
+        if (!nombre.endsWith(".xlsx") && !nombre.endsWith(".xls")) {
             throw new IllegalArgumentException("El archivo debe ser .xlsx o .xls");
         }
     }
