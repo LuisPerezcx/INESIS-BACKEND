@@ -324,43 +324,43 @@ WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '1004' AND id_cat
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
 SELECT '105', 6, 1
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '105' AND id_cat_carrera = 6 AND id_cat_semestre = 1);
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '107' AND id_cat_carrera = 6 AND id_cat_semestre = 1);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
 SELECT '205', 6, 2
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '205' AND id_cat_carrera = 6 AND id_cat_semestre = 2);
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '207' AND id_cat_carrera = 6 AND id_cat_semestre = 2);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
 SELECT '305', 6, 3
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '305' AND id_cat_carrera = 6 AND id_cat_semestre = 3);
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '307' AND id_cat_carrera = 6 AND id_cat_semestre = 3);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
 SELECT '405', 6, 4
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '405' AND id_cat_carrera = 6 AND id_cat_semestre = 4);
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '407' AND id_cat_carrera = 6 AND id_cat_semestre = 4);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
 SELECT '505', 6, 5
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '505' AND id_cat_carrera = 6 AND id_cat_semestre = 5);
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '507' AND id_cat_carrera = 6 AND id_cat_semestre = 5);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
 SELECT '605', 6, 6
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '605' AND id_cat_carrera = 6 AND id_cat_semestre = 6);
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '607' AND id_cat_carrera = 6 AND id_cat_semestre = 6);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
 SELECT '705', 6, 7
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '705' AND id_cat_carrera = 6 AND id_cat_semestre = 7);
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '707' AND id_cat_carrera = 6 AND id_cat_semestre = 7);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
 SELECT '805', 6, 8
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '805' AND id_cat_carrera = 6 AND id_cat_semestre = 8);
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '807' AND id_cat_carrera = 6 AND id_cat_semestre = 8);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
 SELECT '905', 6, 9
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '905' AND id_cat_carrera = 6 AND id_cat_semestre = 9);
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '907' AND id_cat_carrera = 6 AND id_cat_semestre = 9);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
 SELECT '1005', 6, 10
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '1005' AND id_cat_carrera = 6 AND id_cat_semestre = 10);
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '1007' AND id_cat_carrera = 6 AND id_cat_semestre = 10);
 
 --Maestria en ciencias de la conservacion
 
@@ -408,43 +408,43 @@ WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '1006' AND id_cat
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
 SELECT '107', 8, 1
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '107' AND id_cat_carrera = 8 AND id_cat_semestre = 1);
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '108' AND id_cat_carrera = 8 AND id_cat_semestre = 1);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
 SELECT '207', 8, 2
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '207' AND id_cat_carrera = 8 AND id_cat_semestre = 2);
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '208' AND id_cat_carrera = 8 AND id_cat_semestre = 2);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
 SELECT '307', 8, 3
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '307' AND id_cat_carrera = 8 AND id_cat_semestre = 3);
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '308' AND id_cat_carrera = 8 AND id_cat_semestre = 3);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
 SELECT '407', 8, 4
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '407' AND id_cat_carrera = 8 AND id_cat_semestre = 4);
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '408' AND id_cat_carrera = 8 AND id_cat_semestre = 4);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
 SELECT '507', 8, 5
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '507' AND id_cat_carrera = 8 AND id_cat_semestre = 5);
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '508' AND id_cat_carrera = 8 AND id_cat_semestre = 5);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
 SELECT '607', 8, 6
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '607' AND id_cat_carrera = 8 AND id_cat_semestre = 6);
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '608' AND id_cat_carrera = 8 AND id_cat_semestre = 6);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
 SELECT '707', 8, 7
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '707' AND id_cat_carrera = 8 AND id_cat_semestre = 7);
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '708' AND id_cat_carrera = 8 AND id_cat_semestre = 7);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
 SELECT '807', 8, 8
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '807' AND id_cat_carrera = 8 AND id_cat_semestre = 8);
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '808' AND id_cat_carrera = 8 AND id_cat_semestre = 8);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
 SELECT '907', 8, 9
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '907' AND id_cat_carrera = 8 AND id_cat_semestre = 9);
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '908' AND id_cat_carrera = 8 AND id_cat_semestre = 9);
 
 INSERT INTO cat_grupo (nombre_grupo, id_cat_carrera, id_cat_semestre)
 SELECT '1007', 8, 10
-WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '1007' AND id_cat_carrera = 8 AND id_cat_semestre = 10);
+WHERE NOT EXISTS (SELECT 1 FROM cat_grupo WHERE nombre_grupo = '1008' AND id_cat_carrera = 8 AND id_cat_semestre = 10);
 
 #------------------- REGISTROS DE CATSEXO -------------------
 -- Inicio registros
